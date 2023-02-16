@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Http\Controllers;
 
+use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Shop\Entities\Payment;
@@ -19,7 +20,9 @@ class PaymentsController extends Controller
 
     public function edit($id)
     {
-        $payment       = Payment::findOrFail($id);
+        $payment = Payment::find($id);
+        WebsiteHelper::redirectBackIfNull($payment);
+
         $payment->data = json_decode($payment->data);
 
         return view('payments.' . $payment->type . ".edit", ['payment' => $payment]);
