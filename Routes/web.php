@@ -25,28 +25,6 @@ use Modules\Shop\Http\Controllers\VatsController;
  * ADMIN ROUTES
  */
 Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
-    //    Route::group(['prefix' => 'shop'], static function () {
-    //        Route::group(['middleware' => ['permission:' . Shop::PREVIEW_PERMISSION . '|' . Shop::PREVIEW_AND_EDIT_PERMISSION]], function () {
-    //            Route::get('/{id}/show', [ShopController::class, 'show'])->name('admin.shop.show');
-    //        });
-    //
-    //        Route::group(['middleware' => ['permission:' . Shop::PREVIEW_AND_EDIT_PERMISSION]], function () {
-    //            Route::get('/', [ShopController::class, 'index'])->name('admin.shop.index');
-    //            Route::get('/create', [ShopController::class, 'create'])->name('admin.shop.create');
-    //            Route::post('/store', [ShopController::class, 'store'])->name('admin.shop.store');
-    //            Route::get('/{id}/edit', [ShopController::class, 'edit'])->name('admin.shop.edit');
-    //            Route::post('/{id}/update', [ShopController::class, 'update'])->name('admin.shop.update');
-    //            Route::delete('/{id}/delete', [ShopController::class, 'delete'])->name('admin.shop.delete');
-    //            Route::delete('/{id}/image/delete', [ShopController::class, 'imgDelete'])->name('admin.shop.delete-img');
-    //            Route::delete('/delete/multiple/', [ShopController::class, 'deleteMultiple'])->name('admin.shop.delete-multiple');
-    //            Route::post('/active/{id}/{active}', [ShopController::class, 'active'])->name('admin.shop.active');
-    //            Route::post('/active/multiple/{active}', [ShopController::class, 'activeMultiple'])->name('admin.shop.active-multiple');
-    //            Route::get('/move/up/{id}', [ShopController::class, 'positionUp'])->name('admin.shop.position-up');
-    //            Route::get('/move/down/{id}', [ShopController::class, 'positionDown'])->name('admin.shop.position-down');
-    //        });
-    //    });
-
-    //    MOMCHIL ROUTES
     /* Shop */
     Route::group(['prefix' => 'settings'], static function () {
         Route::get('/', [ShopSettingsController::class, 'index'])->name('shop.settings.index');
@@ -150,3 +128,27 @@ Route::prefix('basket')->group(function () {
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
 });
+
+/* Shop Auth */
+Route::group(['prefix' => 'shop'], static function () {
+    // Authentication Routes
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('shop.login');
+    Route::post('login', 'Auth\LoginController@login');
+    Route::post('logout', 'Auth\LoginController@logout')->name('shop.logout');
+
+    // Registration Routes
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('shop.register');
+    Route::post('register', 'Auth\RegisterController@register');
+
+    // Password Reset Routes
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('shop.password.request');
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('shop.password.email');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('shop.password.reset');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('shop.password.update');
+
+    // Account Verification Routes
+    Route::get('email/verify', 'Auth\VerificationController@show')->name('shop.verification.notice');
+    Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('shop.verification.verify');
+    Route::post('email/resend', 'Auth\VerificationController@resend')->name('shop.verification.resend');
+});
+
