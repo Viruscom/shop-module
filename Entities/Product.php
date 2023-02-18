@@ -2,23 +2,14 @@
 
 namespace Modules\Shop\Entities;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\ShopDiscounts\Entities\Discount;
-use Modules\ShopProduct\Database\factories\ProductFactory;
 
 class Product extends Model
 {
-    use HasFactory;
-
     protected $fillable = [];
-
-    protected static function newFactory()
-    {
-        return ProductFactory::new();
-    }
 
     public function discounts(): HasMany
     {
@@ -51,7 +42,7 @@ class Product extends Model
         //nqma kak da go napish sega zashtoto nqmam funkcionalnost za dobavqne na produkti, Kato se dobavqt productite se dobavqt i suotvetnite vat katogrii
         return $defaultVat;
     }
-    
+
     private static function getDefaultVat($country, $city)
     {
         if ($city != null) {
