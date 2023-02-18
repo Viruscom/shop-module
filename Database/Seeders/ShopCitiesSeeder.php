@@ -9,7 +9,7 @@ class ShopCitiesSeeder extends Seeder
 {
     public function run()
     {
-        $sql = file_get_contents(database_path('cities.sql'));
+        $sql = file_get_contents('Modules\Shop\Database\cities.sql');
         DB::unprepared($sql);
     }
 }

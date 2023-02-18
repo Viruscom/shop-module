@@ -116,7 +116,7 @@ class BasketController extends Controller
         $basket = Basket::getCurrent();
         $basket->calculate($basket->basket_products, $country, $city);
 
-        return view('basket.index', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities]);
+        return view('shop::basket.index', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities]);
     }
 
     public function addProduct(Request $request)//can be used for add,increment,decrement,delete

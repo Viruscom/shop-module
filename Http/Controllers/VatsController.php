@@ -69,14 +69,14 @@ class VatsController extends Controller
     {
         $state = State::findOrFail($id);
 
-        return view('vats.states.cities.index', ['state' => $state]);
+        return view('shop::vats.states.cities.index', ['state' => $state]);
     }
 
     public function citiesEdit($id)
     {
         $city = City::findOrFail($id);
 
-        return view('vats.states.cities.edit', ['city' => $city]);
+        return view('shop::vats.states.cities.edit', ['city' => $city]);
     }
 
     public function citiesUpdate($id, VatRequest $request)
@@ -137,14 +137,14 @@ class VatsController extends Controller
     {
         $state = State::findOrFail($id);
 
-        return view('vats.states.categories.index', ['state' => $state]);
+        return view('shop::vats.states.categories.index', ['state' => $state]);
     }
 
     public function statesCategoriesCreate($id)
     {
         $state = State::findOrFail($id);
 
-        return view('vats.states.categories.create', ['state' => $state]);
+        return view('shop::vats.states.categories.create', ['state' => $state]);
     }
 
 
@@ -160,7 +160,7 @@ class VatsController extends Controller
     {
         $category = StateVatCategory::findOrFail($id);
 
-        return view('vats.states.categories.edit', ['category' => $category]);
+        return view('shop::vats.states.categories.edit', ['category' => $category]);
     }
 
     public function statesCategoriesUpdate($id, StateVatCategoryUpdateRequest $request)
@@ -183,14 +183,14 @@ class VatsController extends Controller
     {
         $city = City::findOrFail($id);
 
-        return view('vats.states.cities.categories.index', ['city' => $city]);
+        return view('shop::vats.states.cities.categories.index', ['city' => $city]);
     }
 
     public function citiesCategoriesCreate($id)
     {
         $city = City::findOrFail($id);
 
-        return view('vats.states.cities.categories.create', ['city' => $city]);
+        return view('shop::vats.states.cities.categories.create', ['city' => $city]);
     }
 
 
@@ -206,7 +206,7 @@ class VatsController extends Controller
     {
         $category = CityVatCategory::findOrFail($id);
 
-        return view('vats.states.cities.categories.edit', ['category' => $category]);
+        return view('shop::vats.states.cities.categories.edit', ['category' => $category]);
     }
 
     public function citiesCategoriesUpdate($id, CityVatCategoryUpdateRequest $request)

@@ -17,8 +17,9 @@ class Delivery extends Model
         'validation_rules',
         'validation_messages',
         'validation_attributes',
+        'edit_view_path'
     ];
-    
+
     public function generateData($requestData)
     {
         $data = [];
@@ -67,7 +68,7 @@ class Delivery extends Model
 
     public function hasEditView()
     {
-        return view()->exists('deliveries.' . $this->type . '.edit');
+        return view()->exists($this->edit_view_path);
     }
 
 }

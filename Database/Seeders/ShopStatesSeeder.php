@@ -9,7 +9,7 @@ class ShopStatesSeeder extends Seeder
 {
     public function run()
     {
-        $sql = file_get_contents(database_path('states.sql'));
+        $sql = file_get_contents('Modules\Shop\Database\states.sql');
         DB::unprepared($sql);
     }
 }

@@ -34,7 +34,7 @@ class DeliveriesController extends Controller
         $delivery       = Delivery::findOrFail($id);
         $delivery->data = json_decode($delivery->data);
 
-        return view('deliveries.' . $delivery->type . ".edit", ['delivery' => $delivery]);
+        return view($delivery->edit_view_path, ['delivery' => $delivery]);
     }
     public function updateState($id, $active)
     {
@@ -43,7 +43,7 @@ class DeliveriesController extends Controller
 
         return redirect()->back()->with('success', __('Successful update'));
     }
- 
+
     public function update($id, Request $request)
     {
         $delivery      = Delivery::findOrFail($id);

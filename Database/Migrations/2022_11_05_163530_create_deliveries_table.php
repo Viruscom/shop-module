@@ -22,6 +22,7 @@ class CreateDeliveriesTable extends Migration
             $table->longText('validation_rules');
             $table->longText('validation_messages');
             $table->longText('validation_attributes');
+            $table->text('edit_view_path');
             $table->timestamps();
         });
     }

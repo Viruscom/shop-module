@@ -24,7 +24,8 @@ class CreatePaymentsTable extends Migration
             $table->longText('validation_attributes');
             $table->text('class');
             $table->text('execute_payment_method');
-            
+            $table->text('edit_view_path');
+
             $table->timestamps();
         });
     }

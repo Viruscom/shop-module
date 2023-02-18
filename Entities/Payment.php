@@ -18,7 +18,8 @@ class Payment extends Model
         'validation_messages',
         'validation_attributes',
         'class',
-        'execute_payment_method'
+        'execute_payment_method',
+        'edit_view_path'
     ];
     public function generateData($requestData)
     {
@@ -65,7 +66,7 @@ class Payment extends Model
     }
     public function hasEditView()
     {
-        return view()->exists('payments.' . $this->type . '.edit');
+        return view()->exists($this->edit_view_path);
     }
 
     public function hasClass()

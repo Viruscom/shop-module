@@ -25,7 +25,7 @@ class PaymentsController extends Controller
 
         $payment->data = json_decode($payment->data);
 
-        return view('payments.' . $payment->type . ".edit", ['payment' => $payment]);
+        return view($payment->edit_view_path, ['payment' => $payment]);
     }
     public function updateState($id, $active)
     {

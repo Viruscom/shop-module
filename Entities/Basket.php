@@ -7,22 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Shop\Entities\Discount;
-use Modules\Shop\Entities\Product;
+use Modules\ShopDiscounts\Entities\Discount;
 
 class Basket extends Model
 {
     use HasFactory;
 
-    public    $discounts_to_apply;
-    public    $total                      = 0;
-    public    $total_discounted           = 0;
-    public    $total_free_delivery        = false;
-    public    $calculated_basket_products = [];
+    public $discounts_to_apply;
+    public $total                      = 0;
+    public $total_discounted           = 0;
+    public $total_free_delivery        = false;
+    public $calculated_basket_products = [];
     /**
      * @var array
      */
-    protected $fillable                   = ['user_id', 'key'];
+    protected $fillable = ['user_id', 'key'];
     public static function getCurrent()
     {
         if (Auth::check()) {
@@ -68,7 +67,7 @@ class Basket extends Model
      */
     public function basket_products()
     {
-        return $this->hasMany('App\Models\BasketProduct');
+        return $this->hasMany(BasketProduct::class);
     }
     public function calculate($basketProducts, $country, $city)
     {

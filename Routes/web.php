@@ -74,6 +74,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], static function ()
             Route::get('/', [VatsController::class, 'index'])->name('vats.countries.index');
             Route::get('/edit/{id}', [VatsController::class, 'edit'])->name('vats.countries.edit');
             Route::post('/update/{id}', [VatsController::class, 'update'])->name('vats.countries.update');
+            
             Route::prefix('states')->group(function () {
                 Route::get('{id}/', [VatsController::class, 'states'])->name('vats.countries.states.index');
                 Route::get('/edit/{id}', [VatsController::class, 'statesEdit'])->name('vats.countries.states.edit');
@@ -86,6 +87,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], static function ()
                 });
             });
         });
+
         Route::prefix('categories')->group(function () {
             Route::prefix('countries')->group(function () {
                 Route::get('{id}/', [VatsController::class, 'categories'])->name('vats.countries.categories.index');

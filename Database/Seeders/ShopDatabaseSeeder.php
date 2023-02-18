@@ -21,8 +21,8 @@ class ShopDatabaseSeeder extends Seeder
         $this->call(MyPosPaymentSeeder::class);
         $this->call(OwnDeliverySeeder::class);
         $this->call(ShopProductDatabaseSeeder::class);
-        $this->call(ShopCountriesSeeder::class);
-        $this->call(ShopCitiesSeeder::class);
-        $this->call(ShopCitiesSeeder::class);
+        //        $this->call(ShopCountriesSeeder::class);
+        //        $this->call(ShopStatesSeeder::class);
+        //        $this->call(ShopCitiesSeeder::class);
     }
 }

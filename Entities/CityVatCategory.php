@@ -20,7 +20,7 @@ class CityVatCategory extends Model
      */
     public function city()
     {
-        return $this->belongsTo('App\Models\City');
+        return $this->belongsTo(City::class);
     }
 
 
@@ -29,7 +29,7 @@ class CityVatCategory extends Model
      */
     public function vat_category()
     {
-        return $this->belongsTo('App\Models\VatCategory');
+        return $this->belongsTo(VatCategory::class);
     }
 
 }

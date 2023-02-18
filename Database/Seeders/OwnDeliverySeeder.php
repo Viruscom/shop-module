@@ -22,7 +22,8 @@ class OwnDeliverySeeder extends Seeder
             'position'              => Delivery::getMaxPosition(),
             'validation_rules'      => json_encode([]),
             'validation_messages'   => json_encode([]),
-            'validation_attributes' => json_encode([])
+            'validation_attributes' => json_encode([]),
+            'edit_view_path'        => 'shop::deliveries.' . $type . '.edit'
         ];
 
         $delivery = Delivery::where('type', $type)->first();

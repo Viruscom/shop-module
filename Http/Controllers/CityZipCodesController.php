@@ -10,7 +10,7 @@ class CityZipCodesController extends Controller
 {
     public function index()
     {
-        $cities = City::orderBy('country_id', 'asc')->orderBy('state_id', 'asc')->orderBy('name', 'asc')->paginate(20);
+        $cities = City::orderBy('country_id', 'asc')->with('state', 'country')->orderBy('state_id', 'asc')->orderBy('name', 'asc')->paginate(20);
 
         return view('shop::zip_codes.index', ['cities' => $cities]);
     }

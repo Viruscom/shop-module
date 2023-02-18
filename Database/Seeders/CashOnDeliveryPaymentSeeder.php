@@ -25,6 +25,7 @@ class CashOnDeliveryPaymentSeeder extends Seeder
             'validation_attributes'  => json_encode([]),
             'class'                  => '',
             'execute_payment_method' => '',
+            'edit_view_path'         => 'shop::payments.' . $type . '.edit'
         ];
 
         $payment = Payment::where('type', $type)->first();
