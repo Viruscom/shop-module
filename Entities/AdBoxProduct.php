@@ -2,14 +2,15 @@
 
 namespace Modules\Shop\Entities;
 
-use App\Classes\LanguageHelper;
+use App\Helpers\LanguageHelper;
+use App\Models\AdBoxProductTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AdBoxProduct extends Model
 {
-    public static $WAITING_ACTION = 0;
-    public static $FIRST_TYPE     = 1;
+    public static int $WAITING_ACTION = 0;
+    public static int $FIRST_TYPE     = 1;
 
     protected $table    = 'product_adboxes';
     protected $fillable = ['active', 'position', 'type', 'product_id', 'filename'];
@@ -135,11 +136,11 @@ class AdBoxProduct extends Model
     }
     public function scopeWaitingAction($query)
     {
-        return $query->where('type', 0);
+        return $query->where('type', self::$WAITING_ACTION);
     }
     public function scopeFirstType($query)
     {
-        return $query->where('type', 1);
+        return $query->where('type', self::$FIRST_TYPE);
     }
 
     /**

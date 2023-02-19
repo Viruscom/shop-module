@@ -2,14 +2,16 @@
 
 namespace Modules\Shop\Http\Controllers\admin;
 
-use App\Classes\LanguageHelper;
+use App\Helpers\LanguageHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdBoxProductRequest;
-use App\Models\AdBoxProductTranslation;
 use App\Models\Language;
 use App\Models\OtherSetting;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Modules\Shop\Actions\ProductAdBoxAction;
 use Modules\Shop\Entities\AdBoxProduct;
+use Modules\Shop\Entities\AdBoxProductTranslation;
+use Modules\Shop\Http\Requests\AdBoxProductRequest;
 
 class AdBoxesProductsController extends Controller
 {
@@ -18,10 +20,9 @@ class AdBoxesProductsController extends Controller
         $adBoxesWaitingAction = AdBoxProduct::waitingAction()->orderByPosition('asc')->with('translations')->get();
         $adBoxesFirstType     = AdBoxProduct::firstType()->orderByPosition('asc')->with('translations')->get();
 
-        $defaultLanguage = LanguageHelper::getDefaultLanguage();
-        $languages       = Language::active(true)->get();
+        $languages = LanguageHelper::getActiveLanguages();
 
-        return view('admin.adboxes_products.index', compact('adBoxesWaitingAction', 'adBoxesFirstType', 'defaultLanguage', 'languages'));
+        return view('shop::admin.adboxes_products.index', compact('adBoxesWaitingAction', 'adBoxesFirstType', 'languages'));
     }
     public function active($id, $active)
     {
@@ -68,42 +69,26 @@ class AdBoxesProductsController extends Controller
         $adBoxes         = AdBoxProduct::where('type', $adBox->type)->with('translations')->orderBy('position', 'asc')->get();
         $otherSettings   = OtherSetting::first();
 
-        return view('admin.adboxes_products.edit', compact('adBox', 'languages', 'defaultLanguage', 'adBoxes', 'otherSettings'));
+        return view('shop::admin.adboxes_products.edit', compact('adBox', 'languages', 'defaultLanguage', 'adBoxes', 'otherSettings'));
     }
-    public function deleteMultiple(Request $request)
+    public function deleteMultiple(Request $request, ProductAdBoxAction $action): RedirectResponse
     {
         if (!is_null($request->ids[0])) {
-            $ids = array_map('intval', explode(',', $request->ids[0]));
-            foreach ($ids as $id) {
-                $adBox = AdBoxProduct::find($id);
-                if (is_null($adBox)) {
-                    continue;
-                }
+            $action->deleteMultiple($request, AdBoxProduct::class);
 
-                $adBoxesToUpdate = AdBoxProduct::where('type', $adBox->type)->where('position', '>', $adBox->position)->get();
-                $adBox->delete();
-                foreach ($adBoxesToUpdate as $adBoxToUpdate) {
-                    $adBoxToUpdate->update(['position' => $adBoxToUpdate->position - 1]);
-                }
-            }
-
-            return redirect()->back()->with('success-message', 'administration_messages.successful_delete');
+            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
 
-        return redirect()->back()->withErrors(['administration_messages.no_checked_checkboxes']);
+        return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
     }
-    public function delete($id)
+    public function delete($id, ProductAdBoxAction $action)
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
             return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
         }
 
-        $adBoxesToUpdate = AdBoxProduct::where('type', $adBox->type)->where('position', '>', $adBox->position)->get();
-        $adBox->delete();
-        foreach ($adBoxesToUpdate as $adBoxToUpdate) {
-            $adBoxToUpdate->update(['position' => $adBoxToUpdate->position - 1]);
-        }
+        $action->delete(AdBoxProduct::class, $adBox);
 
         return redirect()->back()->with('success-message', 'administration_messages.successful_delete');
     }

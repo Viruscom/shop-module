@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminControllers\AdBoxesProductsController;
 use Illuminate\Support\Facades\Route;
+use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
 use Modules\Shop\Http\Controllers\admin\ShopSettingsController;
 use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;

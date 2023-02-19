@@ -1,41 +1,30 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Shop\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdBoxProductTranslation extends Model
 {
     protected $table    = "product_adbox_translation";
     protected $fillable = ['language_id', 'product_adbox_id', 'title'];
-
-    public function adbox()
+    public static function getCreateData($language, $request): array
     {
-        return $this->belongsTo(AdBox::class, 'product_adbox_id');
+        return [
+            'language_id' => $language->id,
+            'title'       => $request['title_' . $language->code]
+        ];
     }
-
-    public function language()
+    public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class, 'language_id');
     }
-
-    public static function getCreateData($language, $request)
+    public function getUpdateData($language, $request): array
     {
-        $data = [
+        return [
             'language_id' => $language->id,
             'title'       => $request['title_' . $language->code]
         ];
-
-        return $data;
-    }
-
-    public function getUpdateData($language, $request)
-    {
-        $data = [
-            'language_id' => $language->id,
-            'title'       => $request['title_' . $language->code]
-        ];
-
-        return $data;
     }
 }
