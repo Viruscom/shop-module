@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminControllers\AdBoxesProductsController;
 use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\ShopSettingsController;
 use Modules\Shop\Http\Controllers\BasketController;
@@ -25,7 +26,29 @@ use Modules\Shop\Http\Controllers\VatsController;
  * ADMIN ROUTES
  */
 Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
-    /* Shop */
+    /* Product Adboxes */
+    Route::group(['prefix' => 'product_adboxes'], static function () {
+        Route::get('/', [AdBoxesProductsController::class, 'index'])->name('admin.product-adboxes.index');
+        //        Route::get('/create', [CategoryPageController::class, 'create'])->name('admin.category-page.create');
+        //        Route::post('/store', [CategoryPageController::class, 'store'])->name('admin.category-page.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [AdBoxesProductsController::class, 'activeMultiple'])->name('admin.product-adboxes.active-multiple');
+            Route::get('delete', [AdBoxesProductsController::class, 'deleteMultiple'])->name('admin.product-adboxes.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [AdBoxesProductsController::class, 'edit'])->name('admin.product-adboxes.edit');
+            Route::post('update', [AdBoxesProductsController::class, 'update'])->name('admin.product-adboxes.update');
+            Route::get('delete', [AdBoxesProductsController::class, 'delete'])->name('admin.product-adboxes.delete');
+            Route::get('show', [AdBoxesProductsController::class, 'show'])->name('admin.product-adboxes.show');
+            Route::get('active/{active}', [AdBoxesProductsController::class, 'active'])->name('admin.product-adboxes.changeStatus');
+            Route::get('position/up', [AdBoxesProductsController::class, 'positionUp'])->name('admin.product-adboxes.position-up');
+            Route::get('position/down', [AdBoxesProductsController::class, 'positionDown'])->name('admin.product-adboxes.position-down');
+            Route::get('return_to_waiting', [AdBoxesProductsController::class, 'returnToWaiting'])->name('admin.product-adboxes.return-to-waiting');
+        });
+    });
+
     Route::group(['prefix' => 'settings'], static function () {
         Route::get('/', [ShopSettingsController::class, 'index'])->name('shop.settings.index');
         Route::prefix('payments')->group(function () {
