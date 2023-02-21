@@ -1,11 +1,17 @@
 <?php
 
 return [
-    'shop' => [
+    'shop'   => [
         'index'          => 'Магазин',
         'create'         => 'Добавяне на',
         'edit'           => 'Редактиране на ',
         'settings_index' => 'Магазин настройки'
+    ],
+    'common' => [
+        'number'  => '№',
+        'type'    => 'Тип',
+        'title'   => 'Заглавие',
+        'actions' => 'Действия'
     ],
 
     'products' => [
@@ -13,7 +19,10 @@ return [
     ],
 
     'product_adboxes' => [
-        'index' => 'Продуктови карета',
+        'index'          => 'Продуктови карета',
+        'type_1'         => 'Тип 1',
+        'no_records'     => 'Няма намерени продуктови карета',
+        'waiting_action' => 'Продуктови карета очакващи действие'
     ],
 
     'product_categories' => [

@@ -27,10 +27,10 @@ use Modules\Shop\Http\Controllers\VatsController;
  */
 Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
     /* Product Adboxes */
-    Route::group(['prefix' => 'product_adboxes'], static function () {
+    Route::group(['prefix' => 'product-adboxes'], static function () {
         Route::get('/', [AdBoxesProductsController::class, 'index'])->name('admin.product-adboxes.index');
-        //        Route::get('/create', [CategoryPageController::class, 'create'])->name('admin.category-page.create');
-        //        Route::post('/store', [CategoryPageController::class, 'store'])->name('admin.category-page.store');
+        Route::get('/create', [AdBoxesProductsController::class, 'create'])->name('admin.product-adboxes.create');
+        Route::post('/store', [AdBoxesProductsController::class, 'store'])->name('admin.product-adboxes.store');
 
         Route::group(['prefix' => 'multiple'], static function () {
             Route::get('active/{active}', [AdBoxesProductsController::class, 'activeMultiple'])->name('admin.product-adboxes.active-multiple');
