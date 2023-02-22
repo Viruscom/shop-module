@@ -4,7 +4,7 @@ namespace Modules\Shop\Actions;
 
 class ProductAdBoxAction
 {
-    public function deleteMultiple($request, $modelClass)
+    public function deleteMultiple($request, $modelClass): void
     {
         $ids = array_map('intval', explode(',', $request->ids[0]));
         foreach ($ids as $id) {
