@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateProductsTable extends Migration
 {
@@ -13,14 +13,13 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', static function(Blueprint $table)
-        {
+        Schema::create('products', static function (Blueprint $table) {
             $table->id();
 
-            $table->bigInteger('category_id')->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
-            $table->bigInteger('brand_id')->unsigned();
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('brand_id');
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('brand_id')->references('id')->on('product_brands')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('position');
             $table->integer('creator_user_id');
             $table->integer('units_in_stock')->default(1);
@@ -38,7 +37,6 @@ class CreateProductsTable extends Migration
             $table->string('weight', 191)->nullable();
             $table->timestamps();
         });
-
     }
 
     /**
@@ -48,7 +46,7 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('products');
     }
-
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateBrandsTable extends Migration
 {
@@ -13,10 +13,15 @@ class CreateBrandsTable extends Migration
      */
     public function up()
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('product_brands', function (Blueprint $table) {
             $table->id();
-             $table->string('name', 255);
-           
+            $table->boolean('active')->default(true);
+            $table->integer('position');
+            $table->string('filename')->nullable()->default(null);
+            $table->boolean('logo_active')->default(false);
+            $table->string('logo_filename')->nullable()->default(null);
+            $table->integer('creator_user_id');
+
             $table->timestamps();
         });
     }
@@ -28,6 +33,6 @@ class CreateBrandsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('product_brands');
     }
 }
