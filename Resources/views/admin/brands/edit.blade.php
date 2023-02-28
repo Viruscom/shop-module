@@ -18,6 +18,9 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.brands.breadcrumbs')
+    @include('admin.notify')
+    
     <form class="my-form" action="{{ route('admin.brands.update', ['id' => $brand->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -44,46 +47,13 @@
                 </ul>
                 <div class="tab-content">
                     @foreach($languages as $language)
-                        @php
-                            $langTitle = 'title_'.$language->code;
-                            $langShortDescr = 'short_description_'.$language->code;
-                            $langFirstText = 'first_text_'.$language->code;
-                            $langVersionShow = 'visible_'.$language->code;
-                            $brandTranslation = (is_null($brand->translations->where('language_id', $language->id)->first())) ? null: $brand->translations->where('language_id', $language->id)->first()
-                        @endphp
-                        <div id="{{$language->code}}" class="tab-pane fade in @if($language->code == env('DEF_LANG_CODE')) active @endif}}">
-                            <div class="form-group @if($errors->has($langTitle)) has-error @endif">
-                                <label class="control-label p-b-10">Заглавие (<span class="text-uppercase">{{$language->code}}</span>):</label>
-                                <input class="form-control" type="text" name="{{$langTitle}}" value="{{ old($langTitle) ? old($langTitle) : (!is_null($brandTranslation) ? $brandTranslation->title : '') }}">
-                                @if($errors->has($langTitle))
-                                    <span class="help-block">{{ trans($errors->first($langTitle)) }}</span>
-                                @endif
-                            </div>
-                            <div class="form-group @if($errors->has($langShortDescr)) has-error @endif">
-                                <label class="control-label p-b-10">Кратко описание (<span class="text-uppercase">{{$language->code}}</span>):</label>
-                                <textarea name="{{$langShortDescr}}" class="form-control" rows="3">{{ old($langShortDescr) ? old($langShortDescr) : (!is_null($brandTranslation) ? $brandTranslation->short_description : '') }}</textarea>
-                                @if($errors->has($langShortDescr))
-                                    <span class="help-block">{{ trans($errors->first($langShortDescr)) }}</span>
-                                @endif
-                            </div>
-                            <div class="form-group m-b-0 @if($errors->has($langFirstText)) has-error @endif">
-                    <textarea name="{{$langFirstText}}" class="ckeditor col-xs-12" rows="9">
-                        {{ old($langFirstText) ? old($langFirstText) : (!is_null($brandTranslation) ? $brandTranslation->first_text : '') }}
-                    </textarea>
-                                @if($errors->has($langFirstText))
-                                    <span class="help-block">{{ trans($errors->first($langFirstText)) }}</span>
-                                @endif
-                            </div>
+                        <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
 
-                            <div class="form-group m-t-10 m-b-40 p-t-20">
-                                <label class="control-label col-md-3">Покажи в езикова версия (<span class="text-uppercase">{{$language->code}}</span>):</label>
-                                <div class="col-md-6">
-                                    <label class="switch pull-left">
-                                        <input type="checkbox" name="{{$langVersionShow}}" class="success" data-size="small" {{ old($langVersionShow) ? 'checked' : ((!is_null($brandTranslation) && $brandTranslation->visible) ? 'checked': 'active') }}>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
+                            @include('admin.partials.on_edit.form_fields.input_text', ['model'=> $brand, 'fieldName' => 'title_' . $language->code, 'label' => trans('admin.title'), 'required' => true])
+                            @include('admin.partials.on_edit.form_fields.textarea', ['model'=> $brand, 'fieldName' => 'announce_' . $language->code, 'rows' => 4, 'label' => trans('admin.admin.announce'), 'required' => false])
+                            @include('admin.partials.on_edit.form_fields.textarea', ['model'=> $brand, 'fieldName' => 'description_' . $language->code, 'rows' => 9, 'label' => trans('admin.description'), 'required' => false])
+                            @include('admin.partials.on_edit.show_in_language_visibility_checkbox', ['model'=> $brand, 'fieldName' => 'visible_' . $language->code])
+
                         </div>
                     @endforeach
                 </div>
@@ -182,7 +152,7 @@
                                     @foreach($brands as $brand)
                                         <tr class="pickPositionTr" data-position="{{$brand->position}}">
                                             <td>{{$brand->position}}</td>
-                                            <td>{{$brand->translations->firstWhere('language_id',$defaultLanguage->id)->title}}</td>
+                                            <td>{{$brand->title}}</td>
                                         </tr>
                                     @endforeach
                                     <tr class="pickPositionTr" data-position="{{$brands->last()->position+1}}">

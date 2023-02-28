@@ -51,7 +51,8 @@ class BrandController extends Controller implements ShopBrandInterface, Position
         MainHelper::goBackIfNull($brand);
 
         return view('shop::admin.brands.edit', [
-            'categoryPage'  => $brand,
+            'brand'         => $brand,
+            'brands'        => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
             'languages'     => LanguageHelper::getActiveLanguages(),
             'fileRulesInfo' => Brand::getUserInfoMessage()
         ]);

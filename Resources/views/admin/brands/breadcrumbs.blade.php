@@ -12,10 +12,10 @@
                 <i class="fa fa-angle-right"></i>
                 <a href="{{ route('admin.brands.create') }}" class="text-purple">{{ __('shop::admin.product_brands.create') }}</a>
             </li>
-        @elseif(Request::segment(3) !== null && url()->current() === route('admin.brands.edit', ['id' => Request::segment(3)]))
+        @elseif(Request::segment(4) !== null && url()->current() === route('admin.brands.edit', ['id' => Request::segment(4)]))
             <li>
                 <i class="fa fa-angle-right"></i>
-                <a href="{{ route('admin.brands.edit', ['id' => Request::segment(3)]) }}" class="text-purple">{{ __('shop::admin.product_brands.edit') }}</a>
+                <a href="{{ route('admin.brands.edit', ['id' => Request::segment(4)]) }}" class="text-purple">{{ __('shop::admin.product_brands.edit') }}</a>
             </li>
         @endif
     </ul>
