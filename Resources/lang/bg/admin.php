@@ -30,7 +30,9 @@ return [
     ],
 
     'product_brands' => [
-        'index' => 'Марки',
+        'index'  => 'Марки',
+        'create' => 'Добавяне на марка',
+        'edit'   => 'Редактиране на марка',
     ],
 
     'product_attributes' => [

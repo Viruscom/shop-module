@@ -18,7 +18,7 @@ class CreateBrandTranslationTable extends Migration
             $table->unsignedBigInteger('brand_id');
             $table->string('locale')->index();
             $table->string('title');
-            $table->string('slug');
+            $table->string('url');
             $table->text('announce')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
             $table->string('seo_title')->nullable()->default(null);

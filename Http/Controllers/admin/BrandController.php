@@ -8,57 +8,58 @@ use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PositionInterface;
-use App\Models\CategoryPage\CategoryPage;
-use App\Models\CategoryPage\CategoryPageTranslation;
 use Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Shop\Http\Requests\BrandStoreRequest;
 use Modules\Shop\Http\Requests\BrandUpdateRequest;
 use Modules\Shop\Interfaces\ShopBrandInterface;
+use Modules\Shop\Models\Admin\Brand;
+use Modules\Shop\Models\Admin\BrandTranslation;
 
 class BrandController extends Controller implements ShopBrandInterface, PositionInterface
 {
     public function index()
     {
-        if (is_null(Cache::get(CacheKeysHelper::$CATEGORY_PAGE_ADMIN))) {
-            CategoryPage::cacheUpdate();
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN))) {
+            Brand::cacheUpdate();
         }
 
-        return view('admin.category_pages.index', ['categoryPages' => Cache::get(CacheKeysHelper::$CATEGORY_PAGE_ADMIN)]);
+        return view('shop::admin.brands.index', ['brands' => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)]);
     }
     public function store(BrandStoreRequest $request, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = $action->doSimpleCreate(CategoryPage::class, $request);
-        $action->updateUrlCache($categoryPage, CategoryPageTranslation::class);
-        CategoryPage::cacheUpdate();
+        $brand = $action->doSimpleCreate(Brand::class, $request);
+        $action->updateUrlCache($brand, BrandTranslation::class);
+        Brand::cacheUpdate();
 
-        $categoryPage->storeAndAddNew($request);
+        $brand->storeAndAddNew($request);
 
-        return redirect()->route('admin.category-page.index')->with('success-message', trans('admin.common.successful_create'));
+        return redirect()->route('admin.brands.index')->with('success-message', trans('admin.common.successful_create'));
     }
     public function create()
     {
-        return view('admin.category_pages.create', [
+        return view('shop::admin.brands.create', [
             'languages'     => LanguageHelper::getActiveLanguages(),
-            'fileRulesInfo' => CategoryPage::getUserInfoMessage()
+            'fileRulesInfo' => Brand::getUserInfoMessage(),
+            'brands'        => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
         ]);
     }
     public function edit($id)
     {
-        $categoryPage = CategoryPage::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($brand);
 
-        return view('admin.category_pages.edit', [
-            'categoryPage'  => $categoryPage,
+        return view('shop::admin.brands.edit', [
+            'categoryPage'  => $brand,
             'languages'     => LanguageHelper::getActiveLanguages(),
-            'fileRulesInfo' => CategoryPage::getUserInfoMessage()
+            'fileRulesInfo' => Brand::getUserInfoMessage()
         ]);
     }
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
     {
         if (!is_null($request->ids[0])) {
-            $action->deleteMultiple($request, CategoryPage::class);
+            $action->deleteMultiple($request, Brand::class);
 
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
@@ -67,75 +68,75 @@ class BrandController extends Controller implements ShopBrandInterface, Position
     }
     public function delete($id, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = CategoryPage::find($id);
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::find($id);
+        MainHelper::goBackIfNull($brand);
 
-        $action->delete(CategoryPage::class, $categoryPage);
+        $action->delete(Brand::class, $brand);
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
     public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
     {
-        $action->activeMultiple(CategoryPage::class, $request, $active);
-        CategoryPage::cacheUpdate();
+        $action->activeMultiple(Brand::class, $request, $active);
+        Brand::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
     public function active($id, $active): RedirectResponse
     {
-        $categoryPage = CategoryPage::find($id);
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::find($id);
+        MainHelper::goBackIfNull($brand);
 
-        $categoryPage->update(['active' => $active]);
-        CategoryPage::cacheUpdate();
+        $brand->update(['active' => $active]);
+        Brand::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
     public function update($id, BrandUpdateRequest $request, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = CategoryPage::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($brand);
 
-        $action->doSimpleUpdate(CategoryPage::class, CategoryPageTranslation::class, $categoryPage, $request);
-        $action->updateUrlCache($categoryPage, CategoryPageTranslation::class);
+        $action->doSimpleUpdate(Brand::class, BrandTranslation::class, $brand, $request);
+        $action->updateUrlCache($brand, BrandTranslation::class);
 
         if ($request->has('image')) {
-            $request->validate(['image' => CategoryPage::getFileRules()], [CategoryPage::getUserInfoMessage()]);
-            $categoryPage->saveFile($request->image);
+            $request->validate(['image' => Brand::getFileRules()], [Brand::getUserInfoMessage()]);
+            $brand->saveFile($request->image);
         }
 
-        CategoryPage::cacheUpdate();
+        Brand::cacheUpdate();
 
-        return redirect()->route('admin.category-page.index')->with('success-message', 'admin.common.successful_edit');
+        return redirect()->route('admin.brands.index')->with('success-message', 'admin.common.successful_edit');
     }
     public function positionUp($id, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = CategoryPage::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($brand);
 
-        $action->positionUp(CategoryPage::class, $categoryPage);
-        CategoryPage::cacheUpdate();
+        $action->positionUp(Brand::class, $brand);
+        Brand::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
 
     public function positionDown($id, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = CategoryPage::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($brand);
 
-        $action->positionDown(CategoryPage::class, $categoryPage);
-        CategoryPage::cacheUpdate();
+        $action->positionDown(Brand::class, $brand);
+        Brand::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
 
     public function deleteImage($id, CommonControllerAction $action): RedirectResponse
     {
-        $categoryPage = CategoryPage::find($id);
-        MainHelper::goBackIfNull($categoryPage);
+        $brand = Brand::find($id);
+        MainHelper::goBackIfNull($brand);
 
-        if ($action->imageDelete($categoryPage, CategoryPage::class)) {
+        if ($action->imageDelete($brand, Brand::class)) {
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace Modules\Shop\Entities;
+namespace Modules\Shop\Models\Admin;
 
 use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
-use App\Models\CategoryPage\CategoryPage;
 use App\Models\Language;
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
@@ -15,13 +14,13 @@ class BrandTranslation extends Model implements CommonModelTranslationInterfaces
     use StorageActions;
 
     protected $table    = "brand_translation";
-    protected $fillable = ['locale', 'category_page_id', 'title', 'url', 'announce', 'description', 'visible'];
+    protected $fillable = ['locale', 'brand_id', 'title', 'url', 'announce', 'description', 'visible'];
     public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
     {
         $data = [
             'locale' => $language->code,
             'title'  => $request['title_' . $language->code],
-            'url'    => UrlHelper::generate($request['title_' . $language->code], 'CategoryPageTranslation', $modelId, $isUpdate)
+            'url'    => UrlHelper::generate($request['title_' . $language->code], 'BrandTranslation', $modelId, $isUpdate)
         ];
 
         if ($request->has('announce_' . $language->code)) {
@@ -41,7 +40,7 @@ class BrandTranslation extends Model implements CommonModelTranslationInterfaces
     }
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(CategoryPage::class, 'category_page_id');
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
     public function language(): BelongsTo
     {

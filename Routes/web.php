@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
+use Modules\Shop\Http\Controllers\admin\BrandController;
+use Modules\Shop\Http\Controllers\admin\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\ShopSettingsController;
 use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
@@ -26,6 +28,7 @@ use Modules\Shop\Http\Controllers\VatsController;
  * ADMIN ROUTES
  */
 Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
+
     /* Product Adboxes */
     Route::group(['prefix' => 'product-adboxes'], static function () {
         Route::get('/', [AdBoxesProductsController::class, 'index'])->name('admin.product-adboxes.index');
@@ -49,8 +52,11 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
     });
 
+    /* Settings */
     Route::group(['prefix' => 'settings'], static function () {
         Route::get('/', [ShopSettingsController::class, 'index'])->name('shop.settings.index');
+
+        /* Payment settings */
         Route::prefix('payments')->group(function () {
             Route::get('/', [PaymentsController::class, 'index'])->name('payments.index');
             Route::get('/edit/{id}', [PaymentsController::class, 'edit'])->name('payments.edit');
@@ -59,6 +65,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('/update/position/{id}/{position}', [PaymentsController::class, 'updatePosition'])->name('payments.update_option');
         });
 
+        /* Delivery settings */
         Route::prefix('deliveries')->group(function () {
             Route::get('/', [DeliveriesController::class, 'index'])->name('deliveries.index');
             Route::get('/edit/{id}', [DeliveriesController::class, 'edit'])->name('deliveries.edit');
@@ -67,12 +74,14 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('/update/position/{id}/{position}', [DeliveriesController::class, 'updatePosition'])->name('deliveries.update_option');
         });
 
+        /* Zip codes settings */
         Route::prefix('zipcodes')->group(function () {
             Route::get('/', [CityZipCodesController::class, 'index'])->name('zip_codes.index');
             Route::get('/edit/{id}', [CityZipCodesController::class, 'edit'])->name('zip_codes.edit');
             Route::post('/update/{id}', [CityZipCodesController::class, 'update'])->name('zip_codes.update');
         });
 
+        /* Vats settings */
         Route::prefix('vats')->group(function () {
             Route::prefix('countries')->group(function () {
                 Route::get('/', [VatsController::class, 'index'])->name('vats.countries.index');
@@ -127,8 +136,76 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
 
     Route::post('/user/location', [App\Http\Controllers\HomeController::class, 'setUserLocation'])->name('user.location.set');
 
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductsController::class, 'index'])->name('products.index');
+    /* Brands */
+    Route::group(['prefix' => 'brands'], static function () {
+        Route::get('/', [BrandController::class, 'index'])->name('admin.brands.index');
+        Route::get('/create', [BrandController::class, 'create'])->name('admin.brands.create');
+        Route::post('/store', [BrandController::class, 'store'])->name('admin.brands.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [BrandController::class, 'activeMultiple'])->name('admin.brands.active-multiple');
+            Route::get('delete', [BrandController::class, 'deleteMultiple'])->name('admin.brands.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [BrandController::class, 'edit'])->name('admin.brands.edit');
+            Route::post('update', [BrandController::class, 'update'])->name('admin.brands.update');
+            Route::get('delete', [BrandController::class, 'delete'])->name('admin.brands.delete');
+            Route::get('show', [BrandController::class, 'show'])->name('admin.brands.show');
+            Route::get('active/{active}', [BrandController::class, 'active'])->name('admin.brands.changeStatus');
+            Route::get('position/up', [BrandController::class, 'positionUp'])->name('admin.brands.position-up');
+            Route::get('position/down', [BrandController::class, 'positionDown'])->name('admin.brands.position-down');
+            Route::get('image/delete', [BrandController::class, 'deleteImage'])->name('admin.brands.delete-image');
+            Route::get('image/delete-logo', [BrandController::class, 'deleteLogo'])->name('admin.brands.delete-logo');
+        });
+    });
+
+    /* Product Categories */
+    Route::group(['prefix' => 'product-categories'], static function () {
+        Route::get('/', [ProductCategoriesController::class, 'index'])->name('admin.product-categories.index');
+        Route::get('/create', [ProductCategoriesController::class, 'create'])->name('admin.product-categories.create');
+        Route::post('/store', [ProductCategoriesController::class, 'store'])->name('admin.product-categories.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [ProductCategoriesController::class, 'activeMultiple'])->name('admin.product-categories.active-multiple');
+            Route::get('delete', [ProductCategoriesController::class, 'deleteMultiple'])->name('admin.product-categories.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [ProductCategoriesController::class, 'edit'])->name('admin.product-categories.edit');
+            Route::post('update', [ProductCategoriesController::class, 'update'])->name('admin.product-categories.update');
+            Route::get('delete', [ProductCategoriesController::class, 'delete'])->name('admin.product-categories.delete');
+            Route::get('show', [ProductCategoriesController::class, 'show'])->name('admin.product-categories.show');
+            Route::get('active/{active}', [ProductCategoriesController::class, 'active'])->name('admin.product-categories.changeStatus');
+            Route::get('position/up', [ProductCategoriesController::class, 'positionUp'])->name('admin.product-categories.position-up');
+            Route::get('position/down', [ProductCategoriesController::class, 'positionDown'])->name('admin.product-categories.position-down');
+            Route::get('image/delete', [ProductCategoriesController::class, 'deleteImage'])->name('admin.product-categories.delete-image');
+        });
+    });
+
+    /* Products */
+    Route::group(['prefix' => 'products'], static function () {
+        Route::get('/', [ProductsController::class, 'index'])->name('admin.products.index');
+        Route::get('/create', [ProductsController::class, 'create'])->name('admin.products.create');
+        Route::post('/store', [ProductsController::class, 'store'])->name('admin.products.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [ProductsController::class, 'activeMultiple'])->name('admin.products.active-multiple');
+            Route::get('delete', [ProductsController::class, 'deleteMultiple'])->name('admin.products.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [ProductsController::class, 'edit'])->name('admin.products.edit');
+            Route::post('update', [ProductsController::class, 'update'])->name('admin.products.update');
+            Route::get('delete', [ProductsController::class, 'delete'])->name('admin.products.delete');
+            Route::get('show', [ProductsController::class, 'show'])->name('admin.products.show');
+            Route::get('active/{active}', [ProductsController::class, 'active'])->name('admin.products.changeStatus');
+            Route::get('position/up', [ProductsController::class, 'positionUp'])->name('admin.products.position-up');
+            Route::get('position/down', [ProductsController::class, 'positionDown'])->name('admin.products.position-down');
+            Route::get('image/delete', [ProductsController::class, 'deleteImage'])->name('admin.products.delete-image');
+            Route::get('send-to-adboxes', [ProductsController::class, 'makeAd'])->name('admin.products.send-to-adboxes');
+            Route::get('send-to-product-adboxes', [ProductsController::class, 'makeProductAdBox'])->name('admin.products.send-to-product-adboxes');
+        });
     });
 });
 
