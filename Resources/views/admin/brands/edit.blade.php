@@ -20,7 +20,7 @@
 @section('content')
     @include('shop::admin.brands.breadcrumbs')
     @include('admin.notify')
-    
+
     <form class="my-form" action="{{ route('admin.brands.update', ['id' => $brand->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -59,6 +59,10 @@
                 </div>
                 <div class="form form-horizontal">
                     <div class="form-body">
+                        @include('admin.partials.on_edit.form_fields.upload_file', ['model' => $brand, 'deleteRoute' => route('admin.brands.delete-image', ['id'=>$brand->id])])
+                        <hr>
+                        @include('admin.partials.on_edit.active_checkbox', ['model' => $brand])
+
                         <div class="form-group banner-image">
                             <label class="control-label col-md-3"><span class="text-purple">* </span>Изображение:</label>
                             <div class="col-md-9">
