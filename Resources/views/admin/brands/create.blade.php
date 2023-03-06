@@ -54,135 +54,39 @@
                             @include('admin.partials.on_create.form_fields.textarea', ['fieldName' => 'description_' . $language->code, 'rows' => 9, 'label' => trans('admin.description'), 'required' => false])
                             @include('admin.partials.on_create.show_in_language_visibility_checkbox', ['fieldName' => 'visible_' . $language->code])
 
-                            <div class="form-group @if($errors->has($langShortDescr)) has-error @endif">
-                                <label class="control-label p-b-10">Кратко описание (<span class="text-uppercase">{{$language->code}}</span>):</label>
-                                <textarea name="{{$langShortDescr}}" class="form-control" rows="3">{{ old($langShortDescr) }}</textarea>
-                                @if($errors->has($langShortDescr))
-                                    <span class="help-block">{{ trans($errors->first($langShortDescr)) }}</span>
-                                @endif
-                            </div>
-                            <div class="form-group m-b-0 @if($errors->has($langFirstText)) has-error @endif">
-                            <textarea name="{{$langFirstText}}" class="ckeditor col-xs-12" rows="9">
-                                    {{ old($langFirstText) }}
-                                </textarea>
-                                @if($errors->has($langFirstText))
-                                    <span class="help-block">{{ trans($errors->first($langFirstText)) }}</span>
-                                @endif
-                            </div>
-
-                            <div class="form-group m-t-10 m-b-40 p-t-20">
-                                <label class="control-label col-md-3">Покажи в езикова версия (<span class="text-uppercase">{{$language->code}}</span>):</label>
-                                <div class="col-md-9">
-                                    <label class="switch pull-left">
-                                        <input type="checkbox" name="{{$langVersionShow}}" class="success" data-size="small" checked {{(old($langVersionShow) ? 'checked' : 'active')}}>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                     @endforeach
                 </div>
                 <div class="form form-horizontal">
                     <div class="form-body">
-                        <div class="form-group banner-image">
-                            <label class="control-label col-md-3"><span class="text-purple">* </span>Изображение:</label>
-                            <div class="col-md-9">
-                                <input type="file" name="image" class="filestyle" data-buttonText="{{trans('administration_messages.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
-                                <p class="help-block">{!! $fileRulesInfo !!}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="form-group banner-image">
-                            <label class="control-label col-md-3"><span class="text-purple">* </span>Лого:</label>
-                            <div class="col-md-9">
-                                <input type="file" name="logo_image" class="filestyle" data-buttonText="{{trans('administration_messages.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
-                                <p class="help-block">{!! $fileRulesInfo !!}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Покажи лого в сайта:</label>
-                            <div class="col-md-6">
-                                <label class="switch pull-left">
-                                    <input type="checkbox" name="logo_active" class="success" data-size="small" {{(old('logo_active') ? 'checked' : 'active')}}>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Активен (видим) в сайта:</label>
-                            <div class="col-md-6">
-                                <label class="switch pull-left">
-                                    <input type="checkbox" name="active" class="success" data-size="small" checked {{(old('active') ? 'checked' : 'active')}}>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Позиция в сайта:</label>
-                            <div class="col-md-6">
-                                <p class="position-label"></p>
-                                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">Моля, изберете позиция</a>
-                                <p class="help-block">(ако не изберете позиция, записът се добавя като последен)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <div class="row">
-                            <div class="col-md-offset-3 col-md-9">
-                                <button type="submit" name="submitaddnew" value="submitaddnew" class="btn green saveplusbtn margin-bottom-10"> запиши и добави нов</button>
-                                <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10"><i class="fas fa-save"></i> запиши</button>
-                                <a href="{{ url()->previous() }}" role="button" class="btn back-btn margin-bottom-10"><i class="fa fa-reply"></i> назад</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal -->
-            <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+                        @include('admin.partials.on_create.form_fields.upload_file')
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close text-purple" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Изберете позиция</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-striped table-hover table-positions">
-                                <tbody>
-                                @if(!is_null($brands) && $brands->isNotEmpty())
-                                    @foreach($brands as $brand)
-                                        <tr class="pickPositionTr" data-position="{{$brand->position}}">
-                                            <td>{{$brand->position}}</td>
-                                            <td>{{$brand->title}}</td>
-                                        </tr>
-                                    @endforeach
-                                    <tr class="pickPositionTr" data-position="{{$brands->last()->position+1}}">
-                                        <td>{{$brands->last()->position+1}}</td>
-                                        <td>--{{trans('administration_messages.last_position')}}--</td>
-                                    </tr>
-                                @else
-                                    <tr class="pickPositionTr" data-position="1">
-                                        <td>1</td>
-                                        <td>--{{trans('administration_messages.last_position')}}--</td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
-                            <div class="form-actions">
-                                <div class="row">
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <a href="#" class="btn save-btn margin-bottom-10 accept-position-change" data-dismiss="modal"><i class="fas fa-save"></i> потвърди</a>
-                                        <a role="button" class="btn back-btn margin-bottom-10 cancel-position-change" current-position="{{ old('position') }}" data-dismiss="modal"><i class="fa fa-reply"></i> назад</a>
-                                    </div>
-                                </div>
+                        <hr>
+                        <div class="form-group banner-image">
+                            <label class="control-label col-md-3"><span class="text-purple">* </span>{{ __('admin.common.logo') }}:</label>
+                            <div class="col-md-9">
+                                <input type="file" name="logo_image" class="filestyle" data-buttonText="{{trans('admin.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
+                                <p class="help-block">{!! $fileRulesInfo !!}</p>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{{ __('admin.common.show_logo_in_site') }}:</label>
+                            <div class="col-md-6">
+                                <label class="switch pull-left">
+                                    <input type="checkbox" name="logo_active" class="success" data-size="small" {{(old('logo_active') ? 'checked' : '')}}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <hr>
+                        @include('admin.partials.on_create.active_checkbox')
+                        <hr>
+                        @include('admin.partials.on_create.position_in_site_button')
                     </div>
+                    @include('admin.partials.on_create.form_actions_bottom')
                 </div>
             </div>
         </div>
+        @include('admin.partials.modals.positions_on_create', ['parent' => $brands])
     </form>
 @endsection

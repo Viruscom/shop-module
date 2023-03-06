@@ -11,6 +11,7 @@ use App\Interfaces\PositionInterface;
 use Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Modules\Shop\Actions\BrandAction;
 use Modules\Shop\Http\Requests\BrandStoreRequest;
 use Modules\Shop\Http\Requests\BrandUpdateRequest;
 use Modules\Shop\Interfaces\ShopBrandInterface;
@@ -31,6 +32,11 @@ class BrandController extends Controller implements ShopBrandInterface, Position
     {
         $brand = $action->doSimpleCreate(Brand::class, $request);
         $action->updateUrlCache($brand, BrandTranslation::class);
+
+        if ($request->has('logo_image')) {
+            $brand->saveFile($request->logo_image);
+        }
+
         Brand::cacheUpdate();
 
         $brand->storeAndAddNew($request);
@@ -106,6 +112,11 @@ class BrandController extends Controller implements ShopBrandInterface, Position
             $brand->saveFile($request->image);
         }
 
+        if ($request->has('logo_image')) {
+            $request->validate(['logo_image' => Brand::getFileRules()], [Brand::getUserInfoMessage()]);
+            $brand->saveFile($request->logo_image);
+        }
+
         Brand::cacheUpdate();
 
         return redirect()->route('admin.brands.index')->with('success-message', 'admin.common.successful_edit');
@@ -138,6 +149,18 @@ class BrandController extends Controller implements ShopBrandInterface, Position
         MainHelper::goBackIfNull($brand);
 
         if ($action->imageDelete($brand, Brand::class)) {
+            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
+        }
+
+        return redirect()->back()->withErrors(['admin.image_not_found']);
+    }
+
+    public function deleteLogo($id, CommonControllerAction $action, BrandAction $brandAction): RedirectResponse
+    {
+        $brand = Brand::find($id);
+        MainHelper::goBackIfNull($brand);
+
+        if ($brandAction->logoDelete($brand, Brand::class)) {
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
 

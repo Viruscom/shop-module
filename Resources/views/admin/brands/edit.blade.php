@@ -61,64 +61,31 @@
                     <div class="form-body">
                         @include('admin.partials.on_edit.form_fields.upload_file', ['model' => $brand, 'deleteRoute' => route('admin.brands.delete-image', ['id'=>$brand->id])])
                         <hr>
-                        @include('admin.partials.on_edit.active_checkbox', ['model' => $brand])
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{{ __('admin.common.logo') }}:</label>
+                            <div class="col-md-9">
+                                <input type="file" name="logo_image" class="filestyle" data-buttonText="{{ trans('admin.browse_file') }}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
+                                <p class="help-block">{!! $fileRulesInfo !!}</p>
+                                <div>
+                                    <img class="thumbnail img-responsive" src="{{ $brand->getLogoUrl() }}" width="300" alt="{{ __('admin.image') }}"/>
+                                    @if ($brand->existsFile($brand->logo_filename))
+                                        <a href="{{ route('admin.brands.delete-logo', ['id' => $brand->id])  }}" class="btn btn-danger"><i class="fas fa-times"></i> {{ __('admin.delete_image') }}</a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="form-group banner-image">
-                            <label class="control-label col-md-3"><span class="text-purple">* </span>Изображение:</label>
-                            <div class="col-md-9">
-                                <input type="file" name="image" class="filestyle" data-buttonText="{{trans('administration_messages.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
-                                <p class="help-block">{!! $fileRulesInfo !!}</p>
-                                <div>
-                                    @if (!is_null($brand->filename) && file_exists($brand->fullImageFilePath()))
-                                        <div class="overlay-delete-img hidden">
-                                            <a href="{{ url('/admin/brands/'.$brand->id.'/img/delete') }}" class="del-link"><i class="fas fa-times"></i>
-                                                <p>Изтрий</p></a>
-                                        </div>
-                                        <img class="thumbnail content-box1 has-img img-responsive" src="{{ $brand->fullImageFilePathUrl() }}" width="300"/>
-                                    @else
-                                        <img class="thumbnail img-responsive" src="{{ asset('/admin/assets/system_images/brand_img.png') }}" width="300"/>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="form-group banner-image">
-                            <label class="control-label col-md-3"><span class="text-purple">* </span>Лого:</label>
-                            <div class="col-md-9">
-                                <input type="file" name="logo_image" class="filestyle" data-buttonText="{{trans('administration_messages.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
-                                <p class="help-block">{!! $fileRulesInfo !!}</p>
-                                <div>
-                                    @if (!is_null($brand->logo_filename) && file_exists($brand->fullLogoImageFilePath()))
-                                        <div class="overlay-delete-img2 hidden">
-                                            <a href="{{ url('/admin/brands/'.$brand->id.'/img/deleteLogo') }}" class="del-link"><i class="fas fa-times"></i>
-                                                <p>Изтрий</p></a>
-                                        </div>
-                                        <img class="thumbnail content-box2 has-img img-responsive" src="{{ $brand->fullLogoImageFilePathUrl() }}" width="300"/>
-                                    @else
-                                        <img class="thumbnail img-responsive" src="{{ asset('/admin/assets/system_images/brand_logo_img.png') }}" width="300"/>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">Покажи лого в сайта:</label>
+                            <label class="control-label col-md-3">{{ __('admin.common.show_logo_in_site') }}:</label>
                             <div class="col-md-6">
                                 <label class="switch pull-left">
-                                    <input type="checkbox" name="logo_active" class="success" data-size="small" {{(old('logo_active') ? 'checked' : ((!is_null($brand) && $brand->logo_active) ? 'checked': 'active'))}}>
+                                    <input type="checkbox" name="logo_active" class="success" data-size="small" {{(old('logo_active') || $brand->logo_active ? 'checked' : '')}}>
                                     <span class="slider"></span>
                                 </label>
                             </div>
                         </div>
                         <hr>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Активен (видим) в сайта:</label>
-                            <div class="col-md-6">
-                                <label class="switch pull-left">
-                                    <input type="checkbox" name="active" class="success" data-size="small" {{(old('active') ? 'checked' : ((!is_null($brand) && $brand->active) ? 'checked': 'active'))}}>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
+                        @include('admin.partials.on_edit.active_checkbox', ['model' => $brand])
                         <hr>
                         <div class="form-group">
                             <label class="control-label col-md-3">Позиция в сайта:</label>

@@ -13,6 +13,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Brand extends Model implements TranslatableContract, ImageModelInterface
 {
@@ -73,6 +74,14 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
             $data['logo_filename'] = $request->logo_filename;
         }
 
+        if ($request->hasFile('image')) {
+            $data['filename'] = pathinfo(CommonActions::getValidFilenameStatic($request->image->getClientOriginalName()), PATHINFO_FILENAME) . '.' . $request->image->getClientOriginalExtension();
+        }
+
+        if ($request->hasFile('logo_image')) {
+            $data['logo_filename'] = pathinfo(CommonActions::getValidFilenameStatic($request->logo_image->getClientOriginalName()), PATHINFO_FILENAME) . '.' . $request->logo_image->getClientOriginalExtension();
+        }
+
         return $data;
     }
 
@@ -88,9 +97,13 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     {
         //        Go to Shop Model
     }
-    public function getSystemImage(): string
+    public function getLogoUrl(): string
     {
-        return AdminHelper::getSystemImage(self::$BRAND_SYSTEM_IMAGE);
+        if (!is_null($this->logo_filename) && Storage::disk('public')->exists($this->getFilepath($this->logo_filename))) {
+            return Storage::disk('public')->url($this->getFilepath($this->logo_filename));
+        }
+
+        return url($this->getSystemImage());
     }
     public function getFilepath($filename): string
     {
@@ -99,5 +112,9 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     public function getFilesPath(): string
     {
         return self::FILES_PATH . '/' . $this->id . '/';
+    }
+    public function getSystemImage(): string
+    {
+        return AdminHelper::getSystemImage(self::$BRAND_SYSTEM_IMAGE);
     }
 }
