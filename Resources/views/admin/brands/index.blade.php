@@ -65,11 +65,11 @@
                                 <?php $i++; ?>
                         @endforeach
                         <tr style="display: none;">
-                            <td colspan="4" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_brands.no_records') }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="4" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_brands.no_records') }}</td>
                         </tr>
                     @endif
                     </tbody>

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Shop\Models\Admin\Brand;
+use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\ShopDiscounts\Entities\Discount;
 
 class Product extends Model

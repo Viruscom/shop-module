@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->boolean('active')->default(true);
             $table->integer('position');
+            $table->string('filename')->nullable()->default(null);
             $table->integer('creator_user_id');
             $table->timestamps();
         });

@@ -43,11 +43,7 @@
                 </ul>
                 <div class="tab-content">
                     @foreach($languages as $language)
-                        @php
-                            $langShortDescr = 'short_description_'.$language->code;
-                            $langFirstText = 'first_text_'.$language->code;
-                            $langVersionShow = 'visible_'.$language->code
-                        @endphp
+               
                         <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
                             @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'title_' . $language->code, 'label' => trans('admin.title'), 'required' => true])
                             @include('admin.partials.on_create.form_fields.textarea', ['fieldName' => 'announce_' . $language->code, 'rows' => 3, 'label' => trans('admin.announce'), 'required' => false])

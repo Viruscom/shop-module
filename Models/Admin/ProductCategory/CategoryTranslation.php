@@ -1,10 +1,9 @@
 <?php
 
-namespace Modules\Shop\Entities;
+namespace Modules\Shop\Models\Admin\ProductCategory;
 
 use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
-use App\Models\CategoryPage\CategoryPage;
 use App\Models\Language;
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
@@ -14,14 +13,14 @@ class CategoryTranslation extends Model implements CommonModelTranslationInterfa
 {
     use StorageActions;
 
-    protected $table    = "category_translation";
-    protected $fillable = ['locale', 'category_page_id', 'title', 'url', 'announce', 'description', 'visible'];
+    protected $table    = "product_category_translation";
+    protected $fillable = ['locale', 'category_id', 'title', 'url', 'announce', 'description', 'visible'];
     public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
     {
         $data = [
             'locale' => $language->code,
             'title'  => $request['title_' . $language->code],
-            'url'    => UrlHelper::generate($request['title_' . $language->code], 'CategoryPageTranslation', $modelId, $isUpdate)
+            'url'    => UrlHelper::generate($request['title_' . $language->code], 'CategoryTranslation', $modelId, $isUpdate)
         ];
 
         if ($request->has('announce_' . $language->code)) {
@@ -41,7 +40,7 @@ class CategoryTranslation extends Model implements CommonModelTranslationInterfa
     }
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(CategoryPage::class, 'category_page_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
     public function language(): BelongsTo
     {

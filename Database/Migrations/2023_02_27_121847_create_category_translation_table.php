@@ -13,18 +13,19 @@ class CreateCategoryTranslationTable extends Migration
      */
     public function up()
     {
-        Schema::create('category_translation', function (Blueprint $table) {
+        Schema::create('product_category_translation', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->string('locale')->index();
             $table->string('title');
-            $table->string('slug');
-            $table->string('seo_title')->nullable()->default(null);
+            $table->string('url');
             $table->text('announce')->nullable()->default(null);
             $table->longText('description')->nullable()->default(null);
+            $table->string('seo_title')->nullable()->default(null);
             $table->text('seo_description')->nullable()->default(null);
             $table->text('facebook_script')->nullable()->default(null);
             $table->text('google_script')->nullable()->default(null);
+            $table->boolean('visible')->default(true);
             $table->timestamps();
 
             $table->unique(['category_id', 'locale']);
@@ -39,6 +40,6 @@ class CreateCategoryTranslationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('category_translation');
+        Schema::dropIfExists('product_category_translation');
     }
 }
