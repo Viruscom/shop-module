@@ -25,9 +25,9 @@
 
 @section('content')
     <div class="col-xs-12 p-0">
-        <form class="my-form" action="{{ url('/admin/products/'.$product->id.'/update') }}" method="POST" data-form-type="update" enctype="multipart/form-data">
+        <form class="my-form" action="{{ route('admin.products.update', ['id' => $product->id]) }}" method="POST" data-form-type="update" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="position" value="{{(old('position')) ? old('position') : $product->position}}">
+            <input type="hidden" name="position" value="{{(old('position')) ?: $product->position}}">
             <div class="navigation-id-old hidden">{{old('product_category_id')}}</div>
             <div class="navigation-id-current hidden">{{$product->product_category_id}}</div>
 
@@ -69,13 +69,13 @@
             </ul>
             <div class="tab-content m-b-0">
                 @foreach($languages as $language)
-                    <?php $langTitle = 'title_' . $language->code;
-                    $langShortDescr = 'short_description_' . $language->code;
-                    $langDescription = 'first_text_' . $language->code;
-                    $langVisible = 'visible_' . $language->code;
-                    $langUrlToShop = 'redirect_url_to_shop_' . $language->code;
-                    $productTranslation = (is_null($product->translations->where('language_id', $language->id)->first())) ? null : $product->translations->where('language_id', $language->id)->first();
-                    ?>
+                        <?php $langTitle    = 'title_' . $language->code;
+                        $langShortDescr     = 'short_description_' . $language->code;
+                        $langDescription    = 'first_text_' . $language->code;
+                        $langVisible        = 'visible_' . $language->code;
+                        $langUrlToShop      = 'redirect_url_to_shop_' . $language->code;
+                        $productTranslation = (is_null($product->translations->where('language_id', $language->id)->first())) ? null : $product->translations->where('language_id', $language->id)->first();
+                        ?>
                     <div id="{{$language->code}}" class="tab-pane fade in @if($language->code == env('DEF_LANG_CODE')) active @endif}}">
                         <div class="form-group @if($errors->has($langTitle)) has-error @endif">
                             <label class="control-label p-b-10"><span class="text-purple">* </span>Заглавие / link (<span class="text-uppercase">{{$language->code}}</span>):</label>

@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
 use Modules\Shop\Http\Controllers\admin\BrandController;
 use Modules\Shop\Http\Controllers\admin\ProductCategoriesController;
+use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\ShopSettingsController;
 use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
 use Modules\Shop\Http\Controllers\CityZipCodesController;
 use Modules\Shop\Http\Controllers\DeliveriesController;
 use Modules\Shop\Http\Controllers\PaymentsController;
-use Modules\Shop\Http\Controllers\ProductsController;
 use Modules\Shop\Http\Controllers\VatsController;
 
 /*

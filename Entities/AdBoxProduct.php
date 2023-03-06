@@ -6,6 +6,7 @@ use App\Helpers\LanguageHelper;
 use App\Models\AdBoxProductTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Shop\Models\Admin\Products\Product;
 
 class AdBoxProduct extends Model
 {

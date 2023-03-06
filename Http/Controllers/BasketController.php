@@ -11,8 +11,8 @@ use Modules\Shop\Entities\Country;
 use Modules\Shop\Entities\Delivery;
 use Modules\Shop\Entities\Order;
 use Modules\Shop\Entities\Payment;
-use Modules\Shop\Entities\Product;
 use Modules\Shop\Http\Requests\OrderRequest;
+use Modules\Shop\Models\Admin\Products\Product;
 
 class BasketController extends Controller
 {

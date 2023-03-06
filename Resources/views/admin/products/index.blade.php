@@ -1,29 +1,82 @@
-@extends('layouts.app')
-@section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
-@endsection
-@section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script>
-        $(".select2").select2({language: "bg"});
-    </script>
-@endsection
+@extends('layouts.admin.app')
 @section('content')
-    <div class="alert alert-warning"><strong>Внимание!</strong> За да добавите или разгледате продукт е необходимо да изберете категория.</div>
-    <div class="col-md-12">
-        <div class="form-group">
-            <label class="control-label page-label col-md-3"><span class="text-purple">* </span>Изберете категория:</label>
-            <div class="col-md-4">
-                <select class="form-control select2 products-select" name="navigations">
-                    <option value="" selected>--- Моля, изберете ---</option>
-                    @foreach($categories as $category)
-                        <optgroup label="{{ $category->translations->firstWhere('language_id',1)->title}}">
-                            @foreach($category->product_categories as $productCategory)
-                                <option value="{{ $productCategory->id }}">  {{ $productCategory->translations->firstWhere('language_id',1)->title}}</option>
-                            @endforeach
-                        </optgroup>
-                    @endforeach
-                </select>
+    @include('shop::admin.products.breadcrumbs')
+    @include('admin.notify')
+    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3)])
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <th class="width-2-percent"></th>
+                    <th class="width-2-percent">{{ __('admin.number') }}</th>
+                    <th>{{ __('admin.title') }}</th>
+                    <th class="width-220">{{ __('admin.actions') }}</th>
+                    </thead>
+                    <tbody>
+                    @if(!is_null($products) && $products->isNotEmpty())
+                            <?php $i = 1; ?>
+                        @foreach($products as $product)
+                            <tr class="t-row row-{{$product->id}}">
+                                <td class="width-2-percent">
+                                    <div class="pretty p-default p-square">
+                                        <input type="checkbox" class="checkbox-row" name="check[]" value="{{$product->id}}"/>
+                                        <div class="state p-primary">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="width-2-percent">{{$i}}</td>
+                                <td>
+                                    {{ $product->title }}
+                                </td>
+                                <td class="pull-right">
+                                    @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $products, 'model' => $product, 'showInPublicModal' => false])
+                                </td>
+                            </tr>
+                            <tr class="t-row-details row-{{$product->id}}-details hidden">
+                                <td colspan="2"></td>
+                                <td colspan="1">
+                                    <table class="table-details">
+                                        <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="width-220">
+                                    <img class="thumbnail img-responsive" src="{{ $product->getFileUrl() }}"/>
+                                </td>
+                            </tr>
+                                <?php $i++; ?>
+                        @endforeach
+                        <tr style="display: none;">
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width: 90%; margin: 30px auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Изглед в публичната част</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
             </div>
         </div>
     </div>
