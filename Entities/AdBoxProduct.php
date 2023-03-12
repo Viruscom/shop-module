@@ -59,7 +59,6 @@ class AdBoxProduct extends Model
         $data               = self::getRequestData($request);
         $data['type']       = self::$WAITING_ACTION;
         $data['product_id'] = $request->product_id;
-        $data['filename']   = $request->filename;
 
         if ($request->has('type')) {
             $data['type'] = $request['type'];

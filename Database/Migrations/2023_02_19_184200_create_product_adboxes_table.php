@@ -20,7 +20,7 @@ class CreateProductAdboxesTable extends Migration
             $table->integer('type');
             $table->integer('position');
             $table->boolean('active')->default(true);
-            $table->string('filename');
+            $table->string('filename')->nullable()->default(null);
             $table->timestamps();
         });
     }

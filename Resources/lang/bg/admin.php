@@ -28,7 +28,8 @@ return [
         'length'             => 'Дължина (см)',
         'brand'              => 'Марка',
         'price'              => 'Цена без ДДС',
-        'attach_to_category' => 'Прикрепи към Категория'
+        'attach_to_category' => 'Прикрепи към Категория',
+        'make_product_adbox' => 'Създай продуктово каре',
     ],
 
     'product_adboxes' => [

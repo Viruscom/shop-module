@@ -203,7 +203,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/up', [ProductsController::class, 'positionUp'])->name('admin.products.position-up');
             Route::get('position/down', [ProductsController::class, 'positionDown'])->name('admin.products.position-down');
             Route::get('image/delete', [ProductsController::class, 'deleteImage'])->name('admin.products.delete-image');
-            Route::get('send-to-adboxes', [ProductsController::class, 'makeAd'])->name('admin.products.send-to-adboxes');
             Route::get('send-to-product-adboxes', [ProductsController::class, 'makeProductAdBox'])->name('admin.products.send-to-product-adboxes');
         });
     });

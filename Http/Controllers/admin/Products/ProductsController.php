@@ -163,4 +163,14 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         return redirect()->back()->withErrors(['admin.image_not_found']);
     }
+
+    public function makeProductAdBox($id, ProductAction $action)
+    {
+        $product = Product::find($id);
+        MainHelper::goBackIfNull($product);
+
+        $action->sendToProductAdbox($product->id);
+
+        return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
+    }
 }

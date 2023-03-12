@@ -17,4 +17,5 @@ interface ShopProductInterface
     public function active($id, $active);
     public function delete($id, CommonControllerAction $action);
     public function deleteImage($id, CommonControllerAction $action);
+    public function makeProductAdBox($id, ProductAction $action);
 }

@@ -33,6 +33,7 @@
                                 </td>
                                 <td class="pull-right">
                                     @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $products, 'model' => $product, 'showInPublicModal' => false])
+                                    <a href="{{ route('admin.products.send-to-product-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_product_adbox')"><i class="fas fa-ad"></i></a>
                                 </td>
                             </tr>
                             <tr class="t-row-details row-{{$product->id}}-details hidden">

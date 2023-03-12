@@ -3,7 +3,7 @@
 @section('content')
     @include('shop::admin.adboxes_products.breadcrumbs')
     @include('admin.notify')
-    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3)])
+    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3), 'noCreate' => ''])
 
     <div class="row">
         <div class="col-xs-12">

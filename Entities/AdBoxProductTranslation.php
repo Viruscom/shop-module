@@ -2,18 +2,23 @@
 
 namespace Modules\Shop\Entities;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AdBoxProductTranslation extends Model
+class AdBoxProductTranslation extends Model implements TranslatableContract
 {
-    protected $table    = "product_adbox_translation";
-    protected $fillable = ['language_id', 'product_adbox_id', 'title'];
+    use Translatable;
+
+    public array $translatedAttributes = ['visible'];
+    protected    $table                = "product_adbox_translation";
+    protected    $fillable             = ['code', 'product_adbox_id', 'title'];
     public static function getCreateData($language, $request): array
     {
         return [
-            'language_id' => $language->id,
-            'title'       => $request['title_' . $language->code]
+            'locale'  => $language->code,
+            'visible' => filter_var($request['visible_' . $language->code], FILTER_VALIDATE_BOOLEAN)
         ];
     }
     public function language(): BelongsTo
@@ -22,9 +27,16 @@ class AdBoxProductTranslation extends Model
     }
     public function getUpdateData($language, $request): array
     {
-        return [
+        $data = [
             'language_id' => $language->id,
             'title'       => $request['title_' . $language->code]
         ];
+
+        $data['visible'] = false;
+        if ($request->has('visible_' . $language->code)) {
+            $data['visible'] = filter_var($request['visible_' . $language->code], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $data;
     }
 }
