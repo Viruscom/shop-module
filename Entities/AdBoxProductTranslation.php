@@ -2,18 +2,15 @@
 
 namespace Modules\Shop\Entities;
 
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AdBoxProductTranslation extends Model implements TranslatableContract
+class AdBoxProductTranslation extends Model
 {
-    use Translatable;
 
-    public array $translatedAttributes = ['visible'];
-    protected    $table                = "product_adbox_translation";
-    protected    $fillable             = ['code', 'product_adbox_id', 'title'];
+
+    protected $table    = "product_adbox_translation";
+    protected $fillable = ['locale', 'product_adbox_id', 'visible'];
     public static function getCreateData($language, $request): array
     {
         return [

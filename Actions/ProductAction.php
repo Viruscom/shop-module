@@ -11,7 +11,6 @@ use App\Models\Files\File;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Shop\Entities\AdBoxProduct;
-use Modules\Shop\Entities\AdBoxProductTranslation;
 use Modules\Shop\Models\Admin\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 
@@ -39,19 +38,19 @@ class ProductAction
             Brand::cacheUpdate();
         }
     }
-    public function sendToProductAdbox($productId)
+    public function sendToProductAdbox($productId): void
     {
         $languages = LanguageHelper::getActiveLanguages();
         $data      = new Request();
         foreach ($languages as $language) {
-            $data['visible_' . $language->code] = true;
+            $data[$language->code] = [
+                'locale'  => $language->code,
+                'visible' => true
+            ];
         }
         $data['product_id'] = $productId;
         $data['position']   = AdBoxProduct::generatePosition($data, 0);
 
-        $adBox = AdBoxProduct::create(AdBoxProduct::getCreateData($data));
-        foreach ($languages as $language) {
-            $adBox->translations()->create(AdBoxProductTranslation::getCreateData($language, $data));
-        }
+        AdBoxProduct::create(AdBoxProduct::getCreateData($data));
     }
 }

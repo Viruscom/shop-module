@@ -2,19 +2,21 @@
 
 namespace Modules\Shop\Entities;
 
-use App\Helpers\LanguageHelper;
-use App\Models\AdBoxProductTranslation;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Shop\Models\Admin\Products\Product;
 
-class AdBoxProduct extends Model
+class AdBoxProduct extends Model implements TranslatableContract
 {
-    public static int $WAITING_ACTION = 0;
-    public static int $FIRST_TYPE     = 1;
+    use Translatable;
 
-    protected $table    = 'product_adboxes';
-    protected $fillable = ['active', 'position', 'type', 'product_id', 'filename'];
+    public static int $WAITING_ACTION       = 0;
+    public static int $FIRST_TYPE           = 1;
+    public array      $translatedAttributes = ['locale', 'visible'];
+    protected         $table                = 'product_adboxes';
+    protected         $fillable             = ['active', 'position', 'type', 'product_id', 'filename'];
 
     public static function getTypes(): array
     {
@@ -143,37 +145,7 @@ class AdBoxProduct extends Model
         return $query->where('type', self::$FIRST_TYPE);
     }
 
-    /**
-     * Get translation by language id
-     *
-     * @param $languageId
-     *
-     * @return HasOne
-     */
-    public function getTranslation($languageId): HasOne
-    {
-        return $this->hasOne(AdBoxProductTranslation::class, 'product_adbox_id')->where('language_id', $languageId);
-    }
-    public function translations()
-    {
-        return $this->hasMany(AdBoxProductTranslation::class, 'product_adbox_id');
-    }
-
-    public function currentTranslation(): HasOne
-    {
-        $currentLanguage = LanguageHelper::getCurrentLanguage();
-
-        return $this->hasOne(AdBoxProductTranslation::class, 'product_adbox_id')->where('language_id', $currentLanguage->id);
-    }
-
-    public function defaultTranslation(): HasOne
-    {
-        $defaultLanguage = LanguageHelper::getDefaultLanguage();
-
-        return $this->hasOne(AdBoxProductTranslation::class, 'product_adbox_id')->where('language_id', $defaultLanguage->id);
-    }
-
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
