@@ -30,7 +30,9 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public static string $PRODUCT_MIMES         = 'jpg,jpeg,png,gif';
     public static string $PRODUCT_MAX_FILE_SIZE = '3000';
 
-    public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url'];
+    public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url', 'title_additional_1', 'title_additional_2', 'title_additional_3',
+                                          'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
+                                          'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id'];
     protected    $table                = 'products';
     public static function getFileRules(): string

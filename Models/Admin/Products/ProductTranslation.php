@@ -16,9 +16,9 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
 
     protected $table    = "product_translation";
     protected $fillable = ['locale', 'product_id', 'title', 'url', 'announce', 'description', 'visible', 'seo_title', 'seo_description',
-                           'height', 'width', 'depth', 'weight', 'facebook_script', 'google_script', 'title_additional_first', 'title_additional_second', 'title_additional_third',
-                           'title_additional_fourth', 'title_additional_fifth', 'title_additional_sixth', 'text_additional_first', 'text_additional_second',
-                           'text_additional_third', 'text_additional_fourth', 'text_additional_fifth', 'text_additional_sixth'];
+                           'height', 'width', 'depth', 'weight', 'facebook_script', 'google_script', 'title_additional_1', 'title_additional_2', 'title_additional_3',
+                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
+                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
     {
         $data = [
@@ -56,52 +56,52 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
             $data['google_script'] = $request['google_script_' . $language->code];
         }
 
-        if ($request->has('title_additional_first_' . $language->code)) {
-            $data['title_additional_first'] = $request['title_additional_first_' . $language->code];
+        if ($request->has('title_additional_1_' . $language->code)) {
+            $data['title_additional_1'] = $request['title_additional_1_' . $language->code];
         }
 
-        if ($request->has('title_additional_second_' . $language->code)) {
-            $data['title_additional_second'] = $request['title_additional_second_' . $language->code];
+        if ($request->has('title_additional_2_' . $language->code)) {
+            $data['title_additional_2'] = $request['title_additional_2_' . $language->code];
         }
 
-        if ($request->has('title_additional_third_' . $language->code)) {
-            $data['title_additional_third'] = $request['title_additional_third_' . $language->code];
+        if ($request->has('title_additional_3_' . $language->code)) {
+            $data['title_additional_3'] = $request['title_additional_3_' . $language->code];
         }
 
-        if ($request->has('title_additional_fourth_' . $language->code)) {
-            $data['title_additional_fourth'] = $request['title_additional_fourth_' . $language->code];
+        if ($request->has('title_additional_4_' . $language->code)) {
+            $data['title_additional_4'] = $request['title_additional_4_' . $language->code];
         }
 
-        if ($request->has('title_additional_fifth_' . $language->code)) {
-            $data['title_additional_fifth'] = $request['title_additional_fifth_' . $language->code];
+        if ($request->has('title_additional_5_' . $language->code)) {
+            $data['title_additional_5'] = $request['title_additional_5_' . $language->code];
         }
 
-        if ($request->has('title_additional_sixth_' . $language->code)) {
-            $data['title_additional_sixth'] = $request['title_additional_sixth_' . $language->code];
+        if ($request->has('title_additional_6_' . $language->code)) {
+            $data['title_additional_6'] = $request['title_additional_6_' . $language->code];
         }
 
-        if ($request->has('text_additional_first_' . $language->code)) {
-            $data['text_additional_first'] = $request['text_additional_first_' . $language->code];
+        if ($request->has('text_additional_1_' . $language->code)) {
+            $data['text_additional_1'] = $request['text_additional_1_' . $language->code];
         }
 
-        if ($request->has('text_additional_second_' . $language->code)) {
-            $data['text_additional_second'] = $request['text_additional_second_' . $language->code];
+        if ($request->has('text_additional_2_' . $language->code)) {
+            $data['text_additional_2'] = $request['text_additional_2_' . $language->code];
         }
 
-        if ($request->has('text_additional_third_' . $language->code)) {
-            $data['text_additional_third'] = $request['text_additional_third_' . $language->code];
+        if ($request->has('text_additional_3_' . $language->code)) {
+            $data['text_additional_3'] = $request['text_additional_3_' . $language->code];
         }
 
-        if ($request->has('text_additional_fourth_' . $language->code)) {
-            $data['text_additional_fourth'] = $request['text_additional_fourth_' . $language->code];
+        if ($request->has('text_additional_4_' . $language->code)) {
+            $data['text_additional_4'] = $request['text_additional_4_' . $language->code];
         }
 
-        if ($request->has('text_additional_fifth_' . $language->code)) {
-            $data['text_additional_fifth'] = $request['text_additional_fifth_' . $language->code];
+        if ($request->has('text_additional_5_' . $language->code)) {
+            $data['text_additional_5'] = $request['text_additional_5_' . $language->code];
         }
 
-        if ($request->has('text_additional_sixth_' . $language->code)) {
-            $data['text_additional_sixth'] = $request['text_additional_sixth_' . $language->code];
+        if ($request->has('text_additional_6_' . $language->code)) {
+            $data['text_additional_6'] = $request['text_additional_6_' . $language->code];
         }
 
         return $data;
