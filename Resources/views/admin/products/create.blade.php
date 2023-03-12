@@ -33,7 +33,7 @@
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                <label class="control-label page-label col-md-3"><span class="text-purple">* </span>Прикрепи към Категория:</label>
+                <label class="control-label page-label col-md-3"><span class="text-purple">* </span>@lang('shop::admin.products.attach_to_category'):</label>
                 <div class="col-md-4">
                     <label>
                         <select class="form-control select2 inner-page-products-select" name="category_id">
@@ -55,21 +55,6 @@
                 </ul>
                 <div class="tab-content m-b-0">
                     @foreach($languages as $language)
-                            <?php
-                            $langTitleAdditionalFirst         = 'title_additional_first_' . $language->code;
-                            $langTitleAdditionalSecound       = 'title_additional_secound_' . $language->code;
-                            $langTitleAdditionalThird         = 'title_additional_third_' . $language->code;
-                            $langTitleAdditionalFourth        = 'title_additional_fourth_' . $language->code;
-                            $langTitleAdditionalFifth         = 'title_additional_fifth_' . $language->code;
-                            $langTitleAdditionalSixth         = 'title_additional_sixth_' . $language->code;
-                            $langDescriptionAdditionalFirst   = 'text_additional_first_' . $language->code;
-                            $langDescriptionAdditionalSecound = 'text_additional_secound_' . $language->code;
-                            $langDescriptionAdditionalThird   = 'text_additional_third_' . $language->code;
-                            $langDescriptionAdditionalFourth  = 'text_additional_fourth_' . $language->code;
-                            $langDescriptionAdditionalFifth   = 'text_additional_fifth_' . $language->code;
-                            $langDescriptionAdditionalSixth   = 'text_additional_sixth_' . $language->code;
-                            $langUrlToShop                    = 'redirect_url_to_shop_' . $language->code;
-                            ?>
                         <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
                             @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'title_' . $language->code, 'label' => trans('admin.title'), 'required' => true])
                             @include('admin.partials.on_create.form_fields.textarea', ['fieldName' => 'announce_' . $language->code, 'rows' => 3, 'label' => trans('admin.announce'), 'required' => false])
@@ -197,43 +182,59 @@
                                 </div>
                             @endif
                         </div>
-                        <hr>
-                        @include('admin.partials.on_create.form_fields.upload_file')
-                        <hr>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Нов продукт:</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <hr>
+                                @include('admin.partials.on_create.form_fields.upload_file')
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Нов продукт:</label>
+                                <div class="col-md-6">
+                                    <label class="switch pull-left">
+                                        <input type="checkbox" name="is_new_product" class="success" data-size="small" {{(old('is_new_product') ? 'checked' : 'active')}}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Промо продукт:</label>
+                                <div class="col-md-6">
+                                    <label class="switch pull-left">
+                                        <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{(old('is_in_promotion') ? 'checked' : 'active')}}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 p-r-30">
+                                @include('admin.partials.on_create.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100'])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'product_id_code', 'label' => trans('shop::admin.products.sku_number'), 'required' => false])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'barcode', 'label' => trans('shop::admin.products.barcode'), 'required' => false])
+                                @include('admin.partials.on_create.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: 1, 'min' => 1, 'max'=> 999999999999])
+                            </div>
+
                             <div class="col-md-6">
-                                <label class="switch pull-left">
-                                    <input type="checkbox" name="is_new_product" class="success" data-size="small" {{(old('is_new_product') ? 'checked' : 'active')}}>
-                                    <span class="slider"></span>
-                                </label>
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false])
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Промо продукт:</label>
-                            <div class="col-md-6">
-                                <label class="switch pull-left">
-                                    <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{(old('is_in_promotion') ? 'checked' : 'active')}}>
-                                    <span class="slider"></span>
-                                </label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <hr>
+                                @include('admin.partials.on_create.active_checkbox')
+                                <hr>
+                                @include('admin.partials.on_create.position_in_site_button')
                             </div>
                         </div>
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'product_id_code', 'label' => trans('shop::admin.products.sku_number'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'barcode', 'label' => trans('shop::admin.products.barcode'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => false,'fieldNameValue' => old('units_in_stock') ?: 1, 'min' => 1, 'max'=> 999999999999])
-
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false])
-                        @include('admin.partials.on_create.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'required' => true])
-                        @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true])
-
-                        <hr>
-                        @include('admin.partials.on_create.active_checkbox')
-                        <hr>
-                        @include('admin.partials.on_create.position_in_site_button')
                     </div>
                     @include('admin.partials.on_create.form_actions_bottom')
                 </div>

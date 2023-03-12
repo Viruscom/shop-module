@@ -57,16 +57,24 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
         ]);
     }
-    public function edit($id)
+    public function edit($id, ProductAction $action)
     {
+        $action->checkForFilesCache();
+        $action->checkForBrandsCache();
+        $action->checkForProductCategoriesAdminCache();
+
         $product = Product::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($product);
 
         return view('shop::admin.products.edit', [
-            'product'       => $product,
-            'products'      => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
-            'languages'     => LanguageHelper::getActiveLanguages(),
-            'fileRulesInfo' => Product::getUserInfoMessage()
+            'product'           => $product,
+            'products'          => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
+            'languages'         => LanguageHelper::getActiveLanguages(),
+            'files'             => Cache::get(CacheKeysHelper::$FILES),
+            'filesPathUrl'      => File::getFilesPathUrl(),
+            'fileRulesInfo'     => Product::getUserInfoMessage(),
+            'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
+            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
         ]);
     }
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
