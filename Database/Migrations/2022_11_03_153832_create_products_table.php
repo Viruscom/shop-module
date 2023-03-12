@@ -35,6 +35,7 @@ class CreateProductsTable extends Migration
             $table->string('height', 191)->nullable();
             $table->string('length', 191)->nullable();
             $table->string('weight', 191)->nullable();
+            $table->string('filename', 191)->nullable();
             $table->timestamps();
         });
     }

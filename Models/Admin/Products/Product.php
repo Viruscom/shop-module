@@ -31,7 +31,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public static string $PRODUCT_MAX_FILE_SIZE = '3000';
 
     public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url'];
-    protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active'];
+    protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id'];
     protected    $table                = 'products';
     public static function getFileRules(): string
     {
@@ -56,6 +56,8 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public static function getRequestData($request): array
     {
         $data = [
+            'category_id'     => $request->category_id,
+            'brand_id'        => $request->brand_id,
             'position'        => $request->position,
             'creator_user_id' => Auth::user()->id
         ];
