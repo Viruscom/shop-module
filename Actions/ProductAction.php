@@ -38,6 +38,11 @@ class ProductAction
             Brand::cacheUpdate();
         }
     }
+
+    public function isProductAdBoxExists($productId)
+    {
+        return (bool)AdBoxProduct::where('product_id', $productId)->first();
+    }
     public function sendToProductAdbox($productId): void
     {
         $languages = LanguageHelper::getActiveLanguages();
@@ -48,9 +53,11 @@ class ProductAction
                 'visible' => true
             ];
         }
+        $data['type']       = AdBoxProduct::$WAITING_ACTION;
         $data['product_id'] = $productId;
         $data['position']   = AdBoxProduct::generatePosition($data, 0);
+        $data['active']     = true;
 
-        AdBoxProduct::create(AdBoxProduct::getCreateData($data));
+        AdBoxProduct::create($data->all());
     }
 }

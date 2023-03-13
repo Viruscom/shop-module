@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Entities;
 
+use App\Helpers\CacheKeysHelper;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,19 @@ class AdBoxProduct extends Model implements TranslatableContract
     public array      $translatedAttributes = ['locale', 'visible'];
     protected         $table                = 'product_adboxes';
     protected         $fillable             = ['active', 'position', 'type', 'product_id', 'filename'];
+
+    public static function cacheUpdate(): void
+    {
+        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_ADMIN);
+        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_FRONT);
+        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_ADMIN, config('default.app.cache.ttl_seconds'), function () {
+            return self::withTranslation()->with('translations', 'product')->orderBy('position')->get();
+        });
+
+        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_FRONT, config('default.app.cache.ttl_seconds'), function () {
+            return self::active(true)->withTranslation()->with('translations', 'product')->orderBy('position')->withTranslation()->get();
+        });
+    }
 
     public static function getTypes(): array
     {
@@ -56,29 +70,6 @@ class AdBoxProduct extends Model implements TranslatableContract
             $AdBoxUpdate->update(['position' => $position]);
         }
     }
-    public static function getCreateData($request)
-    {
-        $data               = self::getRequestData($request);
-        $data['type']       = self::$WAITING_ACTION;
-        $data['product_id'] = $request->product_id;
-
-        if ($request->has('type')) {
-            $data['type'] = $request['type'];
-        }
-
-        return $data;
-    }
-    private static function getRequestData($request)
-    {
-        $data = [
-            'position' => $request->position
-        ];
-
-        $data['active'] = true;
-
-        return $data;
-    }
-
     public function updatedPosition($request, $adBox, $AdBoxType): int
     {
         if ($adBox->type == 0) {
@@ -123,6 +114,16 @@ class AdBoxProduct extends Model implements TranslatableContract
         if ($request->has('type')) {
             $data['type'] = $request['type'];
         }
+
+        $data['active'] = true;
+
+        return $data;
+    }
+    private static function getRequestData($request)
+    {
+        $data = [
+            'position' => $request->position
+        ];
 
         $data['active'] = true;
 

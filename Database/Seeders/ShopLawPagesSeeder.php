@@ -17,14 +17,14 @@ class ShopLawPagesSeeder extends Seeder
      */
     public function run(CommonControllerAction $action)
     {
-        $activeLanguages = LanguageHelper::getActiveLanguages();
-        $lastLawPage     = LawPage::last();
+        $activeLanguages     = LanguageHelper::getActiveLanguages();
+        $lastLawPagePosition = !is_null(LawPage::latest()->first()) ? LawPage::latest()->first()->position : 0;
 
-        $faqPage             = LawPage::create(['position' => $lastLawPage->position + 1, 'active' => true]);
-        $deliveryMethodsPage = LawPage::create(['position' => $lastLawPage->position + 2, 'active' => true]);
-        $paymentMethodsPage  = LawPage::create(['position' => $lastLawPage->position + 3, 'active' => true]);
-        $productReturnPage   = LawPage::create(['position' => $lastLawPage->position + 4, 'active' => true]);
-        $whyToRegisterPage   = LawPage::create(['position' => $lastLawPage->position + 5, 'active' => true]);
+        $faqPage             = LawPage::create(['position' => $lastLawPagePosition + 1, 'active' => true]);
+        $deliveryMethodsPage = LawPage::create(['position' => $lastLawPagePosition + 2, 'active' => true]);
+        $paymentMethodsPage  = LawPage::create(['position' => $lastLawPagePosition + 3, 'active' => true]);
+        $productReturnPage   = LawPage::create(['position' => $lastLawPagePosition + 4, 'active' => true]);
+        $whyToRegisterPage   = LawPage::create(['position' => $lastLawPagePosition + 5, 'active' => true]);
 
         foreach ($activeLanguages as $language) {
             LawPageTranslation::create([

@@ -20,9 +20,6 @@
                     <tbody>
                     <?php $i = 1; ?>
                     @forelse ($adBoxesWaitingAction as $adBoxWaitingAction)
-                            <?php
-                            $adBoxWaitingActionTranslation = $adBoxWaitingAction->getTranslation(1)->first();
-                            ?>
                         <tr class="t-row row-{{$adBoxWaitingAction->id}}">
                             <td class="width-2-percent">
                                 <div class="pretty p-default p-square">
@@ -33,10 +30,10 @@
                                 </div>
                             </td>
                             <td class="width-2-percent">{{$i}}</td>
-                            <td><label class="label label-default">{{ trans('administration_messages.adboxes_type_0') }}</label></td>
+                            <td><label class="label label-default">{{ trans('shop::admin.product_adboxes.type_0') }}</label></td>
                             <td>
-                                <span class="text-uppercase">{{ $adBoxWaitingActionTranslation->language->code }}: </span>
-                                {{ $adBoxWaitingActionTranslation->title }}
+                                <span class="text-uppercase">{{ $adBoxWaitingAction->locale }}: </span>
+                                {{ $adBoxWaitingAction->product->title }}
                             </td>
                             <td class="pull-right">
                                 <a href="{{ url('/admin/product_adboxes/'.$adBoxWaitingAction->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
@@ -75,9 +72,6 @@
                     <tbody>
                     <?php $i = 1; ?>
                     @forelse ($adBoxesFirstType as $adBoxFirstType)
-                            <?php
-                            $adBoxFirstTypeTranslation = $adBoxFirstType->getTranslation(1)->first();
-                            ?>
                         <tr class="t-row row-{{$adBoxFirstType->id}}">
                             <td class="width-2-percent">
                                 <div class="pretty p-default p-square">
@@ -90,8 +84,7 @@
                             <td class="width-2-percent">{{$i}}</td>
                             <td><label class="label btn-light-green">{{ trans('administration_messages.adboxes_type_1') }}</label></td>
                             <td>
-                                <span class="text-uppercase">{{ $adBoxFirstTypeTranslation->language->code }}: </span>
-                                {{ $adBoxFirstTypeTranslation->title }}
+                                {{ $adBoxFirstType->product->title }}
                             </td>
                             <td class="pull-right">
                                 @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $adBoxesFirstType, 'model' => $adBoxFirstType, 'showInPublicModal' => false])
