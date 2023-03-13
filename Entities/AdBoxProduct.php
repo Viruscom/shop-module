@@ -21,14 +21,15 @@ class AdBoxProduct extends Model implements TranslatableContract
 
     public static function cacheUpdate(): void
     {
-        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_ADMIN);
-        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_FRONT);
-        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_ADMIN, config('default.app.cache.ttl_seconds'), function () {
-            return self::withTranslation()->with('translations', 'product')->orderBy('position')->get();
+        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_WAITING_ADMIN);
+        cache()->forget(CacheKeysHelper::$AD_BOX_PRODUCT_TYPE_1_FRONT);
+
+        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_WAITING_ADMIN, config('default.app.cache.ttl_seconds'), function () {
+            return self::where('type', self::$WAITING_ACTION)->withTranslation()->with('translations', 'product')->orderBy('position')->get();
         });
 
-        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::active(true)->withTranslation()->with('translations', 'product')->orderBy('position')->withTranslation()->get();
+        cache()->remember(CacheKeysHelper::$AD_BOX_PRODUCT_TYPE_1_FRONT, config('default.app.cache.ttl_seconds'), function () {
+            return self::where('type', self::$FIRST_TYPE)->whereActive(true)->withTranslation()->with('translations', 'product')->orderBy('position')->withTranslation()->get();
         });
     }
 

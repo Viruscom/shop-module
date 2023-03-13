@@ -2,6 +2,9 @@
 
 namespace Modules\Shop\Actions;
 
+use App\Helpers\CacheKeysHelper;
+use Modules\Shop\Entities\AdBoxProduct;
+
 class ProductAdBoxAction
 {
     public function deleteMultiple($request, $modelClass): void
@@ -26,6 +29,12 @@ class ProductAdBoxAction
         $model->delete();
         foreach ($modelsToUpdate as $modelToUpdate) {
             $modelToUpdate->update(['position' => $modelToUpdate->position - 1]);
+        }
+    }
+    public function checkForNullCache(): void
+    {
+        if (is_null(cache()->get(CacheKeysHelper::$AD_BOX_PRODUCT_WAITING_ADMIN)) || is_null(cache()->get(CacheKeysHelper::$AD_BOX_PRODUCT_TYPE_1_FRONT))) {
+            AdBoxProduct::cacheUpdate();
         }
     }
 }

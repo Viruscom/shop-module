@@ -3,6 +3,7 @@
 namespace Modules\Shop\Http\Controllers\admin;
 
 use App\Helpers\LanguageHelper;
+use App\Helpers\MainHelper;
 use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
 use App\Models\OtherSetting;
@@ -16,6 +17,8 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
 {
     public function index(ProductAdBoxAction $action)
     {
+        $action->checkForNullCache();
+
         $adBoxesWaitingAction = AdBoxProduct::waitingAction()->orderByPosition('asc')->with('translations')->get();
         $adBoxesFirstType     = AdBoxProduct::firstType()->orderByPosition('asc')->with('translations')->get();
 
@@ -33,6 +36,10 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
         $adBox->update(['active' => $active]);
 
         return redirect('admin/product_adboxes')->with('success-message', 'administration_messages.successful_edit');
+    }
+    public function update($id, ProductAdBoxAction $action)
+    {
+        // TODO: Implement update() method.
     }
     public function deleteMultiple(Request $request, ProductAdBoxAction $action): RedirectResponse
     {
@@ -64,7 +71,6 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
 
         return redirect('admin/product_adboxes')->with('success-message', 'administration_messages.successful_edit');
     }
-
     public function positionDown($id)
     {
         $adBox = AdBoxProduct::find($id);
@@ -80,7 +86,6 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
 
         return redirect('admin/product_adboxes')->with('success-message', 'administration_messages.successful_edit');
     }
-
     public function positionUp($id)
     {
         $adBox = AdBoxProduct::find($id);
@@ -96,7 +101,6 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
 
         return redirect('admin/product_adboxes')->with('success-message', 'administration_messages.successful_edit');
     }
-
     public function returnToWaiting($id)
     {
         $adBox = AdBoxProduct::find($id);
@@ -106,13 +110,14 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
 
         return redirect()->route('admin.product-adboxes.index')->with('success-message', 'administration_messages.successful_edit');
     }
-    public function activateAdBox($id)
+    public function edit($id)
     {
-        $adBox = AdBoxProduct::find($id);
-        WebsiteHelper::redirectBackIfNull($adBox);
+        $adBox = AdBoxProduct::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($adBox);
 
-        $adBox->update(['type' => 1, 'active' => true]);
-
-        return redirect()->route('admin.product-adboxes.index')->with('success-message', 'administration_messages.successful_edit');
+        return view('shop::admin.product_adboxes.edit', [
+            'adBox'     => $adBox,
+            'languages' => LanguageHelper::getActiveLanguages(),
+        ]);
     }
 }
