@@ -1,3 +1,41 @@
 <?php
 
-return [];
+return [
+    'login'                   => [
+        'create_account' => 'Създай акаунт',
+    ],
+    'registered_user_profile' => [
+        'my_account'       => 'Моят профил',
+        'wishlist'         => 'Желани',
+        'orders'           => 'Поръчки',
+        'addresses'        => 'Адреси',
+        'firms'            => 'Фирми',
+        'discounts'        => 'Отстъпки',
+        'returns'          => 'Връщания',
+        'personal_data'    => 'Лични данни',
+        'logout'           => 'Изход',
+        'hello'            => 'Здравейте',
+        'email'            => 'E-mail:',
+        'phone'            => 'Телефон:',
+        'edit'             => 'Редактиране',
+        'newsletter'       => 'Бюлетин',
+        'subscribe'        => 'Абонирай се',
+        'unsubscribe'      => 'Отписване',
+        'not_subscribed'   => 'Не сте абонирани за нашия бюлетин?',
+        'page_title'       => 'Моят профил',
+        'billing_address'  => 'Адрес за фактуриране',
+        'shipping_address' => 'Адрес за доставка',
+        'email'            => 'E-mail',
+        'phone'            => 'Тел.',
+        'subscribe'        => 'Абонирайте се',
+        'last_orders'      => 'Последни поръчки',
+        'order'            => 'Поръчка',
+        'date'             => 'Дата',
+        'recipient'        => 'Получател',
+        'total'            => 'Общо',
+        'status'           => 'Статус',
+        'details'          => 'Детайли',
+        'sent'             => 'изпратена',
+        'view_all'         => 'Виж всички',
+    ],
+];
