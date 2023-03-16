@@ -2,7 +2,16 @@
 
 return [
     'login'                   => [
-        'create_account' => 'Създай акаунт',
+        'login'                    => 'Вход',
+        'email'                    => 'Имейл',
+        'password'                 => 'Парола',
+        'hide_password'            => 'Скрий паролата',
+        'show_password'            => 'Покажи паролата',
+        'forgot_your_password'     => 'Забравили сте паролата?',
+        'create_account'           => 'Създай акаунт',
+        'login_submit'             => 'Впиши се',
+        'forgot_password'          => 'Забравена парола',
+        'send_password_reset_link' => 'Изпрати линк за възстановяване',
     ],
     'registered_user_profile' => [
         'my_account'       => 'Моят профил',

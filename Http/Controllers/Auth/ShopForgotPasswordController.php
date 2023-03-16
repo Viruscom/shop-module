@@ -9,7 +9,7 @@ class ShopForgotPasswordController extends ShopResetPasswordController
 {
     public function showLinkRequestForm()
     {
-        return view('shop::forgot-password');
+        return view('shop::auth.forgot_password');
     }
 
     public function sendResetLinkEmail(Request $request)
@@ -29,7 +29,7 @@ class ShopForgotPasswordController extends ShopResetPasswordController
     protected function rules()
     {
         return [
-            'email' => 'required|email|exists:shop_users',
+            'email' => 'required|email|exists:shop_registered_users',
         ];
     }
     protected function validationErrorMessages()

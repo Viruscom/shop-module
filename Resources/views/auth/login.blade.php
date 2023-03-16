@@ -7,14 +7,14 @@
             <form method="post" class="form-alt selected" id="form-login" action="{{ route('shop.login', ['languageSlug' => $languageSlug]) }}">
                 @csrf
                 <div class="form-head">
-                    <h3>{{ __('Login') }}</h3>
+                    <h3>{{ __('shop::front.login.login') }}</h3>
                 </div>
 
                 <div class="form-body">
 
                     <div class="form-row">
                         <label class="form-label" for="email">
-                            {{ __('E-Mail Address') }}
+                            {{ __('shop::front.login.email') }}
                             <span class="asterisk">*</span>
                         </label>
 
@@ -31,7 +31,7 @@
 
                     <div class="form-row">
                         <label class="form-label" for="password">
-                            Парола
+                            {{ __('shop::front.login.password') }}
                             <span class="asterisk">*</span>
                         </label>
 
@@ -45,8 +45,8 @@
                             @enderror
 
                             <div class="tooltip-box">
-                                <span>Скрий парола</span>
-                                <span>Покажи парола</span>
+                                <span>{{ __('shop::front.login.hide_password') }}</span>
+                                <span>{{ __('shop::front.login.show_password') }}</span>
 
                                 <img class="toggle-password" src="{{ asset('front/assets/icons/eye-slash.svg') }}" alt="">
                                 <img class="toggle-password" src="{{ asset('front/assets/icons/eye.svg') }}" alt="">
@@ -56,12 +56,12 @@
                 </div>
 
                 <div class="form-footer">
-                    <button type="submit" class="submit-button" value="Sign in">{{ __('Login') }}</button>
+                    <button type="submit" class="submit-button">{{ __('shop::front.login.login_submit') }}</button>
 
                     <p>
                         @if (Route::has('shop.password.request'))
                             <a href="{{ route('shop.password.request', ['languageSlug' => $languageSlug]) }}" data-target="reset-password">
-                                {{ __('Forgot Your Password?') }}
+                                {{ __('shop::front.login.forgot_your_password') }}
                             </a>
                         @endif
                     </p>
