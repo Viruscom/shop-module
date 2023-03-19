@@ -15,11 +15,14 @@ class CreateShopRegisteredUsersTable extends Migration
     {
         Schema::create('shop_registered_users', function (Blueprint $table) {
             $table->id()->unique();
-            $table->string('name');
+            $table->unsignedBigInteger('group_id')->default(0);
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('phone');
+            $table->date('birthday')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('phone');
             $table->rememberToken();
             $table->timestamps();
         });

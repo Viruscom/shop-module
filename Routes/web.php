@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
+use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
 use Modules\Shop\Http\Controllers\admin\BrandController;
@@ -15,7 +17,8 @@ use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
 use Modules\Shop\Http\Controllers\CityZipCodesController;
 use Modules\Shop\Http\Controllers\DeliveriesController;
-use Modules\Shop\Http\Controllers\Front\ShopHomeController;
+use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
+use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
 use Modules\Shop\Http\Controllers\PaymentsController;
 use Modules\Shop\Http\Controllers\VatsController;
 
@@ -239,8 +242,23 @@ Route::group(['middleware' => ['web'], 'prefix' => '{languageSlug}/shop'], stati
 
     // Dashboard Registered user routes
     Route::group(['middleware' => ['auth:shop']], function () {
-        Route::get('dashboard', [ShopHomeController::class, 'dashboard'])->name('shop.dashboard');
-        Route::get('personal-data', [ShopHomeController::class, 'personalData'])->name('shop.personal-data');
+        Route::get('dashboard', [RegisteredUserAccountController::class, 'dashboard'])->name('shop.dashboard');
+        /* Account */
+        Route::group(['prefix' => 'account'], static function () {
+            Route::get('personal-data', [RegisteredUserAccountController::class, 'personalData'])->name('shop.registered_user.account.personal-data');
+            Route::post('/{id}/update', [RegisteredUserAccountController::class, 'update'])->name('shop.registered_user.account.personal-data.update');
+            Route::post('/subscribe', [RegisteredUserAccountController::class, 'subscribe'])->name('shop.registered_user.account.subscribe');
+
+            /* Companies */
+            Route::group(['prefix' => 'companies'], static function () {
+                Route::get('/', [CompaniesController::class, 'index'])->name('shop.registered_user.account.companies');
+                Route::get('create', [CompaniesController::class, 'create'])->name('shop.registered_user.account.companies.create');
+                Route::post('store', [CompaniesController::class, 'store'])->name('shop.registered_user.account.companies.store');
+                Route::get('{id}/edit', [CompaniesController::class, 'edit'])->name('shop.registered_user.account.companies.edit');
+                Route::post('{id}/update', [CompaniesController::class, 'update'])->name('shop.registered_user.account.companies.update');
+                Route::get('{id}/delete', [CompaniesController::class, 'delete'])->name('shop.registered_user.account.companies.delete');
+            });
+        });
     });
 
     // Authentication routes

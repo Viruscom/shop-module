@@ -10,7 +10,7 @@ class ShopRegisteredUser extends Authenticatable
     use Notifiable;
 
     protected $table    = 'shop_registered_users';
-    protected $fillable = ['name', 'email', 'email_verified_at', 'password'];
+    protected $fillable = ['group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password'];
 
     //    public function orders()
     //    {
