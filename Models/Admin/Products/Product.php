@@ -21,7 +21,6 @@ use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\ShopDiscounts\Entities\Discount;
 use Nwidart\Modules\Facades\Module;
 
-
 class Product extends Model implements TranslatableContract, ImageModelInterface
 {
     use Translatable, Scopes, StorageActions, CommonActions;
