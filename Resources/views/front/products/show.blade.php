@@ -32,7 +32,6 @@
                                 <span class="promo">2 = 1</span>
 
                                 <span class="promo">-25 %</span>
-
                                 <span class="promo promo-new">NEW</span>
                             </div>
                         </div>

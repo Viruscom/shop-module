@@ -2,6 +2,8 @@
 
 namespace Modules\Shop\Http\Controllers\Auth;
 
+
+use App\Helpers\LanguageHelper;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,15 @@ class ShopLoginController extends ShopRegisterController
 
     public function showLoginForm()
     {
+        if (!is_null(Auth::guard('shop')->user())) {
+            return redirect()->route('shop.dashboard', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code]);
+        }
+
         return view('shop::auth.login');
+    }
+    protected function guard()
+    {
+        return Auth::guard('shop');
     }
     public function logout(Request $request)
     {
@@ -31,12 +41,9 @@ class ShopLoginController extends ShopRegisterController
 
         return redirect()->route('shop.login');
     }
-    protected function guard()
-    {
-        return Auth::guard('shop');
-    }
+
     protected function authenticated(Request $request, $user)
     {
-        return redirect()->route('shop.dashboard');
+        return redirect()->route('shop.dashboard', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code]);
     }
 }

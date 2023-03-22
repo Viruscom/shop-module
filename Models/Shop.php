@@ -6,6 +6,7 @@ use App\Helpers\AdminHelper;
 use App\Helpers\LanguageHelper;
 use App\Models\Settings\Application;
 use App\Models\SpecialPage\SpecialPage;
+
 use Illuminate\Database\Eloquent\Model;
 use Modules\Shop\Models\Admin\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
@@ -26,6 +27,7 @@ class Shop extends Model
                 abort(404);
         }
     }
+
     public function setKeys($array): array
     {
         $array[1]['sys_image_name'] = trans('shop::admin.brand.index');

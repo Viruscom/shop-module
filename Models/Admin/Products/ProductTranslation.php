@@ -109,6 +109,7 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+
     }
     public function language(): BelongsTo
     {

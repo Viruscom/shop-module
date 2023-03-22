@@ -29,29 +29,35 @@ class ShopRegisterController extends ShopRegisteredUserController
     protected function rules()
     {
         return [
-            'name'     => 'required',
-            'email'    => 'required|email|unique:shop_users',
-            'password' => 'required|min:8|confirmed',
+            'first_name' => 'required',
+            'last_name'  => 'required',
+            'phone'      => 'required',
+            'email'      => 'required|email|unique:shop_users',
+            'password'   => 'required|min:8|confirmed',
         ];
     }
     protected function validationErrorMessages()
     {
         return [
-            'name.required'      => 'The name is required.',
-            'email.required'     => 'The email address is required.',
-            'email.email'        => 'The email address is not valid.',
-            'email.unique'       => 'The email address is already taken.',
-            'password.required'  => 'The password is required.',
-            'password.min'       => 'The password must be at least 8 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
+            'first_name.required' => __('shop::front.login.first_name_required'),
+            'last_name.required'  => __('shop::front.login.last_name_required'),
+            'phone.required'      => __('shop::front.login.phone_required'),
+            'email.required'      => __('shop::front.login.email_required'),
+            'email.email'         => __('shop::front.login.email_email'),
+            'email.unique'        => __('shop::front.login.email_unique'),
+            'password.required'   => __('shop::front.login.password_required'),
+            'password.min'        => __('shop::front.login.password_min'),
+            'password.confirmed'  => __('shop::front.login.password_confirmed'),
         ];
     }
     protected function create(array $data)
     {
         return ShopRegisteredUser::create([
-                                              'name'     => $data['name'],
-                                              'email'    => $data['email'],
-                                              'password' => Hash::make($data['password']),
+                                              'first_name' => $data['first_name'],
+                                              'last_name'  => $data['last_name'],
+                                              'phone'      => $data['phone'],
+                                              'email'      => $data['email'],
+                                              'password'   => Hash::make($data['password']),
                                           ]);
     }
 }

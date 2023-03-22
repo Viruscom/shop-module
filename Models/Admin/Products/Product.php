@@ -21,6 +21,7 @@ use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\ShopDiscounts\Entities\Discount;
 use Nwidart\Modules\Facades\Module;
 
+
 class Product extends Model implements TranslatableContract, ImageModelInterface
 {
     use Translatable, Scopes, StorageActions, CommonActions;
@@ -148,6 +149,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         //        Go to Shop Model
     }
+
     public function getAnnounce(): string
     {
         return Str::limit($this->announce, 255, ' ...');
