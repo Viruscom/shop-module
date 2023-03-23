@@ -4,6 +4,7 @@ namespace Modules\Shop\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Shop\Http\Middleware\SetCookieMiddleware;
 
 class ShopServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,8 @@ class ShopServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        $this->app['router']->aliasMiddleware('set.sbuuid', SetCookieMiddleware::class);
+
     }
 
     /**

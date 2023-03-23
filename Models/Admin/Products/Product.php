@@ -5,6 +5,7 @@ namespace Modules\Shop\Models\Admin\Products;
 use App\Helpers\AdminHelper;
 use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
+use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Traits\CommonActions;
 use App\Traits\Scopes;
@@ -157,5 +158,31 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public function getPrice()
     {
         return number_format($this->price, 2, '.', '');
+    }
+
+    public function seo()
+    {
+        SeoHelper::setTitle($this->title);
+        SeoHelper::setDescription($this->description);
+        SeoHelper::setMetaTags([
+                                   'robots' => 'index, follow',
+                                   'author' => 'John Doe',
+                                   'keywords' => 'Laravel, SEO, Example',
+                               ]);
+//        SeoHelper::setOGTags([
+//                                 'type' => 'article',
+//                                 'url' => url()->current(),
+//                                 'image' => $this->getFileUrl(),
+//                             ]);
+        SeoHelper::setTwitterCard('summary_large_image');
+        SeoHelper::setJsonLd('Article', [
+            'title' => $this->title,
+            'description' => $this->description,
+            'image' => $this->getFileUrl(),
+            'published_at' => $this->created_at->toIso8601String(),
+            'updated_at' => $this->updated_at->toIso8601String(),
+        ]);
+
+        return null;
     }
 }

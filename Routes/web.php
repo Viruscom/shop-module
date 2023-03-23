@@ -221,66 +221,71 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
  * FRONT ROUTES
  */
 
-Route::prefix('basket')->group(function () {
-    Route::get('/', [BasketController::class, 'index'])->name('basket.index');
-    Route::post('add', [BasketController::class, 'addProduct'])->name('basket.products.add');
+Route::middleware(['web', 'set.sbuuid'])->group(function () {
+    Route::prefix('basket')->group(function () {
+        Route::get('/', [BasketController::class, 'index'])->name('basket.index');
+        Route::post('add', [BasketController::class, 'addProduct'])->name('basket.products.add');
 
-    /* Order */
-    Route::group(['prefix' => 'order'], static function () {
-        Route::get('preview/{id}', [BasketController::class, 'previewOrder'])->name('basket.order.preview');
-        Route::get('create', [BasketController::class, 'createOrder'])->name('basket.order.create');
-        Route::post('store', [BasketController::class, 'storeOrder'])->name('basket.order.store');
-    });
-});
-
-Route::prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('cart.index');
-});
-
-/* Shop Auth */
-Route::group(['middleware' => ['web'], 'prefix' => '{languageSlug}/shop'], static function () {
-
-    // Dashboard Registered user routes
-    Route::group(['middleware' => ['auth:shop']], function () {
-        Route::get('dashboard', [RegisteredUserAccountController::class, 'dashboard'])->name('shop.dashboard');
-        /* Account */
-        Route::group(['prefix' => 'account'], static function () {
-            Route::get('personal-data', [RegisteredUserAccountController::class, 'personalData'])->name('shop.registered_user.account.personal-data');
-            Route::post('/{id}/update', [RegisteredUserAccountController::class, 'update'])->name('shop.registered_user.account.personal-data.update');
-            Route::post('/subscribe', [RegisteredUserAccountController::class, 'subscribe'])->name('shop.registered_user.account.subscribe');
-
-            /* Companies */
-            Route::group(['prefix' => 'companies'], static function () {
-                Route::get('/', [CompaniesController::class, 'index'])->name('shop.registered_user.account.companies');
-                Route::get('create', [CompaniesController::class, 'create'])->name('shop.registered_user.account.companies.create');
-                Route::post('store', [CompaniesController::class, 'store'])->name('shop.registered_user.account.companies.store');
-                Route::get('{id}/edit', [CompaniesController::class, 'edit'])->name('shop.registered_user.account.companies.edit');
-                Route::post('{id}/update', [CompaniesController::class, 'update'])->name('shop.registered_user.account.companies.update');
-                Route::get('{id}/delete', [CompaniesController::class, 'delete'])->name('shop.registered_user.account.companies.delete');
-            });
+        /* Order */
+        Route::group(['prefix' => 'order'], static function () {
+            Route::get('preview/{id}', [BasketController::class, 'previewOrder'])->name('basket.order.preview');
+            Route::get('create', [BasketController::class, 'createOrder'])->name('basket.order.create');
+            Route::post('store', [BasketController::class, 'storeOrder'])->name('basket.order.store');
         });
     });
 
-    // Authentication routes
-    Route::get('login', [ShopLoginController::class, 'showLoginForm'])->name('shop.login');
-    Route::post('login', [ShopLoginController::class, 'login']);
-    Route::post('logout', [ShopLoginController::class, 'logout'])->name('shop.logout');
-
-    // Password reset routes
-    Route::get('password/reset', [ShopForgotPasswordController::class, 'showLinkRequestForm'])->name('shop.password.request');
-    Route::post('password/email', [ShopForgotPasswordController::class, 'sendResetLinkEmail'])->name('shop.password.email');
-    Route::get('password/reset/{token}', [ShopResetPasswordController::class, 'showResetForm'])->name('shop.password.reset');
-    Route::post('password/reset', [ShopResetPasswordController::class, 'reset'])->name('shop.password.update');
-
-    // Registration routes
-    Route::get('register', [ShopRegisterController::class, 'showRegistrationForm'])->name('shop.register');
-    Route::post('register', [ShopRegisterController::class, 'register'])->name('shop.register.submit');
-
-    // Email verification routes
-    Route::group(['middleware' => ['auth:shop', 'verified']], function () {
-        Route::get('verification/notice', [ShopVerificationController::class, 'show'])->name('shop.verification.notice');
-        Route::get('verification/verify/{id}/{hash}', [ShopVerificationController::class, 'verify'])->name('shop.verification.verify');
-        Route::get('verification/resend', [ShopVerificationController::class, 'resend'])->name('shop.verification.resend');
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('cart.index');
     });
+
+    /* Shop Auth */
+    Route::group(['middleware' => ['web'], 'prefix' => '{languageSlug}/shop'], static function () {
+
+        // Dashboard Registered user routes
+        Route::group(['middleware' => ['auth:shop']], function () {
+            Route::get('dashboard', [RegisteredUserAccountController::class, 'dashboard'])->name('shop.dashboard');
+            /* Account */
+            Route::group(['prefix' => 'account'], static function () {
+                Route::get('personal-data', [RegisteredUserAccountController::class, 'personalData'])->name('shop.registered_user.account.personal-data');
+                Route::post('/{id}/update', [RegisteredUserAccountController::class, 'update'])->name('shop.registered_user.account.personal-data.update');
+                Route::post('/subscribe', [RegisteredUserAccountController::class, 'subscribe'])->name('shop.registered_user.account.subscribe');
+
+                /* Companies */
+                Route::group(['prefix' => 'companies'], static function () {
+                    Route::get('/', [CompaniesController::class, 'index'])->name('shop.registered_user.account.companies');
+                    Route::get('create', [CompaniesController::class, 'create'])->name('shop.registered_user.account.companies.create');
+                    Route::post('store', [CompaniesController::class, 'store'])->name('shop.registered_user.account.companies.store');
+                    Route::get('{id}/edit', [CompaniesController::class, 'edit'])->name('shop.registered_user.account.companies.edit');
+                    Route::post('{id}/update', [CompaniesController::class, 'update'])->name('shop.registered_user.account.companies.update');
+                    Route::get('{id}/delete', [CompaniesController::class, 'delete'])->name('shop.registered_user.account.companies.delete');
+                });
+            });
+        });
+
+        // Authentication routes
+        Route::get('login', [ShopLoginController::class, 'showLoginForm'])->name('shop.login');
+        Route::post('login', [ShopLoginController::class, 'login']);
+        Route::post('logout', [ShopLoginController::class, 'logout'])->name('shop.logout');
+
+        // Password reset routes
+        Route::get('password/reset', [ShopForgotPasswordController::class, 'showLinkRequestForm'])->name('shop.password.request');
+        Route::post('password/email', [ShopForgotPasswordController::class, 'sendResetLinkEmail'])->name('shop.password.email');
+        Route::get('password/reset/{token}', [ShopResetPasswordController::class, 'showResetForm'])->name('shop.password.reset');
+        Route::post('password/reset', [ShopResetPasswordController::class, 'reset'])->name('shop.password.update');
+
+        // Registration routes
+        Route::get('register', [ShopRegisterController::class, 'showRegistrationForm'])->name('shop.register');
+        Route::post('register', [ShopRegisterController::class, 'register'])->name('shop.register.submit');
+
+        // Email verification routes
+        Route::group(['middleware' => ['auth:shop', 'verified']], function () {
+            Route::get('verification/notice', [ShopVerificationController::class, 'show'])->name('shop.verification.notice');
+            Route::get('verification/verify/{id}/{hash}', [ShopVerificationController::class, 'verify'])->name('shop.verification.verify');
+            Route::get('verification/resend', [ShopVerificationController::class, 'resend'])->name('shop.verification.resend');
+        });
+    });
+
+
 });
+
 

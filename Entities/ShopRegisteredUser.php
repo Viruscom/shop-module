@@ -9,8 +9,16 @@ class ShopRegisteredUser extends Authenticatable
 {
     use Notifiable;
 
+    public static int $DEFAULT_CLIENT_GROUP_ID = 1;
+
     protected $table    = 'shop_registered_users';
     protected $fillable = ['group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password'];
+
+    public static function getClientGroups()
+    {
+        return [1, 2, 3, 4, 5, 6];
+    }
+
 
     //    public function orders()
     //    {

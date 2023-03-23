@@ -92,6 +92,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $product = Product::find($id);
         MainHelper::goBackIfNull($product);
 
+        $action->deleteFromUrlCache($product);
         $action->delete(Product::class, $product);
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');

@@ -39,6 +39,7 @@ class BasketController extends Controller
         $request['uid']                = uniqid(uniqid(uniqid(uniqid('', true) . "-", true) . "-", true) . "-", true);
         $request['paid_at']            = null;
         $request['delivered_at']       = null;
+
         $order                         = Order::create($request->all());
         foreach ($basket->calculated_basket_products as $basketProduct) {
             $order->order_products()->create([
@@ -66,13 +67,13 @@ class BasketController extends Controller
             return call_user_func_array(array($payment->class, $payment->method), array($order));
         }
 
-        return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
+        return redirect(route('shop::basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
     }
     public function previewOrder($id)
     {
         $order = Order::where('id', $id)->where(function ($q) {
             if (Auth::check()) {
-                return $q->where('user_id', Auth::user()->id);
+                return $q->where('user_id', Auth::guard('shop')->user()->id);
             } else {
                 return $q->where('key', $_COOKIE['sbuuid']);
             }
@@ -82,7 +83,7 @@ class BasketController extends Controller
             abort(404);
         }
 
-        return view('basket.order.preview', ['order' => $order]);
+        return view('shop::basket.order.preview', ['order' => $order]);
     }
     public function createOrder()
     {
@@ -101,7 +102,7 @@ class BasketController extends Controller
         $paymentMethods  = Payment::orderBy('position', 'asc')->get();
         $deliveryMethods = Delivery::orderBy('position', 'asc')->get();
 
-        return view('basket.order.create', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities, 'paymentMethods' => $paymentMethods, 'deliveryMethods' => $deliveryMethods]);
+        return view('shop::basket.order.create', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities, 'paymentMethods' => $paymentMethods, 'deliveryMethods' => $deliveryMethods]);
     }
     public function index()
     {
@@ -163,6 +164,6 @@ class BasketController extends Controller
             $basketProduct->increment('product_quantity', $request->product_quantity);
         }
 
-        return redirect()->back();
+        return redirect()->route('basket.index');
     }
 }
