@@ -7,6 +7,7 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Traits\CommonActions;
+use App\Traits\HasGallery;
 use App\Traits\Scopes;
 use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Brand extends Model implements TranslatableContract, ImageModelInterface
 {
-    use Translatable, Scopes, StorageActions, CommonActions;
+    use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
     public const FILES_PATH = "images/shop/brands";
 
@@ -116,5 +117,9 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     public function getSystemImage(): string
     {
         return AdminHelper::getSystemImage(self::$BRAND_SYSTEM_IMAGE);
+    }
+    public function headerGallery()
+    {
+        return $this->getHeaderGalleryRelation(get_class($this));
     }
 }

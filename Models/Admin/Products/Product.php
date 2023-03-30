@@ -8,6 +8,7 @@ use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Traits\CommonActions;
+use App\Traits\HasGallery;
 use App\Traits\Scopes;
 use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -24,7 +25,7 @@ use Nwidart\Modules\Facades\Module;
 
 class Product extends Model implements TranslatableContract, ImageModelInterface
 {
-    use Translatable, Scopes, StorageActions, CommonActions;
+    use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
     public const FILES_PATH = "images/shop/products";
 
@@ -184,5 +185,38 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         ]);
 
         return null;
+    }
+
+    public function headerGallery()
+    {
+        return $this->getHeaderGalleryRelation(get_class($this));
+    }
+    public function mainGallery()
+    {
+        return $this->getMainGalleryRelation(get_class($this));
+    }
+    public function additionalGalleryOne()
+    {
+        return $this->getAdditionalGalleryOneRelation(get_class($this));
+    }
+    public function additionalGalleryTwo()
+    {
+        return $this->getAdditionalGalleryTwoRelation(get_class($this));
+    }
+    public function additionalGalleryThree()
+    {
+        return $this->getAdditionalGalleryThreeRelation(get_class($this));
+    }
+    public function additionalGalleryFour()
+    {
+        return $this->getAdditionalGalleryFourRelation(get_class($this));
+    }
+    public function additionalGalleryFive()
+    {
+        return $this->getAdditionalGalleryFiveRelation(get_class($this));
+    }
+    public function additionalGallerySix()
+    {
+        return $this->getAdditionalGallerySixRelation(get_class($this));
     }
 }

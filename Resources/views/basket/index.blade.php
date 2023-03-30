@@ -1,6 +1,413 @@
 @extends('layouts.front.app')
 
 @section('content')
+    <div class="page-wrapper">
+        @include('front.partials.breadcrumbs')
+
+        <div class="cart-wrapper">
+            <div class="shell">
+                <div class="cart-cols">
+                    <div class="col col-2of3">
+                        <h3 class="title-main title-border">Количка</h3>
+
+                        <div class="col-inner">
+                            <div class="box-warning">
+                                <p>Някои от избраните продукти в момента не са налични.</p>
+                            </div>
+
+                            <div class="box-info">
+                                <img src="assets/icons/gift-box.svg" alt="">
+
+                                <p>
+                                    Изберете <strong>2 подаръка</strong> от нашите предложения в периода 01-31 януари
+                                </p>
+                            </div>
+
+                            <div class="product-boxes">
+                                <div class="product-box">
+                                    <div class="prod-content">
+                                        <div class="prod-image">
+                                            <a href=""></a>
+                                            <img src="assets/images/prod-img.png" alt="">
+                                        </div>
+
+                                        <div class="prod-inner">
+                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
+
+                                            <div class="prod-prices">
+                                                <p class="main-price price-old">
+                                                    <b>25.00</b> лв.
+                                                </p>
+
+                                                <p class="new-price">
+                                                    <b>23.00</b> лв.
+                                                </p>
+                                            </div>
+
+                                            <div class="prod-qty hover-images">
+                                                <div class="input-group">
+                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
+
+                                                    <input class="input-group-field" type="number" name="quantity" value="0">
+
+                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
+                                                </div>
+
+
+                                                <a href="" class="prod-fav">
+                                                    <img src="assets/icons/heart-alt.svg" alt="">
+
+                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
+                                                </a>
+                                            </div>
+
+                                            <div class="prod-actions">
+                                                <a href="" class="remove-prod">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- prod EXTRAS -->
+                                    <div class="prod-extras">
+                                        <h4>В комплект с:</h4>
+
+                                        <div class="product-box">
+                                            <div class="prod-content">
+                                                <div class="prod-image">
+                                                    <a href=""></a>
+                                                    <img src="assets/images/prod-img.png" alt="">
+                                                </div>
+
+                                                <div class="prod-inner">
+                                                    <h3><a href="">Shampoo for all hair types</a></h3>
+
+                                                    <div class="prod-prices">
+                                                        <p class="main-price price-old">
+                                                            <b>25.00</b> лв.
+                                                        </p>
+
+                                                        <p class="new-price">
+                                                            <b>23.00</b> лв.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="prod-actions">
+                                                        <a href="" class="remove-prod">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="product-box">
+                                            <div class="prod-content">
+                                                <div class="prod-image">
+                                                    <a href=""></a>
+                                                    <img src="assets/images/prod-img.png" alt="">
+                                                </div>
+
+                                                <div class="prod-inner">
+                                                    <h3><a href="">Shampoo for all hair types</a></h3>
+
+                                                    <div class="prod-prices">
+                                                        <p class="main-price price-old">
+                                                            <b>25.00</b> лв.
+                                                        </p>
+
+                                                        <p class="new-price">
+                                                            <b>23.00</b> лв.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="prod-actions">
+                                                        <a href="" class="remove-prod">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="product-box">
+                                    <div class="prod-content">
+                                        <div class="prod-image">
+                                            <a href=""></a>
+                                            <img src="assets/images/prod-img.png" alt="">
+                                        </div>
+
+                                        <div class="prod-inner">
+                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
+
+                                            <div class="prod-prices">
+                                                <p class="main-price price-old">
+                                                    <b>25.00</b> лв.
+                                                </p>
+
+                                                <p class="new-price">
+                                                    <b>23.00</b> лв.
+                                                </p>
+                                            </div>
+
+                                            <div class="prod-qty hover-images">
+                                                <div class="input-group">
+                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
+
+                                                    <input class="input-group-field" type="number" name="quantity" value="0">
+
+                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
+                                                </div>
+
+
+                                                <a href="" class="prod-fav">
+                                                    <img src="assets/icons/heart-alt.svg" alt="">
+
+                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
+                                                </a>
+                                            </div>
+
+                                            <div class="prod-actions">
+                                                <a href="" class="remove-prod">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- prod EXTRAS -->
+                                    <div class="prod-extras">
+                                        <h4>
+                                            Промоция 2=3
+
+                                            <span class="info-wrapper">
+												<img src="assets/icons/icon-info.svg" alt="">
+
+												<span class="info-text">
+													Купи два, получаваш трети с 50% отстъпка
+												</span>
+											</span>
+                                        </h4>
+
+                                        <div class="product-box">
+                                            <div class="prod-content">
+                                                <div class="prod-image">
+                                                    <a href=""></a>
+                                                    <img src="assets/images/prod-img.png" alt="">
+                                                </div>
+
+                                                <div class="prod-inner">
+                                                    <h3><a href="">Shampoo for all hair types and scalps for women, men and little curly children</a></h3>
+
+                                                    <div class="prod-prices">
+                                                        <p class="main-price price-old">
+                                                            <b>25.00</b> лв.
+                                                        </p>
+
+                                                        <p class="new-price">
+                                                            <b>23.00</b> лв.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="prod-actions">
+                                                        <a href="" class="remove-prod">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="product-box">
+                                    <div class="prod-content">
+                                        <div class="prod-image">
+                                            <a href=""></a>
+                                            <img src="assets/images/prod-img.png" alt="">
+                                        </div>
+
+                                        <div class="prod-inner">
+                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
+
+                                            <div class="prod-prices">
+                                                <p class="main-price price-old">
+                                                    <b>25.00</b> лв.
+                                                </p>
+
+                                                <p class="new-price">
+                                                    <b>23.00</b> лв.
+                                                </p>
+                                            </div>
+
+                                            <div class="prod-qty hover-images">
+                                                <div class="input-group">
+                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
+
+                                                    <input class="input-group-field" type="number" name="quantity" value="0">
+
+                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
+                                                </div>
+
+
+                                                <a href="" class="prod-fav">
+                                                    <img src="assets/icons/heart-alt.svg" alt="">
+
+                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
+                                                </a>
+                                            </div>
+
+                                            <div class="prod-actions">
+                                                <a href="" class="remove-prod">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                </div>
+                            </div>
+
+                            <div class="product-boxes gift-boxes">
+                                <h3>Your gifts</h3>
+
+                                <div class="product-box">
+                                    <div class="prod-content">
+                                        <div class="prod-image">
+                                            <a href=""></a>
+                                            <img src="assets/images/prod-img.png" alt="">
+                                        </div>
+
+                                        <div class="prod-inner">
+                                            <h3>Shampoo for all hair types and scalps for</h3>
+
+                                            <div class="prod-prices">
+                                                <p class="main-price">
+                                                    <b>0.00</b> лв.
+                                                </p>
+                                            </div>
+
+                                            <div class="prod-gift-info">
+                                                <img src="assets/icons/gift-box.svg" alt="">
+
+                                                <span class="info-wrapper">
+													<strong>Подарък</strong>
+
+													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>
+												</span>
+                                            </div>
+
+                                            <div class="prod-actions">
+                                                <a href="" class="remove-prod">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="product-box">
+                                    <div class="prod-content">
+                                        <div class="prod-image missing-prod">
+                                            <a href=""></a>
+                                            <img src="assets/images/prod-img.png" alt="">
+                                        </div>
+
+                                        <div class="prod-inner">
+                                            <h3>Shampoo for all hair types and scalps for</h3>
+
+                                            <div class="prod-prices">
+                                                <p class="main-price">
+                                                    <b>0.00</b> лв.
+                                                </p>
+                                            </div>
+
+                                            <div class="prod-gift-info">
+                                                <img src="assets/icons/gift-box.svg" alt="">
+
+                                                <span class="info-wrapper">
+													<strong>Подарък</strong>
+
+													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>
+												</span>
+                                            </div>
+
+                                            <div class="prod-actions">
+                                                <a href="" class="remove-prod">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-1of3">
+                        <h3 class="title-main title-border">Обобщение</h3>
+
+                        <div class="col-inner">
+                            <div class="summary-boxes">
+                                <div class="box">
+                                    <div class="box-row">
+                                        <span>Цена на продуктите</span>
+
+                                        <strong>840.00  лв.</strong>
+                                    </div>
+
+                                    <div class="box-row box-row-promo">
+                                        <div class="promo-info">
+                                            Кодът ви е добавен успешно!
+                                        </div>
+
+                                        <div class="promo-info promo-info-warning">
+                                            Кодът не е валиден или е грешен.
+                                        </div>
+
+                                        <div class="form-wrapper form-wrapper-alt">
+                                            <form method="post" enctype="multipart/form-data" action="">
+                                                <div class="form-body">
+                                                    <div class="form-row">
+                                                        <div class="input-container">
+                                                            <input id="promo-code" class="promo-code" type="text" placeholder="Код за отстъпка">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-footer">
+                                                    <button type="submit" class="submit-button" value="приложи">приложи</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="box-row box-row-warning">
+                                        <span>Общо отстъпки</span>
+
+                                        <strong>- 185.00  лв.</strong>
+                                    </div>
+                                </div>
+
+                                <div class="box">
+                                    <div class="box-row box-row-big">
+                                        <span>Общо с ДДС</span>
+
+                                        <strong>655.00  лв.</strong>
+                                    </div>
+
+                                    <p>Остават ви 85.00 лв до безплатна доставка.</p>
+
+                                    <p>Shipping and taxes will be calculated at checkout.</p>
+                                </div>
+
+                                <div class="box-actions">
+                                    <a href="" class="btn btn-black">go to check out</a>
+
+                                    <a href="" class="btn btn-outline">Continue shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">

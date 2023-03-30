@@ -7,6 +7,7 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Traits\CommonActions;
+use App\Traits\HasGallery;
 use App\Traits\Scopes;
 use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model implements TranslatableContract, ImageModelInterface
 {
-    use Translatable, Scopes, StorageActions, CommonActions;
+    use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
     public const FILES_PATH = "images/shop/product_categories";
 
@@ -95,5 +96,9 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     public function getSystemImage(): string
     {
         return AdminHelper::getSystemImage(self::$PRODUCT_CATEGORY_SYSTEM_IMAGE);
+    }
+    public function headerGallery()
+    {
+        return $this->getHeaderGalleryRelation(get_class($this));
     }
 }
