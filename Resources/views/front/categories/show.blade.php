@@ -1,6 +1,16 @@
 @extends('layouts.front.app')
+@section('styles')
+    <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/cubeportfolio.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/remove_padding.css') }}">
+@endsection
+
+@section('scripts')
+    <script type="text/javascript" src="{{ asset('/front/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/front/plugins/cubeportfolio/js/main.js') }}"></script>
+@endsection
 
 @section('content')
+    @include('front.partials.inner_header')
     @include('front.partials.breadcrumbs')
 
     <section class="section-article">
