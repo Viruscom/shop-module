@@ -36,7 +36,7 @@
                                 {{ $adBoxWaitingAction->product->title }}
                             </td>
                             <td class="pull-right">
-                                <a href="{{ url('/admin/product_adboxes/'.$adBoxWaitingAction->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="{{ route('admin.product-adboxes.edit', ['id' => $adBoxWaitingAction->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                                 <a href="{{ url('/admin/product_adboxes/'.$adBoxWaitingAction->id.'/delete') }}" class="btn red" data-toggle="confirmation"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>

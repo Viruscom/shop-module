@@ -115,8 +115,9 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
         $adBox = AdBoxProduct::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($adBox);
 
-        return view('shop::admin.product_adboxes.edit', [
+        return view('shop::admin.adboxes_products.edit', [
             'adBox'     => $adBox,
+            'waitingAction' => AdBoxProduct::$WAITING_ACTION,
             'languages' => LanguageHelper::getActiveLanguages(),
         ]);
     }
