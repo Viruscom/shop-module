@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBаsketProductsTable extends Migration
+class CreateBasketProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class CreateBаsketProductsTable extends Migration
             $table->foreign('basket_id')->references('id')->on('baskets')->onDelete('cascade')->onUpdate('cascade');
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
-            
+
             $table->bigInteger('product_quantity')->unsigned()->nullable(false)->default(0);
             $table->timestamps();
         });
