@@ -113,6 +113,7 @@ class AdBoxProduct extends Model implements TranslatableContract
     {
         $data         = self::getRequestData($request);
         $data['type'] = self::$FIRST_TYPE;
+
         if ($request->has('type')) {
             $data['type'] = $request['type'];
         }

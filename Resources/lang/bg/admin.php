@@ -5,8 +5,12 @@ return [
         'index'          => 'Магазин',
         'create'         => 'Добавяне на',
         'edit'           => 'Редактиране на ',
+<<<<<<< HEAD
         'settings_index' => 'Магазин настройки',
         'dashboard'      => 'Табло',
+=======
+        'settings_index' => 'Магазин настройки'
+>>>>>>> baae6815a0adaf49e36d8a6037d00fefd47a52d2
     ],
     'common' => [
         'number'  => '№',

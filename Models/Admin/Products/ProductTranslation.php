@@ -6,7 +6,10 @@ use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
 use App\Models\CategoryPage\CategoryPage;
 use App\Models\Language;
+<<<<<<< HEAD
 use App\Models\Pages\PageTranslation;
+=======
+>>>>>>> baae6815a0adaf49e36d8a6037d00fefd47a52d2
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,8 +27,13 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
     {
         $data = [
             'locale' => $language->code,
+<<<<<<< HEAD
             'title'  => UrlHelper::makeUniqueTitle($request['title_' . $language->code], $language->code, ProductTranslation::class, $modelId, $isUpdate),
             'url'    => UrlHelper::generate($request['title_' . $language->code], ProductTranslation::class, $modelId, $isUpdate)
+=======
+            'title'  => $request['title_' . $language->code],
+            'url'    => UrlHelper::generate($request['title_' . $language->code], 'ProductTranslation', $modelId, $isUpdate)
+>>>>>>> baae6815a0adaf49e36d8a6037d00fefd47a52d2
         ];
 
         if ($request->has('announce_' . $language->code)) {
