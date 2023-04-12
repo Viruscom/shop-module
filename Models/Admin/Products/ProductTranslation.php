@@ -6,10 +6,7 @@ use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
 use App\Models\CategoryPage\CategoryPage;
 use App\Models\Language;
-<<<<<<< HEAD
 use App\Models\Pages\PageTranslation;
-=======
->>>>>>> baae6815a0adaf49e36d8a6037d00fefd47a52d2
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,17 +20,13 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
                            'height', 'width', 'depth', 'weight', 'facebook_script', 'google_script', 'title_additional_1', 'title_additional_2', 'title_additional_3',
                            'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                            'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
+
     public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
     {
         $data = [
             'locale' => $language->code,
-<<<<<<< HEAD
             'title'  => UrlHelper::makeUniqueTitle($request['title_' . $language->code], $language->code, ProductTranslation::class, $modelId, $isUpdate),
             'url'    => UrlHelper::generate($request['title_' . $language->code], ProductTranslation::class, $modelId, $isUpdate)
-=======
-            'title'  => $request['title_' . $language->code],
-            'url'    => UrlHelper::generate($request['title_' . $language->code], 'ProductTranslation', $modelId, $isUpdate)
->>>>>>> baae6815a0adaf49e36d8a6037d00fefd47a52d2
         ];
 
         if ($request->has('announce_' . $language->code)) {
