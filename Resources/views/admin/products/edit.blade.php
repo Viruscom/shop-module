@@ -128,6 +128,7 @@
                         <li @if($language->code == env('DEF_LANG_CODE')) class="active" @endif><a langcode="{{$language->code}}">{{$language->code}}</a></li>
                     @endforeach
                 </ul>
+                @include('admin.partials.on_edit.seo', ['model' => $product->seoFields])
                 <div class="form form-horizontal">
                     <div class="form-body">
                         <div class="form-group insertFileContainer">

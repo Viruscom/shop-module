@@ -57,6 +57,7 @@
                         </div>
                     @endforeach
                 </div>
+                @include('admin.partials.on_edit.seo', ['model' => $brand->seoFields])
                 <div class="form form-horizontal">
                     <div class="form-body">
                         @include('admin.partials.on_edit.form_fields.upload_file', ['model' => $brand, 'deleteRoute' => route('admin.brands.delete-image', ['id'=>$brand->id])])

@@ -11,7 +11,9 @@
 @section('content')
     @include('front.partials.inner_header')
     @include('front.partials.breadcrumbs')
-
+    @php
+        $product = $viewArray['currentModel']->parent;
+    @endphp
     <section class="section-article">
         <article class="article-single">
             <div class="shell">
@@ -26,7 +28,6 @@
                         </p>
                     </div>
 
-
                     <h3 class="article-title" data-aos="fade-up" data-aos-delay="150">{{ $viewArray['currentModel']->title }}</h3>
                 </div>
 
@@ -34,46 +35,48 @@
                     <div class="product-main">
                         <div class="prod-aside">
                             <div class="prod-image">
-                                <img src="{{ $viewArray['currentModel']->parent->getFileUrl() }}" alt="" class="">
+                                <img src="{{ $product->getFileUrl() }}" alt="" class="">
                             </div>
 
                             <div class="promos-wrapper">
                                 <span class="promo">2 = 1</span>
 
                                 <span class="promo">-25 %</span>
-                                <span class="promo promo-new">NEW</span>
+                                @if($product->isNewProduct())
+                                    <span class="promo promo-new">NEW</span>
+                                @endif
                             </div>
                         </div>
 
                         <div class="prod-content">
                             <form method="post" enctype="multipart/form-data" id="" action="{{ route('basket.products.add') }}">
                                 @csrf
-                                <input type="hidden" name="product_id" value="{{$viewArray['currentModel']->parent->id}}">
+                                <input type="hidden" name="product_id" value="{{$product->id}}">
                                 <div class="prod-price">
                                     <p class="price-old"><b>25.00</b> лв.</p>
 
-                                    <p class="price-new"><b>23.00</b> лв.</p>
+                                    <p class="price-new"><b>{{ $product->getPrice() }}</b> лв.</p>
                                 </div>
 
                                 <div class="prod-info">
                                     <p>
                                         {{ __('shop::front.product.sku') }}:
-                                        <strong>{{$viewArray['currentModel']->parent->sku}}</strong>
+                                        <strong>{{$product->sku}}</strong>
                                     </p>
 
                                     <p>
                                         {{ __('shop::front.product.barcode') }}:
-                                        <strong>{{$viewArray['currentModel']->parent->barcode}}</strong>
+                                        <strong>{{$product->barcode}}</strong>
                                     </p>
 
                                     <p>
                                         {{ __('shop::front.product.brand') }}:
-                                        <strong>{{$viewArray['currentModel']->parent->brand->title}}</strong>
+                                        <strong>{{$product->brand->title}}</strong>
                                     </p>
 
                                     <p>
                                         {{ __('shop::front.product.category') }}:
-                                        <strong>{{$viewArray['currentModel']->parent->category->title}}</strong>
+                                        <strong>{{$product->category->title}}</strong>
                                     </p>
                                 </div>
 
@@ -92,9 +95,9 @@
                                         <a href="" data-quantity="plus" data-field="quantity">+</a>
                                     </div>
 
-{{--                                    <div class="qty-wrapper">--}}
-{{--                                        <span>50</span> ml--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="qty-wrapper">--}}
+                                    {{--                                        <span>50</span> ml--}}
+                                    {{--                                    </div>--}}
                                 </div>
 
                                 <p>Subtotal: 75.00 BGN</p>
@@ -114,11 +117,11 @@
                                     </button>
 
                                     @if(!Auth::guard('shop')->guest())
-                                    <a href="" class="btn btn-icon">
-                                        <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="" width="21.21">
+                                        <a href="" class="btn btn-icon">
+                                            <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="" width="21.21">
 
-                                        <span>{{__('shop::front.product.add_to_wishlist')}}</span>
-                                    </a>
+                                            <span>{{__('shop::front.product.add_to_wishlist')}}</span>
+                                        </a>
                                     @endif
                                 </div>
                             </form>
@@ -306,27 +309,27 @@
                 <div class="article-body" data-aos="fade-up" data-aos-delay="200">
                     <div class="article-inner">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
+                            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. </p>
 
                         <h3>Lorem ipsum dolor sit amet, consectetur</h3>
 
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
+                            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. </p>
 
                         <h3>Lorem ipsum dolor sit amet, consectetur</h3>
 
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
+                            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. </p>
 
                         <h3>Lorem ipsum dolor sit amet, consectetur</h3>
 
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                        </p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
+                            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. </p>
                     </div>
 
                     <div class="article-product-info">

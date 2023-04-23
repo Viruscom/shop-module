@@ -26,7 +26,7 @@
                 <div>
                     <a href="{{ route('payments.index') }}">
                         <img src="{{ asset('admin/assets/images/cart.svg') }}">
-                        <span>Плащания</span>
+                        <span>{{ __('shop::admin.payments.index') }}</span>
                     </a>
                 </div>
 

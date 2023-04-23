@@ -31,6 +31,7 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
     {
         $productCategory = $action->doSimpleCreate(Category::class, $request);
         $action->updateUrlCache($productCategory, CategoryTranslation::class);
+        $action->storeSeo($request, $productCategory, 'Category');
         Category::cacheUpdate();
 
         $productCategory->storeAndAddNew($request);
@@ -101,6 +102,7 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
 
         $action->doSimpleUpdate(Category::class, CategoryTranslation::class, $productCategory, $request);
         $action->updateUrlCache($productCategory, CategoryTranslation::class);
+        $action->updateSeo($request, $productCategory, 'Category');
 
         if ($request->has('image')) {
             $request->validate(['image' => Category::getFileRules()], [Category::getUserInfoMessage()]);

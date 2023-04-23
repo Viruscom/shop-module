@@ -1,45 +1,44 @@
 @extends('layouts.admin.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Payments
-                    </div>
+    @include('admin.notify')
 
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-                        <table class="table table-responsive">
-                            <thead>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{{ __('shop::admin.payments.position') }}</th>
+                        <th>{{ __('shop::admin.payments.payment_system') }}</th>
+                        <th>{{ __('shop::admin.payments.status') }}</th>
+                        <th class="text-right">{{ __('admin.actions') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if(count($payments))
+                        @foreach($payments as $payment)
                             <tr>
-                                <td>Position</td>
-                                <td>Payment</td>
-                                <td>Active</td>
-                                <td>ACTION</td>
+                                <td>{{$payment->position}}</td>
+                                <td>{{$payment->type}}</td>
+                                <td>{{$payment->active}}</td>
+                                <td class="text-right">
+                                    @if($payment->hasEditView())
+                                        <a class="btn btn-warning" href="{{route('payments.edit',['id'=>$payment->id])}}">{{ __('edit') }}</a>
+                                    @endif
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($payments as $payment)
-                                <tr>
-                                    <td>{{$payment->position}}</td>
-                                    <td>{{$payment->type}}</td>
-                                    <td>{{$payment->active}}</td>
-                                    <td>
-                                        @if($payment->hasEditView())
-                                            <a class="btn btn-warning" href="{{route('payments.edit',['id'=>$payment->id])}}">edit</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        @endforeach
+                        <tr style="display: none;">
+                            <td colspan="4" class="no-table-rows">{{ __('shop::admin.payments.no-payments') }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="4" class="no-table-rows">{{ __('shop::admin.payments.no-payments') }}</td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

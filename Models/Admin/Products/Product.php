@@ -7,6 +7,7 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
+use App\Models\Seo;
 use App\Traits\CommonActions;
 use App\Traits\HasGallery;
 use App\Traits\Scopes;
@@ -28,6 +29,9 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
     public const FILES_PATH = "images/shop/products";
+    const ALLOW_CATALOGS = true;
+    const ALLOW_ICONS = true;
+    const ALLOW_LOGOS = true;
 
     public static string $PRODUCT_SYSTEM_IMAGE  = 'product_1_image.png';
     public static string $PRODUCT_RATIO         = '1/1';
@@ -160,33 +164,6 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return number_format($this->price, 2, '.', '');
     }
-
-    public function seo()
-    {
-        SeoHelper::setTitle($this->title);
-        SeoHelper::setDescription($this->description);
-        SeoHelper::setMetaTags([
-                                   'robots' => 'index, follow',
-                                   'author' => 'John Doe',
-                                   'keywords' => 'Laravel, SEO, Example',
-                               ]);
-//        SeoHelper::setOGTags([
-//                                 'type' => 'article',
-//                                 'url' => url()->current(),
-//                                 'image' => $this->getFileUrl(),
-//                             ]);
-        SeoHelper::setTwitterCard('summary_large_image');
-        SeoHelper::setJsonLd('Article', [
-            'title' => $this->title,
-            'description' => $this->description,
-            'image' => $this->getFileUrl(),
-            'published_at' => $this->created_at->toIso8601String(),
-            'updated_at' => $this->updated_at->toIso8601String(),
-        ]);
-
-        return null;
-    }
-
     public function headerGallery()
     {
         return $this->getHeaderGalleryRelation(get_class($this));
@@ -218,5 +195,39 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public function additionalGallerySix()
     {
         return $this->getAdditionalGallerySixRelation(get_class($this));
+    }
+    public function seoFields()
+    {
+        return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
+    }
+
+    public function seo($languageSlug)
+    {
+        $seo = $this->seoFields;
+        if (is_null($seo)) {
+            return null;
+        }
+        SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
+    }
+
+    public function isNewProduct(): bool
+    {
+        return (boolean) $this->is_new;
+    }
+
+    public function isPromoProduct(): bool
+    {
+        return (boolean) $this->is_promo;
+    }
+
+    public function isInCollection(): bool
+    {
+        //TODO: Make collection check
+        return false;
+    }
+
+    public function getUrl($languageSlug)
+    {
+        return url($languageSlug . '/' . $this->url);
     }
 }

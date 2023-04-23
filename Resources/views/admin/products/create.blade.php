@@ -121,6 +121,7 @@
                         <li @if($language->code === config('default.app.language.code')) class="active" @endif><a langcode="{{$language->code}}">{{$language->code}}</a></li>
                     @endforeach
                 </ul>
+                @include('admin.partials.on_create.seo')
                 <div class="form form-horizontal">
                     <div class="form-body">
                         <div class="row">

@@ -52,6 +52,7 @@
                         </div>
                     @endforeach
                 </div>
+                @include('admin.partials.on_create.seo')
                 <div class="form form-horizontal">
                     <div class="form-body">
                         @include('admin.partials.on_create.form_fields.upload_file')

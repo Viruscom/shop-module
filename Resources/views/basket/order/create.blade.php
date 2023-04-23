@@ -1,6 +1,48 @@
 @extends('layouts.front.app')
 
 @section('content')
+    <div class="page-wrapper">
+        @include('shop::basket.breadcrumbs')
+
+        <div class="cart-wrapper">
+            <div class="shell">
+                <div class="form-wrapper form-wrapper-alt">
+                    <form method="post" enctype="multipart/form-data" id="payment-form-unregistered" action="">
+                        <div class="cart-cols">
+                            <div class="col col-2of3">
+                                <h3 class="title-main title-border">Каса</h3>
+
+                                <div class="col-inner">
+                                    @if(!\Illuminate\Support\Facades\Auth::guard('shop')->check())
+                                        <div class="top-actions">
+                                            <a href="" class="btn btn-black">Sign in</a>
+
+                                            <a href="" class="btn btn-outline">Create account</a>
+                                        </div>
+                                    @endif
+
+                                    @include('shop::basket.partials.contact_info')
+
+                                    @include('shop::basket.partials.deliveries')
+
+                                    @include('shop::basket.partials.payments')
+
+                                    @include('shop::basket.partials.invoice_details')
+                                </div>
+                            </div>
+
+                            <div class="col col-1of3">
+                                @include('shop::basket.partials.basket_summary')
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">

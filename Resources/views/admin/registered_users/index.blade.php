@@ -1,60 +1,23 @@
 @extends('layouts.admin.app')
 
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
     <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
     <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-        $(".select2").select2({language: "bg"});
         $(document).ready(function () {
-            // Setup - add a text input to each footer cell
-            $('#example thead tr').clone(true).appendTo('#example thead');
-            $('#example thead tr:eq(1) th').each(function (i) {
-                var title = $(this).text();
-                $(this).html('<input type="text" class="datatable-filter-input" placeholder="филтрирай по ' + title + '" style="width:100%;" />');
-
-                $('input', this).on('keyup change', function () {
-                    if (table.column(i).search() !== this.value) {
-                        table
-                            .column(i)
-                            .search(this.value)
-                            .draw();
-                    }
-                });
-            });
-
-            var table = $('#example').DataTable({
-                orderCellsTop: true,
-                fixedHeader: true,
-                language: {
-                    "sProcessing": "Обработка на резултатите...",
-                    "sLengthMenu": "Показване на _MENU_ резултата",
-                    "sZeroRecords": "Няма намерени резултати",
-                    "sInfo": "Показване на резултати от _START_ до _END_ от общо _TOTAL_",
-                    "sInfoEmpty": "Показване на резултати от 0 до 0 от общо 0",
-                    "sInfoFiltered": "(филтрирани от общо _MAX_ резултата)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Търсене:",
-                    "sUrl": "",
-                    "oPaginate": {
-                        "sFirst": "Първа",
-                        "sPrevious": "Предишна",
-                        "sNext": "Следваща",
-                        "sLast": "Последна"
-                    }
-                }
-            });
+            var options = {
+                withSortableRow: true,
+                sortableRowFromColumn: 0,
+                sortableRowToColumn: 5,
+                rowsPerPage: 50
+            }
+            initDatatable('example', options);
         });
+
     </script>
 @endsection
 

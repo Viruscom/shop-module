@@ -32,6 +32,7 @@ class BrandController extends Controller implements ShopBrandInterface, Position
     {
         $brand = $action->doSimpleCreate(Brand::class, $request);
         $action->updateUrlCache($brand, BrandTranslation::class);
+        $action->storeSeo($request, $brand, 'Brand');
 
         if ($request->has('logo_image')) {
             $brand->saveFile($request->logo_image);
@@ -107,6 +108,7 @@ class BrandController extends Controller implements ShopBrandInterface, Position
 
         $action->doSimpleUpdate(Brand::class, BrandTranslation::class, $brand, $request);
         $action->updateUrlCache($brand, BrandTranslation::class);
+        $action->updateSeo($request, $brand, 'Brand');
 
         if ($request->has('image')) {
             $request->validate(['image' => Brand::getFileRules()], [Brand::getUserInfoMessage()]);

@@ -11,328 +11,252 @@
                         <h3 class="title-main title-border">{!! trans('shop::front.basket.index') !!}</h3>
 
                         <div class="col-inner">
-                            <div class="box-warning">
-                                <p>Някои от избраните продукти в момента не са налични.</p>
-                            </div>
+{{--                            <div class="box-warning">--}}
+{{--                                <p>Някои от избраните продукти в момента не са налични.</p>--}}
+{{--                            </div>--}}
 
-                            <div class="box-info">
-                                <img src="assets/icons/gift-box.svg" alt="">
+{{--                            <div class="box-info">--}}
+{{--                                <img src="{{ asset('front/assets/icons/gift-box.svg') }}" alt="">--}}
 
-                                <p>
-                                    Изберете <strong>2 подаръка</strong> от нашите предложения в периода 01-31 януари
-                                </p>
-                            </div>
+{{--                                <p>--}}
+{{--                                    Изберете <strong>2 подаръка</strong> от нашите предложения в периода 01-31 януари--}}
+{{--                                </p>--}}
+{{--                            </div>--}}
 
                             <div class="product-boxes">
+                                @if(is_null($basket) || $basket->basket_products->count()<1)
+                                    <div class="box-warning">
+                                        <p>@lang('shop::front.basket.empty_basket')</p>
+                                    </div>
+                                @else
+                                    @foreach($basket->calculated_basket_products as $basketProduct)
+                                        <tr>
+                                            <td></td>
+                                            <td>{{$basketProduct->product->price}}</td>
+                                            <td></td>
+                                            <td>{{$basketProduct->vat}}</td>
+                                            <td>{{$basketProduct->vat_applied_price}}</td>
+                                            <td>{{$basketProduct->vat_applied_discounted_price}}</td>
+                                            <td>{{$basketProduct->end_price}}</td>
+                                            <td>{{$basketProduct->end_discounted_price}}</td>
+                                            <td>{{$basketProduct->free_delivery ? 'Yes':'No'}}</td>
+                                            <td>
+                                                <form method="post" action="{{route('basket.products.add')}}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
+                                                    <input type="hidden" name="product_quantity" value="-1">
+                                                    <span class="btn btn-warning" onclick="$(this).closest('form').submit();">Decrement</span>
+                                                </form>
+                                                <form method="post" action="{{route('basket.products.add')}}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
+                                                    <span class="btn btn-success" onclick="$(this).closest('form').submit();">Increment</span>
+                                                </form>
+                                                <form method="post" action="{{route('basket.products.add')}}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
+                                                    <input type="hidden" name="product_quantity" value="0">
+                                                    <span class="btn btn-danger" onclick="$(this).closest('form').submit();">Delete</span>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td colspan="11">{{__("Total")}}: {{$basket->total}} / {{__("Total Discounted")}}: {{$basket->total_discounted}} / {{__('Free delivery')}}: {{$basket->total_free_delivery ? 'Yes':'No'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="11">
+                                            <a href="" class="btn btn-success">{{__('Order')}}</a>
+                                        </td>
+                                    </tr>
+                                @endif
                                 <div class="product-box">
                                     <div class="prod-content">
                                         <div class="prod-image">
-                                            <a href=""></a>
-                                            <img src="assets/images/prod-img.png" alt="">
+                                            <a href="{{ $basketProduct->product->getUrl($languageSlug) }}"></a>
+                                            <img src="{{ $basketProduct->product->getFileUrl() }}" alt="">
                                         </div>
 
                                         <div class="prod-inner">
-                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
+                                            <h3><a href="{{ $basketProduct->product->getUrl($languageSlug) }}">{{ $basketProduct->product->title }}</a></h3>
 
                                             <div class="prod-prices">
-                                                <p class="main-price price-old">
-                                                    <b>25.00</b> лв.
-                                                </p>
+                                                @if($basketProduct->end_discounted_price !== $basketProduct->price)
+                                                    <p class="main-price price-old">
+                                                        <b>25.00</b> лв.
+                                                    </p>
 
-                                                <p class="new-price">
-                                                    <b>23.00</b> лв.
-                                                </p>
+                                                    <p class="new-price">
+                                                        <b>{{$basketProduct->price}}</b> лв.
+                                                    </p>
+                                                @else
+                                                    <p class="new-price">
+                                                        <b>{{$basketProduct->price}}</b> лв.
+                                                    </p>
+                                                @endif
+
                                             </div>
 
                                             <div class="prod-qty hover-images">
                                                 <div class="input-group">
                                                     <a href="" data-quantity="minus" data-field="quantity">-</a>
 
-                                                    <input class="input-group-field" type="number" name="quantity" value="0">
+                                                    <input class="input-group-field" type="number" name="quantity" value="{{$basketProduct->product_quantity}}">
 
                                                     <a href="" data-quantity="plus" data-field="quantity">+</a>
                                                 </div>
 
 
                                                 <a href="" class="prod-fav">
-                                                    <img src="assets/icons/heart-alt.svg" alt="">
+                                                    <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="">
 
-                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
+                                                    <img src="{{ asset('front/assets/icons/heart-alt-hover.svg') }}" alt="">
                                                 </a>
                                             </div>
 
                                             <div class="prod-actions">
-                                                <a href="" class="remove-prod">Remove</a>
+                                                <a href="" class="remove-prod">@lang('shop::front.basket.remove_product')</a>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- prod EXTRAS -->
-                                    <div class="prod-extras">
-                                        <h4>В комплект с:</h4>
+                                    @if($basketProduct->isInCollection)
+                                        <div class="prod-extras">
+                                            <h4>В комплект с:</h4>
 
-                                        <div class="product-box">
-                                            <div class="prod-content">
-                                                <div class="prod-image">
-                                                    <a href=""></a>
-                                                    <img src="assets/images/prod-img.png" alt="">
-                                                </div>
-
-                                                <div class="prod-inner">
-                                                    <h3><a href="">Shampoo for all hair types</a></h3>
-
-                                                    <div class="prod-prices">
-                                                        <p class="main-price price-old">
-                                                            <b>25.00</b> лв.
-                                                        </p>
-
-                                                        <p class="new-price">
-                                                            <b>23.00</b> лв.
-                                                        </p>
+                                            <div class="product-box">
+                                                <div class="prod-content">
+                                                    <div class="prod-image">
+                                                        <a href=""></a>
+                                                        <img src="assets/images/prod-img.png" alt="">
                                                     </div>
 
-                                                    <div class="prod-actions">
-                                                        <a href="" class="remove-prod">Remove</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    <div class="prod-inner">
+                                                        <h3><a href="">Shampoo for all hair types</a></h3>
 
-                                        <div class="product-box">
-                                            <div class="prod-content">
-                                                <div class="prod-image">
-                                                    <a href=""></a>
-                                                    <img src="assets/images/prod-img.png" alt="">
-                                                </div>
+                                                        <div class="prod-prices">
+                                                            <p class="main-price price-old">
+                                                                <b>25.00</b> лв.
+                                                            </p>
 
-                                                <div class="prod-inner">
-                                                    <h3><a href="">Shampoo for all hair types</a></h3>
+                                                            <p class="new-price">
+                                                                <b>23.00</b> лв.
+                                                            </p>
+                                                        </div>
 
-                                                    <div class="prod-prices">
-                                                        <p class="main-price price-old">
-                                                            <b>25.00</b> лв.
-                                                        </p>
-
-                                                        <p class="new-price">
-                                                            <b>23.00</b> лв.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="prod-actions">
-                                                        <a href="" class="remove-prod">Remove</a>
+                                                        <div class="prod-actions">
+                                                            <a href="" class="remove-prod">Remove</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                            <div class="product-box">
+                                                <div class="prod-content">
+                                                    <div class="prod-image">
+                                                        <a href=""></a>
+                                                        <img src="assets/images/prod-img.png" alt="">
+                                                    </div>
+
+                                                    <div class="prod-inner">
+                                                        <h3><a href="">Shampoo for all hair types</a></h3>
+
+                                                        <div class="prod-prices">
+                                                            <p class="main-price price-old">
+                                                                <b>25.00</b> лв.
+                                                            </p>
+
+                                                            <p class="new-price">
+                                                                <b>23.00</b> лв.
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="prod-actions">
+                                                            <a href="" class="remove-prod">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
 
-                                <div class="product-box">
-                                    <div class="prod-content">
-                                        <div class="prod-image">
-                                            <a href=""></a>
-                                            <img src="assets/images/prod-img.png" alt="">
-                                        </div>
-
-                                        <div class="prod-inner">
-                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
-
-                                            <div class="prod-prices">
-                                                <p class="main-price price-old">
-                                                    <b>25.00</b> лв.
-                                                </p>
-
-                                                <p class="new-price">
-                                                    <b>23.00</b> лв.
-                                                </p>
-                                            </div>
-
-                                            <div class="prod-qty hover-images">
-                                                <div class="input-group">
-                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
-
-                                                    <input class="input-group-field" type="number" name="quantity" value="0">
-
-                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
-                                                </div>
-
-
-                                                <a href="" class="prod-fav">
-                                                    <img src="assets/icons/heart-alt.svg" alt="">
-
-                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
-                                                </a>
-                                            </div>
-
-                                            <div class="prod-actions">
-                                                <a href="" class="remove-prod">Remove</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- prod EXTRAS -->
-                                    <div class="prod-extras">
-                                        <h4>
-                                            Промоция 2=3
-
-                                            <span class="info-wrapper">
-												<img src="assets/icons/icon-info.svg" alt="">
-
-												<span class="info-text">
-													Купи два, получаваш трети с 50% отстъпка
-												</span>
-											</span>
-                                        </h4>
-
-                                        <div class="product-box">
-                                            <div class="prod-content">
-                                                <div class="prod-image">
-                                                    <a href=""></a>
-                                                    <img src="assets/images/prod-img.png" alt="">
-                                                </div>
-
-                                                <div class="prod-inner">
-                                                    <h3><a href="">Shampoo for all hair types and scalps for women, men and little curly children</a></h3>
-
-                                                    <div class="prod-prices">
-                                                        <p class="main-price price-old">
-                                                            <b>25.00</b> лв.
-                                                        </p>
-
-                                                        <p class="new-price">
-                                                            <b>23.00</b> лв.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="prod-actions">
-                                                        <a href="" class="remove-prod">Remove</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="product-box">
-                                    <div class="prod-content">
-                                        <div class="prod-image">
-                                            <a href=""></a>
-                                            <img src="assets/images/prod-img.png" alt="">
-                                        </div>
-
-                                        <div class="prod-inner">
-                                            <h3><a href="">Shampoo for all hair types and scalps for</a></h3>
-
-                                            <div class="prod-prices">
-                                                <p class="main-price price-old">
-                                                    <b>25.00</b> лв.
-                                                </p>
-
-                                                <p class="new-price">
-                                                    <b>23.00</b> лв.
-                                                </p>
-                                            </div>
-
-                                            <div class="prod-qty hover-images">
-                                                <div class="input-group">
-                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
-
-                                                    <input class="input-group-field" type="number" name="quantity" value="0">
-
-                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
-                                                </div>
-
-
-                                                <a href="" class="prod-fav">
-                                                    <img src="assets/icons/heart-alt.svg" alt="">
-
-                                                    <img src="assets/icons/heart-alt-hover.svg" alt="">
-                                                </a>
-                                            </div>
-
-                                            <div class="prod-actions">
-                                                <a href="" class="remove-prod">Remove</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <h4 class="title-warning">Продуктът не е наличен!</h4>
-                                </div>
                             </div>
 
-                            <div class="product-boxes gift-boxes">
-                                <h3>Your gifts</h3>
+{{--                            <div class="product-boxes gift-boxes">--}}
+{{--                                <h3>Your gifts</h3>--}}
 
-                                <div class="product-box">
-                                    <div class="prod-content">
-                                        <div class="prod-image">
-                                            <a href=""></a>
-                                            <img src="assets/images/prod-img.png" alt="">
-                                        </div>
+{{--                                <div class="product-box">--}}
+{{--                                    <div class="prod-content">--}}
+{{--                                        <div class="prod-image">--}}
+{{--                                            <a href=""></a>--}}
+{{--                                            <img src="assets/images/prod-img.png" alt="">--}}
+{{--                                        </div>--}}
 
-                                        <div class="prod-inner">
-                                            <h3>Shampoo for all hair types and scalps for</h3>
+{{--                                        <div class="prod-inner">--}}
+{{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
 
-                                            <div class="prod-prices">
-                                                <p class="main-price">
-                                                    <b>0.00</b> лв.
-                                                </p>
-                                            </div>
+{{--                                            <div class="prod-prices">--}}
+{{--                                                <p class="main-price">--}}
+{{--                                                    <b>0.00</b> лв.--}}
+{{--                                                </p>--}}
+{{--                                            </div>--}}
 
-                                            <div class="prod-gift-info">
-                                                <img src="assets/icons/gift-box.svg" alt="">
+{{--                                            <div class="prod-gift-info">--}}
+{{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
 
-                                                <span class="info-wrapper">
-													<strong>Подарък</strong>
+{{--                                                <span class="info-wrapper">--}}
+{{--													<strong>Подарък</strong>--}}
 
-													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>
-												</span>
-                                            </div>
+{{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
+{{--												</span>--}}
+{{--                                            </div>--}}
 
-                                            <div class="prod-actions">
-                                                <a href="" class="remove-prod">Remove</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+{{--                                            <div class="prod-actions">--}}
+{{--                                                <a href="" class="remove-prod">Remove</a>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                <div class="product-box">
-                                    <div class="prod-content">
-                                        <div class="prod-image missing-prod">
-                                            <a href=""></a>
-                                            <img src="assets/images/prod-img.png" alt="">
-                                        </div>
+{{--                                <div class="product-box">--}}
+{{--                                    <div class="prod-content">--}}
+{{--                                        <div class="prod-image missing-prod">--}}
+{{--                                            <a href=""></a>--}}
+{{--                                            <img src="assets/images/prod-img.png" alt="">--}}
+{{--                                        </div>--}}
 
-                                        <div class="prod-inner">
-                                            <h3>Shampoo for all hair types and scalps for</h3>
+{{--                                        <div class="prod-inner">--}}
+{{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
 
-                                            <div class="prod-prices">
-                                                <p class="main-price">
-                                                    <b>0.00</b> лв.
-                                                </p>
-                                            </div>
+{{--                                            <div class="prod-prices">--}}
+{{--                                                <p class="main-price">--}}
+{{--                                                    <b>0.00</b> лв.--}}
+{{--                                                </p>--}}
+{{--                                            </div>--}}
 
-                                            <div class="prod-gift-info">
-                                                <img src="assets/icons/gift-box.svg" alt="">
+{{--                                            <div class="prod-gift-info">--}}
+{{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
 
-                                                <span class="info-wrapper">
-													<strong>Подарък</strong>
+{{--                                                <span class="info-wrapper">--}}
+{{--													<strong>Подарък</strong>--}}
 
-													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>
-												</span>
-                                            </div>
+{{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
+{{--												</span>--}}
+{{--                                            </div>--}}
 
-                                            <div class="prod-actions">
-                                                <a href="" class="remove-prod">Remove</a>
-                                            </div>
-                                        </div>
-                                    </div>
+{{--                                            <div class="prod-actions">--}}
+{{--                                                <a href="" class="remove-prod">Remove</a>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
-                                    <h4 class="title-warning">Продуктът не е наличен!</h4>
-                                </div>
-                            </div>
+{{--                                    <h4 class="title-warning">Продуктът не е наличен!</h4>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                         </div>
                     </div>
 
@@ -394,7 +318,7 @@
                                 </div>
 
                                 <div class="box-actions">
-                                    <a href="" class="btn btn-black">go to check out</a>
+                                    <a href="{{route('basket.order.create')}}" class="btn btn-black">go to check out</a>
 
                                     <a href="" class="btn btn-outline">Continue shopping</a>
                                 </div>
@@ -509,33 +433,33 @@
                                     <td colspan="11">{{__("No data")}}</td>
                                 </tr>
                             @else
-                                @foreach($basket->calculated_basket_products as $basket_product)
+                                @foreach($basket->calculated_basket_products as $basketProduct)
                                     <tr>
-                                        <td>{{$basket_product->product->id}}</td>
-                                        <td>{{$basket_product->product_quantity}}</td>
-                                        <td>{{$basket_product->product->price}}</td>
-                                        <td>{{$basket_product->price}}</td>
-                                        <td>{{$basket_product->vat}}</td>
-                                        <td>{{$basket_product->vat_applied_price}}</td>
-                                        <td>{{$basket_product->vat_applied_discounted_price}}</td>
-                                        <td>{{$basket_product->end_price}}</td>
-                                        <td>{{$basket_product->end_discounted_price}}</td>
-                                        <td>{{$basket_product->free_delivery ? 'Yes':'No'}}</td>
+                                        <td>{{$basketProduct->product->id}}</td>
+                                        <td>{{$basketProduct->product_quantity}}</td>
+                                        <td>{{$basketProduct->product->price}}</td>
+                                        <td>{{$basketProduct->price}}</td>
+                                        <td>{{$basketProduct->vat}}</td>
+                                        <td>{{$basketProduct->vat_applied_price}}</td>
+                                        <td>{{$basketProduct->vat_applied_discounted_price}}</td>
+                                        <td>{{$basketProduct->end_price}}</td>
+                                        <td>{{$basketProduct->end_discounted_price}}</td>
+                                        <td>{{$basketProduct->free_delivery ? 'Yes':'No'}}</td>
                                         <td>
                                             <form method="post" action="{{route('basket.products.add')}}">
                                                 @csrf
-                                                <input type="hidden" name="product_id" value="{{$basket_product->product->id}}">
+                                                <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
                                                 <input type="hidden" name="product_quantity" value="-1">
                                                 <span class="btn btn-warning" onclick="$(this).closest('form').submit();">Decrement</span>
                                             </form>
                                             <form method="post" action="{{route('basket.products.add')}}">
                                                 @csrf
-                                                <input type="hidden" name="product_id" value="{{$basket_product->product->id}}">
+                                                <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
                                                 <span class="btn btn-success" onclick="$(this).closest('form').submit();">Increment</span>
                                             </form>
                                             <form method="post" action="{{route('basket.products.add')}}">
                                                 @csrf
-                                                <input type="hidden" name="product_id" value="{{$basket_product->product->id}}">
+                                                <input type="hidden" name="product_id" value="{{$basketProduct->product->id}}">
                                                 <input type="hidden" name="product_quantity" value="0">
                                                 <span class="btn btn-danger" onclick="$(this).closest('form').submit();">Delete</span>
                                             </form>

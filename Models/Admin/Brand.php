@@ -5,7 +5,9 @@ namespace Modules\Shop\Models\Admin;
 use App\Helpers\AdminHelper;
 use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
+use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
+use App\Models\Seo;
 use App\Traits\CommonActions;
 use App\Traits\HasGallery;
 use App\Traits\Scopes;
@@ -21,6 +23,9 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
     public const FILES_PATH = "images/shop/brands";
+    const ALLOW_CATALOGS = true;
+    const ALLOW_ICONS = true;
+    const ALLOW_LOGOS = true;
 
     public static string $BRAND_SYSTEM_IMAGE  = 'brand_1_image.png';
     public static string $BRAND_RATIO         = '1/1';
@@ -121,5 +126,18 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     public function headerGallery()
     {
         return $this->getHeaderGalleryRelation(get_class($this));
+    }
+    public function seoFields()
+    {
+        return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
+    }
+
+    public function seo($languageSlug)
+    {
+        $seo = $this->seoFields;
+        if (is_null($seo)) {
+            return null;
+        }
+        SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
     }
 }

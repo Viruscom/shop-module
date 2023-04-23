@@ -34,6 +34,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
     {
         $product = $action->doSimpleCreate(Product::class, $request);
         $action->updateUrlCache($product, ProductTranslation::class);
+        $action->storeSeo($request, $product, 'Product');
 
         Product::cacheUpdate();
 
@@ -121,6 +122,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         $action->doSimpleUpdate(Product::class, ProductTranslation::class, $product, $request);
         $action->updateUrlCache($product, ProductTranslation::class);
+        $action->updateSeo($request, $product, 'Product');
 
         if ($request->has('image')) {
             $request->validate(['image' => Product::getFileRules()], [Product::getUserInfoMessage()]);
