@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
 
             $table->bigInteger('user_id')->unsigned()->nullable()->default(null);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('shop_registered_users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('key', 255)->nullable()->default(null);
             $table->string('uid', 191)->unique();
             $table->string('email');

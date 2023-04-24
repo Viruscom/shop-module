@@ -6,6 +6,9 @@ use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
 use Modules\Shop\Http\Controllers\admin\BrandController;
+use Modules\Shop\Http\Controllers\admin\Orders\OrderDocumentController;
+use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
+use Modules\Shop\Http\Controllers\admin\Orders\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\ShopAdminHomeController;
@@ -44,6 +47,45 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
     /* Dashboard */
     Route::get('/', [ShopAdminHomeController::class, 'index'])->name('admin.shop.dashboard');
 
+    /* Orders */
+    Route::group(['prefix' => 'orders'], static function () {
+        Route::get('/', [OrdersController::class, 'index'])->name('admin.shop.orders');
+        Route::get('/create', [OrdersController::class, 'create'])->name('admin.shop.orders.create');
+        Route::post('/store', [OrdersController::class, 'store'])->name('admin.shop.orders.store');
+        Route::get('/{id}/edit', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
+        Route::post('/{id}/update', [OrdersController::class, 'update'])->name('admin.shop.orders.update');
+        Route::get('/{id}/delete', [OrdersController::class, 'revoke'])->name('admin.shop.orders.revoke');
+        Route::get('/{id}/show', [OrdersController::class, 'show'])->name('admin.shop.orders.show');
+        Route::post('/changeOrderStatus', [OrdersController::class, 'changeOrderStatus'])->name('admin.shop.orders.change-status');
+        Route::post('/getProductByIdForOrder', [OrdersController::class, 'getProductByIdForOrder']);
+        Route::post('/changePaymentType', [OrdersController::class, 'changePaymentType']);
+        Route::post('/changeDeliveryType', [OrdersController::class, 'changeDeliveryType']);
+        Route::post('/changeFirmInfo', [OrdersController::class, 'changeFirmInfo']);
+        Route::post('/changeProductQuantity', [OrdersController::class, 'changeProductQuantity']);
+        Route::post('/deleteProduct', [OrdersController::class, 'deleteProduct']);
+
+        /* Statuses */
+        Route::group(['prefix' => 'statuses'], static function () {
+            Route::get('/', [OrderStatusController::class, 'index'])->name('admin.shop.orders.statuses.index');
+            Route::get('/create', [OrderStatusController::class, 'create'])->name('admin.shop.orders.statuses.create');
+            Route::post('/store', [OrderStatusController::class, 'store'])->name('admin.shop.orders.statuses.store');
+            Route::get('/{id}/edit', [OrderStatusController::class, 'edit'])->name('admin.shop.orders.statuses.edit');
+            Route::post('/{id}/update', [OrderStatusController::class, 'update'])->name('admin.shop.orders.statuses.update');
+            Route::delete('/{id}/delete', [OrderStatusController::class, 'delete'])->name('admin.shop.orders.statuses.delete');
+            Route::get('/{id}/show', [OrderStatusController::class, 'show'])->name('admin.shop.orders.statuses.show');
+            Route::post('/active/{id}/{active}', [OrderStatusController::class, 'changeActiveStatus'])->name('admin.shop.orders.statuses.changeStatus');
+        });
+        /* Documents */
+        Route::group(['prefix' => '{order_id}/documents'], static function () {
+            Route::get('/', [OrderDocumentController::class, 'index']);
+            Route::get('/create', [OrderDocumentController::class, 'create']);
+            Route::post('/store', [OrderDocumentController::class, 'store']);
+            Route::get('/{document_id}/delete', [OrderDocumentController::class, 'delete']);
+            Route::get('/{document_id}/show', [OrderDocumentController::class, 'show']);
+            Route::get('/{document_id}/send', [OrderDocumentController::class, 'send']);
+        });
+    });
+
     /* Clients - registered users */
     Route::group(['prefix' => 'registered-users'], static function () {
         Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.index');
@@ -65,25 +107,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
 
         });
 
-    /* Product Adboxes */
-    Route::group(['prefix' => 'product-adboxes'], static function () {
-        Route::get('/', [AdBoxesProductsController::class, 'index'])->name('admin.product-adboxes.index');
-
-        Route::group(['prefix' => 'multiple'], static function () {
-            Route::get('active/{active}', [AdBoxesProductsController::class, 'activeMultiple'])->name('admin.product-adboxes.active-multiple');
-            Route::get('delete', [AdBoxesProductsController::class, 'deleteMultiple'])->name('admin.product-adboxes.delete-multiple');
-        });
-
-        Route::group(['prefix' => '{id}'], static function () {
-            Route::get('edit', [AdBoxesProductsController::class, 'edit'])->name('admin.product-adboxes.edit');
-            Route::post('update', [AdBoxesProductsController::class, 'update'])->name('admin.product-adboxes.update');
-            Route::get('delete', [AdBoxesProductsController::class, 'delete'])->name('admin.product-adboxes.delete');
-            Route::get('active/{active}', [AdBoxesProductsController::class, 'active'])->name('admin.product-adboxes.changeStatus');
-            Route::get('position/up', [AdBoxesProductsController::class, 'positionUp'])->name('admin.product-adboxes.position-up');
-            Route::get('position/down', [AdBoxesProductsController::class, 'positionDown'])->name('admin.product-adboxes.position-down');
-            Route::get('return_to_waiting', [AdBoxesProductsController::class, 'returnToWaiting'])->name('admin.product-adboxes.return-to-waiting');
-        });
-    });
 
     /* Settings */
     Route::group(['prefix' => 'settings'], static function () {
@@ -235,6 +258,26 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/down', [ProductsController::class, 'positionDown'])->name('admin.products.position-down');
             Route::get('image/delete', [ProductsController::class, 'deleteImage'])->name('admin.products.delete-image');
             Route::get('send-to-product-adboxes', [ProductsController::class, 'makeProductAdBox'])->name('admin.products.send-to-product-adboxes');
+        });
+    });
+
+    /* Product Adboxes */
+    Route::group(['prefix' => 'product-adboxes'], static function () {
+        Route::get('/', [AdBoxesProductsController::class, 'index'])->name('admin.product-adboxes.index');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [AdBoxesProductsController::class, 'activeMultiple'])->name('admin.product-adboxes.active-multiple');
+            Route::get('delete', [AdBoxesProductsController::class, 'deleteMultiple'])->name('admin.product-adboxes.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [AdBoxesProductsController::class, 'edit'])->name('admin.product-adboxes.edit');
+            Route::post('update', [AdBoxesProductsController::class, 'update'])->name('admin.product-adboxes.update');
+            Route::get('delete', [AdBoxesProductsController::class, 'delete'])->name('admin.product-adboxes.delete');
+            Route::get('active/{active}', [AdBoxesProductsController::class, 'active'])->name('admin.product-adboxes.changeStatus');
+            Route::get('position/up', [AdBoxesProductsController::class, 'positionUp'])->name('admin.product-adboxes.position-up');
+            Route::get('position/down', [AdBoxesProductsController::class, 'positionDown'])->name('admin.product-adboxes.position-down');
+            Route::get('return_to_waiting', [AdBoxesProductsController::class, 'returnToWaiting'])->name('admin.product-adboxes.return-to-waiting');
         });
     });
 });

@@ -5,6 +5,7 @@ namespace Modules\Shop\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
+use Modules\Shop\Actions\BasketAction;
 use Modules\Shop\Entities\Basket;
 use Modules\Shop\Entities\City;
 use Modules\Shop\Entities\Country;
@@ -16,7 +17,7 @@ use Modules\Shop\Models\Admin\Products\Product;
 
 class BasketController extends Controller
 {
-    public static function storeOrder(OrderRequest $request)
+    public static function storeOrder(OrderRequest $request, BasketAction $action)
     {
         $basket = Basket::getCurrent();
         if ($basket->basket_products->count() < 1) {
@@ -40,27 +41,16 @@ class BasketController extends Controller
         $request['paid_at']            = null;
         $request['delivered_at']       = null;
 
-        $order = Order::create($request->all());
-        foreach ($basket->calculated_basket_products as $basketProduct) {
-            $order->order_products()->create([
-                                                 'product_id'                   => $basketProduct->product_id,
-                                                 'product_quantity'             => $basketProduct->product_quantity,
-                                                 'supplier_delivery_price'      => $basketProduct->product->supplier_delivery_price,
-                                                 'price'                        => $basketProduct->product->price,
-                                                 'discounts_amount'             => $basketProduct->discounts_amount,
-                                                 'vat'                          => $basketProduct->vat,
-                                                 'vat_applied_price'            => $basketProduct->vat_applied_price,
-                                                 'end_price'                    => $basketProduct->end_price,
-                                                 'free_delivery'                => $basketProduct->free_delivery ? 1 : 0,
-                                                 'vat_applied_discounted_price' => $basketProduct->vat_applied_discounted_price,
-                                                 'end_discounted_price'         => $basketProduct->end_discounted_price
-                                             ]);
-        }
+        $order = $action->storeOrder($request, $basket);
+
 
         //decrement quantities
         //delete current basket
         $basket->delete();
         //send mail for order created
+        $action->sendEmailToClient($request, $basket);
+        $action->sendEmailToAdmin($request, $basket);
+
         //execute payment method
         $payment = Payment::find($request->payment_id);
         if (!empty($payment->class) && !empty($payment->method)) {
@@ -72,7 +62,7 @@ class BasketController extends Controller
     public function previewOrder($id)
     {
         $order = Order::where('id', $id)->where(function ($q) {
-            if (Auth::check()) {
+            if (Auth::guard('shop')->check()) {
                 return $q->where('user_id', Auth::guard('shop')->user()->id);
             } else {
                 return $q->where('key', $_COOKIE['sbuuid']);

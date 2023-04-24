@@ -31,6 +31,120 @@
                                     </div>
                                 @else
                                     @foreach($basket->calculated_basket_products as $basketProduct)
+                                        <div class="product-box">
+                                            <div class="prod-content">
+                                                <div class="prod-image">
+                                                    <a href="{{ $basketProduct->product->getUrl($languageSlug) }}"></a>
+                                                    <img src="{{ $basketProduct->product->getFileUrl() }}" alt="">
+                                                </div>
+
+                                                <div class="prod-inner">
+                                                    <h3><a href="{{ $basketProduct->product->getUrl($languageSlug) }}">{{ $basketProduct->product->title }}</a></h3>
+
+                                                    <div class="prod-prices">
+                                                        @if($basketProduct->end_discounted_price !== $basketProduct->price)
+                                                            <p class="main-price price-old">
+                                                                <b>25.00</b> лв.
+                                                            </p>
+
+                                                            <p class="new-price">
+                                                                <b>{{$basketProduct->price}}</b> лв.
+                                                            </p>
+                                                        @else
+                                                            <p class="new-price">
+                                                                <b>{{$basketProduct->price}}</b> лв.
+                                                            </p>
+                                                        @endif
+
+                                                    </div>
+
+                                                    <div class="prod-qty hover-images">
+                                                        <div class="input-group">
+                                                            <a href="" data-quantity="minus" data-field="quantity">-</a>
+
+                                                            <input class="input-group-field" type="number" name="quantity" value="{{$basketProduct->product_quantity}}">
+
+                                                            <a href="" data-quantity="plus" data-field="quantity">+</a>
+                                                        </div>
+
+
+                                                        <a href="" class="prod-fav">
+                                                            <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="">
+
+                                                            <img src="{{ asset('front/assets/icons/heart-alt-hover.svg') }}" alt="">
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="prod-actions">
+                                                        <a href="" class="remove-prod">@lang('shop::front.basket.remove_product')</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- prod EXTRAS -->
+                                            @if($basketProduct->isInCollection)
+                                                <div class="prod-extras">
+                                                    <h4>В комплект с:</h4>
+
+                                                    <div class="product-box">
+                                                        <div class="prod-content">
+                                                            <div class="prod-image">
+                                                                <a href=""></a>
+                                                                <img src="assets/images/prod-img.png" alt="">
+                                                            </div>
+
+                                                            <div class="prod-inner">
+                                                                <h3><a href="">Shampoo for all hair types</a></h3>
+
+                                                                <div class="prod-prices">
+                                                                    <p class="main-price price-old">
+                                                                        <b>25.00</b> лв.
+                                                                    </p>
+
+                                                                    <p class="new-price">
+                                                                        <b>23.00</b> лв.
+                                                                    </p>
+                                                                </div>
+
+                                                                <div class="prod-actions">
+                                                                    <a href="" class="remove-prod">Remove</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="product-box">
+                                                        <div class="prod-content">
+                                                            <div class="prod-image">
+                                                                <a href=""></a>
+                                                                <img src="assets/images/prod-img.png" alt="">
+                                                            </div>
+
+                                                            <div class="prod-inner">
+                                                                <h3><a href="">Shampoo for all hair types</a></h3>
+
+                                                                <div class="prod-prices">
+                                                                    <p class="main-price price-old">
+                                                                        <b>25.00</b> лв.
+                                                                    </p>
+
+                                                                    <p class="new-price">
+                                                                        <b>23.00</b> лв.
+                                                                    </p>
+                                                                </div>
+
+                                                                <div class="prod-actions">
+                                                                    <a href="" class="remove-prod">Remove</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <h4 class="title-warning">Продуктът не е наличен!</h4>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+
                                         <tr>
                                             <td></td>
                                             <td>{{$basketProduct->product->price}}</td>
@@ -71,119 +185,6 @@
                                         </td>
                                     </tr>
                                 @endif
-                                <div class="product-box">
-                                    <div class="prod-content">
-                                        <div class="prod-image">
-                                            <a href="{{ $basketProduct->product->getUrl($languageSlug) }}"></a>
-                                            <img src="{{ $basketProduct->product->getFileUrl() }}" alt="">
-                                        </div>
-
-                                        <div class="prod-inner">
-                                            <h3><a href="{{ $basketProduct->product->getUrl($languageSlug) }}">{{ $basketProduct->product->title }}</a></h3>
-
-                                            <div class="prod-prices">
-                                                @if($basketProduct->end_discounted_price !== $basketProduct->price)
-                                                    <p class="main-price price-old">
-                                                        <b>25.00</b> лв.
-                                                    </p>
-
-                                                    <p class="new-price">
-                                                        <b>{{$basketProduct->price}}</b> лв.
-                                                    </p>
-                                                @else
-                                                    <p class="new-price">
-                                                        <b>{{$basketProduct->price}}</b> лв.
-                                                    </p>
-                                                @endif
-
-                                            </div>
-
-                                            <div class="prod-qty hover-images">
-                                                <div class="input-group">
-                                                    <a href="" data-quantity="minus" data-field="quantity">-</a>
-
-                                                    <input class="input-group-field" type="number" name="quantity" value="{{$basketProduct->product_quantity}}">
-
-                                                    <a href="" data-quantity="plus" data-field="quantity">+</a>
-                                                </div>
-
-
-                                                <a href="" class="prod-fav">
-                                                    <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="">
-
-                                                    <img src="{{ asset('front/assets/icons/heart-alt-hover.svg') }}" alt="">
-                                                </a>
-                                            </div>
-
-                                            <div class="prod-actions">
-                                                <a href="" class="remove-prod">@lang('shop::front.basket.remove_product')</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- prod EXTRAS -->
-                                    @if($basketProduct->isInCollection)
-                                        <div class="prod-extras">
-                                            <h4>В комплект с:</h4>
-
-                                            <div class="product-box">
-                                                <div class="prod-content">
-                                                    <div class="prod-image">
-                                                        <a href=""></a>
-                                                        <img src="assets/images/prod-img.png" alt="">
-                                                    </div>
-
-                                                    <div class="prod-inner">
-                                                        <h3><a href="">Shampoo for all hair types</a></h3>
-
-                                                        <div class="prod-prices">
-                                                            <p class="main-price price-old">
-                                                                <b>25.00</b> лв.
-                                                            </p>
-
-                                                            <p class="new-price">
-                                                                <b>23.00</b> лв.
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="prod-actions">
-                                                            <a href="" class="remove-prod">Remove</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-box">
-                                                <div class="prod-content">
-                                                    <div class="prod-image">
-                                                        <a href=""></a>
-                                                        <img src="assets/images/prod-img.png" alt="">
-                                                    </div>
-
-                                                    <div class="prod-inner">
-                                                        <h3><a href="">Shampoo for all hair types</a></h3>
-
-                                                        <div class="prod-prices">
-                                                            <p class="main-price price-old">
-                                                                <b>25.00</b> лв.
-                                                            </p>
-
-                                                            <p class="new-price">
-                                                                <b>23.00</b> лв.
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="prod-actions">
-                                                            <a href="" class="remove-prod">Remove</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <h4 class="title-warning">Продуктът не е наличен!</h4>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
 
                             </div>
 

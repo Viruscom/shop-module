@@ -23,7 +23,7 @@
 
                                     <div class="prod-info">
                                         <div class="prod-qty">
-                                            Брой <strong>{{ $basketProduct->product_quantity }}</strong>
+                                            @lang('shop::front.basket.count') <strong>{{ $basketProduct->product_quantity }}</strong>
                                         </div>
 
                                         <div class="prod-prices">
@@ -43,6 +43,18 @@
         <div class="box">
             <div class="box-row">
                 <span>@lang('shop::front.basket.products_prices')</span>
+
+                <strong>840.00  лв.</strong>
+            </div>
+
+            <div class="box-row">
+                <span>Общо отстъпки</span>
+
+                <strong>- 840.00  лв.</strong>
+            </div>
+
+            <div class="box-row">
+                <span>ДДС</span>
 
                 <strong>840.00  лв.</strong>
             </div>
@@ -70,7 +82,7 @@
             <div class="box-row">
                 <div class="checkboxes-wrapper">
                     <label class="checkbox-wrapper">
-                        <input type="checkbox" id="privacy">
+                        <input type="checkbox" id="privacy" name="checkbox_privacy_agree">
 
                         <span class="checkmark"></span>
 
@@ -82,7 +94,7 @@
             <div class="box-row">
                 <div class="checkboxes-wrapper">
                     <label class="checkbox-wrapper">
-                        <input type="checkbox" id="adds">
+                        <input type="checkbox" id="adds" name="checkbox_email_ads_agree">
 
                         <span class="checkmark"></span>
 
@@ -93,7 +105,7 @@
         </div>
 
         <div class="box-actions">
-            <button type="submit" class="submit-button" value="Поръчай">Поръчай</button>
+            <button type="submit" class="submit-button" value="Поръчай">@lang('shop::front.basket.order')</button>
 
             <a href="" class="btn btn-outline">Back</a>
         </div>

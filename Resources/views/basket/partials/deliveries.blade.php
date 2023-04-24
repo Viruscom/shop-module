@@ -5,7 +5,7 @@
         <div class="form-row-radio">
             <div class="form-row-inner">
                 <label class="radio-label">{{$deliveryMethod->type}}
-                    <input type="radio"  name="delivery_id" value="{{$deliveryMethod->id}}">
+                    <input type="radio" name="delivery_id" value="{{$deliveryMethod->id}}">
                     <span class="checkmark"></span>
                 </label>
 
@@ -15,24 +15,27 @@
     @endforeach
 </div>
 
-
-{{--Ako e izbrano do adres po-gore--}}
-<h3>@lang('shop::front.basket.address_title')</h3>
+{{--Ako e izbrano do adres po-gore--}}<h3>@lang('shop::front.basket.address_title')</h3>
 
 <div class="form-section">
     <div class="form-row">
-        <label class="form-label" for="location">
-            @lang('shop::front.basket.country_label')
-            <span class="asterisk">*</span>
-        </label>
+        <div class="form-cols">
+            <div class="form-col">
+                <label class="form-label" for="location">
+                    @lang('shop::front.basket.country_label')
+                    <span class="asterisk">*</span>
+                </label>
 
-        <div class="input-container">
-            <select id="country_id" class="form-control @error('country_id') is-invalid @enderror" name="country_id" required>
-                <option value="">{{__('admin.common.please_select')}}</option>
-                @foreach($countries as $country)
-                    <option value="{{$country->id}}" {{old('country_id')==$country->id ? "selected":""}}>{{$country->name}}</option>
-                @endforeach
-            </select>
+                <div class="input-container">
+                    <select id="country_id" class="form-control @error('country_id') is-invalid @enderror" name="country_id" required>
+                        <option value="">{{__('admin.common.please_select')}}</option>
+                        @foreach($countries as $country)
+                            <option value="{{$country->id}}" {{old('country_id')==$country->id ? "selected":""}}>{{$country->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="form-row">

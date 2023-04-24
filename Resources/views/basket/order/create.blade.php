@@ -100,35 +100,7 @@
                                 @endif
                                 </tbody>
                             </table>
-                            <hr>
-                            <div class="col-12">
-                                <div class="@error('delivery_id') is-invalid @enderror">{{__('Delivery Method')}}
-                                    @error('delivery_id')
-                                    <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                                    @enderror
-                                </div>
-                                @foreach($deliveryMethods as $deliveryMethod)
-                                    <input type="radio" name="delivery_id" value="{{$deliveryMethod->id}}">
-                                    <label>{{$deliveryMethod->type}}</label><br>
-                                @endforeach
-                            </div>
-                            <hr>
-                            <div class="col-12">
-                                <div class="@error('payment_id') is-invalid @enderror">{{__('Payment Method')}}
-                                    @error('payment_id')
-                                    <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                    @enderror
-                                </div>
-                                @foreach($paymentMethods as $paymentMethod)
-                                    <input type="radio" name="payment_id" value="{{$paymentMethod->id}}" required>
-                                    <label>{{$paymentMethod->type}}</label><br>
-                                @endforeach
-                            </div>
-                            <button type="submit" class="btn btn-primary float-left">{{ __('Finish') }}</button>
+
                         </form>
                     </div>
                 </div>
