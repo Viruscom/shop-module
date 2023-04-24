@@ -6,6 +6,7 @@
 
         <div class="cart-wrapper">
             <div class="shell">
+                @include('front.notify')
                 <div class="cart-cols">
                     <div class="col col-2of3">
                         <h3 class="title-main title-border">{!! trans('shop::front.basket.index') !!}</h3>

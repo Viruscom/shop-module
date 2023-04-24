@@ -23,6 +23,21 @@ class Basket extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'key'];
+
+    public static function productsCount()
+    {
+        $basket = Basket::getCurrent();
+        if (is_null($basket)) {
+            return 0;
+        }
+
+        $productsCount = 0;
+        foreach ($basket->basket_products as $basketProduct) {
+            $productsCount += $basketProduct->product_quantity;
+        }
+
+        return $productsCount;
+    }
     public static function getCurrent()
     {
         if (Auth::guard('shop')->check()) {
@@ -44,7 +59,7 @@ class Basket extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(ShopRegisteredUser::class);
     }
     public function merge($basket)
     {

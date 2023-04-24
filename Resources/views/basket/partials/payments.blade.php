@@ -16,9 +16,9 @@
     <div class="form-row-radio">
         <div class="form-row-inner">
             <label class="radio-label">
-                Плащане с карта
+                Плащане с карта, чрез MyPOS
 
-                <strong>Ще бъдете пренасочени към сайта на Epay World, където да направите плащането.</strong>
+                <strong>Ще бъдете пренасочени към сайта на MyPOS, където да направите плащането.</strong>
 
                 <input type="radio"  name="paymentMethod">
                 <span class="checkmark"></span>
