@@ -57,7 +57,7 @@ class BasketController extends Controller
             return call_user_func_array(array($payment->class, $payment->method), array($order));
         }
 
-        return redirect(route('shop::basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
+        return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
     }
     public function previewOrder($id)
     {

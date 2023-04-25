@@ -137,7 +137,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::post('/update/{id}', [CityZipCodesController::class, 'update'])->name('zip_codes.update');
         });
 
-        /* Vats settings */
+        /* Vats settings default */
         Route::prefix('vats')->group(function () {
             Route::prefix('countries')->group(function () {
                 Route::get('/', [VatsController::class, 'index'])->name('vats.countries.index');
@@ -157,6 +157,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 });
             });
 
+            /* Vat categories */
             Route::prefix('categories')->group(function () {
                 Route::prefix('countries')->group(function () {
                     Route::get('{id}/', [VatsController::class, 'categories'])->name('vats.countries.categories.index');

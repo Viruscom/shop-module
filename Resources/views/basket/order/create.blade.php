@@ -84,10 +84,10 @@
                                         <tr>
                                             <td>{{$basket_product->product->id}}</td>
                                             <td>{{$basket_product->product_quantity}}</td>
-                                            <td>{{$basket_product->product->price}}</td>
-                                            <td>{{$basket_product->price}}</td>
+                                            <td>{{$basket_product->product->price}}</td> Ed.cena na produkt
+                                            <td>{{$basket_product->price}}</td> Ed.cena с начислена отстъпка за бройка ако има такава
                                             <td>{{$basket_product->vat}}</td>
-                                            <td>{{$basket_product->vat_applied_price}}</td>
+                                            <td>{{$basket_product->vat_applied_price}}</td> // Ed.cena + vat
                                             <td>{{$basket_product->vat_applied_discounted_price}}</td>
                                             <td>{{$basket_product->end_price}}</td>
                                             <td>{{$basket_product->end_discounted_price}}</td>
