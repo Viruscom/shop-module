@@ -125,63 +125,8 @@
                 <div class="form form-horizontal">
                     <div class="form-body">
                         <div class="row">
-                            <div class="form-group insertFileContainer col-md-6">
-                                <div class="col-md-12">
-                                    <h3 class="m-t-40 m-b-20"><i class="fas fa-file fa-2x"></i> {{ __('admin.files.index') }}</h3>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="m-t-10 m-b-10">{{ __('admin.files.import_file_in_editor') }}:</div>
-                                            <label for="file_title" class="m-t-10">{{ __('admin.files.title_of_file') }}</label>
-                                            <input type="text" name="file_title" id="file_title" class="form-control file-title" placeholder="Заглавие на файл">
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-top: 10px">
-                                        <div class="col-md-12">
-                                            <label for="fileName">{{ __('admin.files.file') }}</label><select class="form-control file-select select2" name="file" id="fileName">
-                                                <option disabled="" selected="" value=""> {{ __('admin.files.choose_file') }}</option>
-                                                @foreach($files as $file)
-                                                    <option>{{$file}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-top: 10px">
-                                        <div class="col-md-12">
-                                            <button id="fileInsert" data-editor="" folder-path="{{ $filesPathUrl }}" name="file_insert" class="btn btn-sm grey margin-bottom-10"><i class="fa fa-upload"></i> {{ __('admin.files.import_file') }}</button>
-                                            <p class="help-block">{{ __('admin.files.help_step_1') }}</p>
-                                            <p class="help-block">{{ __('admin.files.help_step_2') }}</p>
-                                            <p class="help-block">{{ __('admin.files.help_step_3') }}</p>
-                                            <p class="help-block">{{ __('admin.files.help_step_4') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if (array_key_exists('Catalogs', $activeModules) && isset($mainCatalogs))
-                                <div class="form-group catalogInsert col-md-6">
-                                    <div class="col-md-12">
-                                        <h3 class="m-t-40 m-b-20"><i class="fas fa-book-open fa-2x"></i> {{ __('admin.catalogs') }}</h3>
-                                        <div class="row" style="margin-top: 10px">
-                                            <div class="col-md-12">
-                                                <div class="m-t-10 m-b-10">Вмъкване на каталог в едитора:</div>
-                                                <label for="catalogName">Каталог</label><select class="form-control file-select select2" name="file" id="catalogName">
-                                                    <option disabled="" selected="" value=""> избери каталог</option>
-                                                    @foreach($mainCatalogs as $mainCatalog)
-                                                        <option value="{{ $mainCatalog->id }}">{{$mainCatalog->short_description}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-top: 10px">
-                                            <div class="col-md-12">
-                                                <button id="catalogInsertBtn" data-editor="" folder-path="{{ $filesPathUrl }}" name="file_insert" class="btn btn-sm grey margin-bottom-10"><i class="fa fa-upload"></i> вмъкни каталог</button>
-                                                <p class="help-block">1. Изберете каталог от падащото меню</p>
-                                                <p class="help-block">2. Кликнете в едитора, където искате да се покаже файла.</p>
-                                                <p class="help-block">3. Натиснете бутонът "Вмъкни каталог".</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                            @include('admin.partials.common.import_file')
+                            @include('admin.partials.common.import_catalog')
                         </div>
                         <div class="row">
                             <div class="col-md-12">

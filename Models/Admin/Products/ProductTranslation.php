@@ -29,6 +29,11 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
             'url'    => UrlHelper::generate($request['title_' . $language->code], ProductTranslation::class, $modelId, $isUpdate)
         ];
 
+        return self::langArray($data, $language, $request);
+    }
+
+    private static function langArray($data, $language, $request)
+    {
         if ($request->has('announce_' . $language->code)) {
             $data['announce'] = $request['announce_' . $language->code];
         }
@@ -108,10 +113,19 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
 
         return $data;
     }
+    public static function createMissingLanguageRow($language, $request, $model)
+    {
+        $title = $request['title_' . $language->code] . '-' . $language->code;
+        $data  = [
+            'locale' => $language->code,
+            'title'  => UrlHelper::makeUniqueTitle($title, $language->code, self::class, $model->id, false),
+            'url'    => UrlHelper::generate($title, self::class, $model->id, false)
+        ];
+        $model->translations()->create(self::langArray($data, $language, $request));
+    }
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
-
     }
     public function language(): BelongsTo
     {

@@ -6,6 +6,7 @@ use App\Actions\CommonControllerAction;
 use App\Helpers\CacheKeysHelper;
 use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
+use App\Helpers\ModuleHelper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PositionInterface;
 use App\Models\Files\File;
@@ -48,7 +49,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->checkForBrandsCache();
         $action->checkForProductCategoriesAdminCache();
 
-        return view('shop::admin.products.create', [
+        $data = [
             'languages'         => LanguageHelper::getActiveLanguages(),
             'files'             => Cache::get(CacheKeysHelper::$FILES),
             'filesPathUrl'      => File::getFilesPathUrl(),
@@ -56,7 +57,17 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'products'          => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
-        ]);
+        ];
+
+        $activeModules = ModuleHelper::getActiveModules();
+        if (array_key_exists('Catalogs', $activeModules)) {
+            if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
+                \Modules\Catalogs\Models\MainCatalog::cacheUpdate();
+            }
+            $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
+        }
+
+        return view('shop::admin.products.create', $data);
     }
     public function edit($id, ProductAction $action)
     {
@@ -67,7 +78,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $product = Product::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($product);
 
-        return view('shop::admin.products.edit', [
+        $data = [
             'product'           => $product,
             'products'          => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
             'languages'         => LanguageHelper::getActiveLanguages(),
@@ -76,7 +87,17 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'fileRulesInfo'     => Product::getUserInfoMessage(),
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
-        ]);
+        ];
+
+        $activeModules = ModuleHelper::getActiveModules();
+        if (array_key_exists('Catalogs', $activeModules)) {
+            if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
+                \Modules\Catalogs\Models\MainCatalog::cacheUpdate();
+            }
+            $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
+        }
+
+        return view('shop::admin.products.edit', $data);
     }
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
     {

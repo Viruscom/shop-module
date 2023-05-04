@@ -11,7 +11,7 @@
     <script src="{{ asset('admin/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/ckeditor/ckeditor.js') }}"></script>
     <script>
-        $(".select2").select2({language: "bg"});
+        // $(".select2").select2({language: "bg"});
         var focusedEditor;
         CKEDITOR.timestamp = new Date();
         CKEDITOR.on('instanceReady', function (evt) {
@@ -24,6 +24,8 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.products.breadcrumbs')
+    @include('admin.notify')
     <form class="my-form" action="{{ route('admin.products.update', ['id' => $product->id]) }}" method="POST" data-form-type="update" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -131,65 +133,10 @@
                 @include('admin.partials.on_edit.seo', ['model' => $product->seoFields])
                 <div class="form form-horizontal">
                     <div class="form-body">
-                        <div class="form-group insertFileContainer">
-                            <label class="control-label col-md-3"><i class="fas fa-file"></i> Вмъкване на файл в едитора:</label>
-                            <div class="col-md-9">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="text" name="file_title" class="form-control input-sm file-title" placeholder="Заглавие на файл">
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 10px">
-                                    <div class="col-md-4">
-                                        <select class="form-control file-select select2" name="file" id="fileName">
-                                            <option disabled="" selected="" value=""> избери файл</option>
-                                            @foreach($files as $file)
-                                                <option>{{$file}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 10px">
-                                    <div class="col-md-4">
-                                        <button id="fileInsert" data-editor="" folder-path="{{ $filesPathUrl }}" name="file_insert" class="btn btn-sm grey margin-bottom-10"><i class="fa fa-upload"></i> вмъкни файл</button>
-                                        <p class="help-block">1. Изберете заглавие на файла</p>
-                                        <p class="help-block">2. Изберете файл от падащото меню</p>
-                                        <p class="help-block">3. Кликнете в едитора, където искате да се покаже файла.</p>
-                                        <p class="help-block">4. Натиснете бутонът "Вмъкни файл".</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row">
+                            @include('admin.partials.common.import_file')
+                            @include('admin.partials.common.import_catalog')
                         </div>
-                        <hr>
-                        @if (array_key_exists('Catalogs', $activeModules) && isset($mainCatalogs))
-                            <div class="form-group catalogInsert">
-                                <label class="control-label col-md-3"><i class="fas fa-book-open"></i> Вмъкване на каталог в едитора:</label>
-                                <div class="col-md-9">
-                                    <div class="row" style="margin-top: 10px">
-                                        <div class="col-md-4">
-                                            <select class="form-control file-select select2" name="file" id="catalogName">
-                                                <option disabled="" selected="" value=""> избери каталог</option>
-                                                @foreach($mainCatalogs as $mainCatalog)
-                                                    @php
-                                                        $catalogTranslation = $mainCatalog->translations()->where('language_id', 1)->first();
-                                                    @endphp
-                                                    <option value="{{ $mainCatalog->id }}">{{$catalogTranslation->short_description}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-top: 10px">
-                                        <div class="col-md-4">
-                                            <button id="catalogInsertBtn" data-editor="" folder-path="{{ $filesPathUrl }}" name="file_insert" class="btn btn-sm grey margin-bottom-10"><i class="fa fa-upload"></i> вмъкни каталог</button>
-                                            <p class="help-block">1. Изберете каталог от падащото меню</p>
-                                            <p class="help-block">2. Кликнете в едитора, където искате да се покаже файла.</p>
-                                            <p class="help-block">3. Натиснете бутонът "Вмъкни каталог".</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        @endif
 
                         <div class="row">
                             <div class="col-md-12">

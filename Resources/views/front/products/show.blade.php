@@ -345,9 +345,9 @@
                             </p>
                         </div>
 
-                        <div class="product-actions">
-                            <a href="" class="link-more-big">Request</a>
-                        </div>
+{{--                        <div class="product-actions">--}}
+{{--                            <a href="" class="link-more-big">Request</a>--}}
+{{--                        </div>--}}
                     </div>
 
                     <!-- <div class="article-dates">
