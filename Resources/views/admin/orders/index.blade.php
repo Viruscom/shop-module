@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('styles')
     <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
@@ -68,11 +68,14 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.orders.breadcrumbs')
+    @include('admin.notify')
+
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             <div class="search pull-left hidden-xs">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control input-sm search-text" placeholder="Търси" autocomplete="off">
+                    <input type="text" name="search" class="form-control input-sm search-text" placeholder="{{ __('admin.common.search') }}" autocomplete="off">
                     <span class="input-group-btn">
 					<button class="btn btn-sm submit"><i class="fa fa-search"></i></button>
 				</span>
@@ -80,62 +83,66 @@
             </div>
 
             <div class="action-mass-buttons pull-right">
-                <a href="{{ url('/admin/shop/orders/create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">
+                <a href="{{ route('admin.shop.orders.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">
                     <i class="fas fa-plus"></i>
                 </a>
             </div>
         </div>
     </div>
-    <div class="col-md-12 overflow-auto">
-        <table id="example" class="table table-striped">
-            <thead>
-            <tr>
-                <th style="max-width: 50px">№</th>
-                <th>Статус на поръчката</th>
-                <th>Име и фамилия</th>
-                <th>Населено място</th>
-                <th>Сума на поръчката</th>
-                <th>Метод на плащане</th>
-                <th>Регистрирана на</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if(count($orders))
-                @foreach($orders as $order)
-                    <tr class="t-row">
-                        <td style="max-width: 50px;">{{ $order->id }}</td>
-                        <td>
-                            @if($order->returned_amount != '')
-                                <img src="{{ asset('admin/assets/images/return_order_black.svg') }}" width="24" alt="" style="margin-right: 12px;">
-                            @endif
-                            <span style="background: {{ $order->getStatusClass($order->status()) }};padding: 4px; color: #000000;">{{ $order->statusHumanReadable() }}</span></td>
-                        <td>{{ $order->name }}</td>
-                        <td>{{ $order->city .', '. $order->shipment_address }}</td>
-                        <td>
-                            <div data-toggle="popover" data-content='@include('admin.partials.shop.orders.summary', ['orderPrices'=>$orderPrices, 'order'=>$order])'>
-                                Общо: {{ $orderPrices[$order->id]['total_without_discounts'] }} лв.
-                                <span>Отстъпки: <strong class="text-purple">-{{ $orderPrices[$order->id]['total_discounts'] }}</strong> лв.</span><br>
-                                <span>Общо с отстъпки и ДДС: {{ $orderPrices[$order->id]['total_with_discounts_and_shipment'] }} лв.</span>
-                            </div>
-                        </td>
-                        <td>{{ $order->paymentTypeHumanReadable() }}</td>
-                        <td>
-                            <strong>{{ \Carbon\Carbon::parse($order->created_at)->format('d.m.Y') }} г.</strong><br>
-                            <span>Час: {{ \Carbon\Carbon::parse($order->created_at)->format('H:i:s') }}</span>
-                        </td>
-                        <td class="pull-right">
-                            <a href="{{ url('/admin/shop/orders/'.$order->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
-                            <a href="{{ url('/admin/shop/orders/'.$order->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
+
+    <div class="row">
+        <div class="col-md-12 overflow-auto">
+            <table id="example" class="table table-striped">
+                <thead>
                 <tr>
-                    <td colspan="8" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                    <th style="max-width: 50px">№</th>
+                    <th>Статус на поръчката</th>
+                    <th>Име и фамилия</th>
+                    <th>Населено място</th>
+                    <th>Сума на поръчката</th>
+                    <th>Метод на плащане</th>
+                    <th>Регистрирана на</th>
+                    <th>Действия</th>
                 </tr>
-            @endif
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @if(count($orders))
+                    @foreach($orders as $order)
+                        <tr class="t-row">
+                            <td style="max-width: 50px;">{{ $order->id }}</td>
+                            <td>
+                                @if($order->returned_amount != '')
+                                    <img src="{{ asset('admin/assets/images/return_order_black.svg') }}" width="24" alt="" style="margin-right: 12px;">
+                                @endif
+                                <span style="background: {{ $order->getStatusClass($order->status()) }};padding: 4px; color: #000000;">{{ $order->statusHumanReadable() }}</span></td>
+                            <td>{{ $order->name }}</td>
+                            <td>{{ $order->city .', '. $order->shipment_address }}</td>
+                            <td>
+                                <div data-toggle="popover" data-content='@include('admin.partials.shop.orders.summary', ['orderPrices'=>$orderPrices, 'order'=>$order])'>
+                                    Общо: {{ $orderPrices[$order->id]['total_without_discounts'] }} лв.
+                                    <span>Отстъпки: <strong class="text-purple">-{{ $orderPrices[$order->id]['total_discounts'] }}</strong> лв.</span><br>
+                                    <span>Общо с отстъпки и ДДС: {{ $orderPrices[$order->id]['total_with_discounts_and_shipment'] }} лв.</span>
+                                </div>
+                            </td>
+                            <td>{{ $order->paymentTypeHumanReadable() }}</td>
+                            <td>
+                                <strong>{{ \Carbon\Carbon::parse($order->created_at)->format('d.m.Y') }} г.</strong><br>
+                                <span>Час: {{ \Carbon\Carbon::parse($order->created_at)->format('H:i:s') }}</span>
+                            </td>
+                            <td class="pull-right">
+                                <a href="{{ url('/admin/shop/orders/'.$order->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
+                                <a href="{{ url('/admin/shop/orders/'.$order->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="8" class="no-table-rows">{{ trans('shop::admin.orders.no_orders_found') }}</td>
+                    </tr>
+                @endif
+                </tbody>
+            </table>
+        </div>
     </div>
+
 @endsection

@@ -47,10 +47,13 @@
                 </ul>
                 <div class="tab-content">
                     @foreach($languages as $language)
+                        @php
+                            $categoryTranslate = is_null($category->translate($language->code)) ? $category : $category->translate($language->code);
+                        @endphp
                         <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
 
                             @include('admin.partials.on_edit.form_fields.input_text', ['model'=> $category, 'fieldName' => 'title_' . $language->code, 'label' => trans('admin.title'), 'required' => true])
-                            @include('admin.partials.on_edit.form_fields.textarea', ['model'=> $category, 'fieldName' => 'announce_' . $language->code, 'rows' => 4, 'label' => trans('admin.admin.announce'), 'required' => false])
+                            @include('admin.partials.on_edit.form_fields.textarea', ['model'=> $category, 'fieldName' => 'announce_' . $language->code, 'rows' => 4, 'label' => trans('admin.announce'), 'required' => false])
                             @include('admin.partials.on_edit.form_fields.textarea', ['model'=> $category, 'fieldName' => 'description_' . $language->code, 'rows' => 9, 'label' => trans('admin.description'), 'required' => false])
                             @include('admin.partials.on_edit.show_in_language_visibility_checkbox', ['model'=> $category, 'fieldName' => 'visible_' . $language->code])
 

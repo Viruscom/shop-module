@@ -230,4 +230,9 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return url($languageSlug . '/' . $this->url);
     }
+
+    public function additionalFields()
+    {
+        //TODO: Make relation
+    }
 }

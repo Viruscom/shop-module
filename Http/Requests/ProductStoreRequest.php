@@ -30,13 +30,22 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         $this->trimInput();
-
-        return [
-            'weight' => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'width'  => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'height' => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'length' => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
+        $array = [
+            'category_id'             => 'required',
+            'brand_id'                => 'required',
+            'supplier_delivery_price' => 'required',
+            'price'                   => 'required',
+            'units_in_stock'          => ['required', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'weight'                  => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'width'                   => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'height'                  => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'length'                  => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
         ];
+        foreach ($this->LANGUAGES as $language) {
+            $array['title_' . $language->code] = 'required';
+        }
+
+        return $array;
     }
     public function trimInput(): void
     {
@@ -48,21 +57,18 @@ class ProductStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'weight.regex' => 'Полето за тегло трябва да е от типа 0.00',
-            'weight.min'   => 'Полето за тегло трябва да е минимум 0.01',
-            'weight.max'   => 'Полето за тегло трябва да е максимум 99999.99',
-
-            'width.regex' => 'Полето за широчина трябва да е от типа 0.00',
-            'width.min'   => 'Полето за широчина трябва да е минимум 0.01',
-            'width.max'   => 'Полето за широчина трябва да е максимум 99999.99',
-
-            'height.regex' => 'Полето за височина трябва да е от типа 0.00',
-            'height.min'   => 'Полето за височина трябва да е минимум 0.01',
-            'height.max'   => 'Полето за височина трябва да е максимум 99999.99',
-
-            'length.regex' => 'Полето за височина трябва да е от типа 0.00',
-            'length.min'   => 'Полето за височина трябва да е минимум 0.01',
-            'length.max'   => 'Полето за височина трябва да е максимум 99999.99',
+            'weight.regex' => trans('shop::admin.products.weight_regex'),
+            'weight.min'   => trans('shop::admin.products.weight_min'),
+            'weight.max'   => trans('shop::admin.products.weight_max'),
+            'width.regex'  => trans('shop::admin.products.width_regex'),
+            'width.min'    => trans('shop::admin.products.width_min'),
+            'width.max'    => trans('shop::admin.products.width_max'),
+            'height.regex' => trans('shop::admin.products.height_regex'),
+            'height.min'   => trans('shop::admin.products.height_min'),
+            'height.max'   => trans('shop::admin.products.height_max'),
+            'length.regex' => trans('shop::admin.products.length_regex'),
+            'length.min'   => trans('shop::admin.products.length_min'),
+            'length.max'   => trans('shop::admin.products.length_max'),
         ];
     }
 }

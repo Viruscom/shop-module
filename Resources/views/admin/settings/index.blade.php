@@ -32,22 +32,22 @@
 
                 <div>
                     <a href="{{ route('deliveries.index') }}">
-                        <img src="{{ asset('admin/assets/images/cart.svg') }}">
-                        <span>Доставки</span>
+                        <i class="fas fa-truck fa-5x"></i>
+                        <span>{{ __('shop::admin.deliveries.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="{{ route('zip_codes.index') }}">
                         <img src="{{ asset('admin/assets/images/cart.svg') }}">
-                        <span>Пощенски кодове</span>
+                        <span>{{ __('shop::admin.post_codes.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="#">
                         <img src="{{ asset('admin/assets/images/cart.svg') }}">
-                        <span>ДДС ставки</span>
+                        <span>{{ __('shop::admin.vats.index') }}</span>
                     </a>
                 </div>
             </div>

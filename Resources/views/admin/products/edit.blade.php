@@ -38,14 +38,12 @@
         <div class="col-md-12">
             <div class="form-group">
                 <label class="control-label page-label col-md-3"><span class="text-purple">* </span>@lang('shop::admin.products.attach_to_category'):</label>
-                <div class="col-md-4">
-                    <label>
-                        <select class="form-control select2 inner-page-products-select" name="category_id">
-                            @foreach($productCategories as $category)
-                                <option value="{{ $category->id }}" {{ (old('category_id')===$category->id || $category->id === $product->category_id) ? 'selected': '' }}>  {{ $category->title }}</option>
-                            @endforeach
-                        </select>
-                    </label>
+                <div class="col-md-5">
+                    <select class="form-control select2 inner-page-products-select" name="category_id">
+                        @foreach($productCategories as $category)
+                            <option value="{{ $category->id }}" {{ (old('category_id')===$category->id || $category->id === $product->category_id) ? 'selected': '' }}>  {{ $category->title }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -64,54 +62,16 @@
                 </ul>
                 <div class="tab-content m-b-0">
                     @foreach($languages as $language)
+                        @php
+                            $productTranslate = is_null($product->translate($language->code)) ? $product : $product->translate($language->code);
+                        @endphp
                         <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
                             @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'title_' . $language->code, 'label' => trans('admin.title'), 'required' => true, 'model' => $product])
                             @include('admin.partials.on_edit.form_fields.textarea', ['fieldName' => 'announce_' . $language->code, 'rows' => 3, 'label' => trans('admin.announce'), 'required' => false, 'model' => $product])
                             @include('admin.partials.on_edit.form_fields.textarea', ['fieldName' => 'description_' . $language->code, 'rows' => 9, 'label' => trans('admin.description'), 'required' => false, 'model' => $product])
                             @include('admin.partials.on_edit.show_in_language_visibility_checkbox', ['fieldName' => 'visible_' . $language->code, 'model' => $product])
 
-                            <div class="panel-group" id="additional_fields">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 data-toggle="collapse" data-parent="#additional_fields" href="#additional_fields_collapse-{{$language->id}}-1" class="panel-title expand">
-                                            <a href="#">Допълнителни полета</a>
-                                        </h4>
-                                    </div>
-                                    {{--                                <div id="additional_fields_collapse-{{$language->id}}-1" class="panel-collapse collapse">--}}
-                                    {{--                                    <div class="panel-body">--}}
-                                    {{--                                        <div class="row">--}}
-                                    {{--                                            @for($f=1; $f<=10; $f++)--}}
-                                    {{--                                                @php--}}
-                                    {{--                                                    $langAdditionalFieldTitle = 'additional_field_title'.$language->id.$f;--}}
-                                    {{--                                                    $langAdditionalFieldAmount = 'additional_field_amount'.$language->id.$f;--}}
-                                    {{--                                                    $aditionalField = $product->aditional_fields()->where('field_id', $f)->where('language_id', $language->id)->first()--}}
-                                    {{--                                                @endphp--}}
-                                    {{--                                                <div>--}}
-                                    {{--                                                    <div class="col-md-6">--}}
-                                    {{--                                                        <div class="form-group @if($errors->has($langAdditionalFieldTitle)) has-error @endif">--}}
-                                    {{--                                                            <label class="control-label p-b-10">Заглавие на поле {{$f}} (<span class="text-uppercase">{{$language->code}}</span>):</label>--}}
-                                    {{--                                                            <input class="form-control" type="text" name="{{$langAdditionalFieldTitle}}" value="{{ old($langAdditionalFieldTitle) ? old($langAdditionalFieldTitle) : (!is_null($aditionalField) ? $aditionalField->name : '') }}">--}}
-                                    {{--                                                            @if($errors->has($langAdditionalFieldTitle))--}}
-                                    {{--                                                                <span class="help-block">{{ trans($errors->first($langAdditionalFieldTitle)) }}</span>--}}
-                                    {{--                                                            @endif--}}
-                                    {{--                                                        </div>--}}
-                                    {{--                                                    </div>--}}
-                                    {{--                                                    <div class="col-md-6">--}}
-                                    {{--                                                        <div class="form-group @if($errors->has($langAdditionalFieldAmount)) has-error @endif">--}}
-                                    {{--                                                            <label class="control-label p-b-10">Стойност на поле {{$f}} (<span class="text-uppercase">{{$language->code}}</span>):</label>--}}
-                                    {{--                                                            <input class="form-control" type="text" name="{{$langAdditionalFieldAmount}}" value="{{ old($langAdditionalFieldTitle) ? old($langAdditionalFieldTitle) : (!is_null($aditionalField) ? $aditionalField->text : '') }}">--}}
-                                    {{--                                                            @if($errors->has($langAdditionalFieldAmount))--}}
-                                    {{--                                                                <span class="help-block">{{ trans($errors->first($langAdditionalFieldAmount)) }}</span>--}}
-                                    {{--                                                            @endif--}}
-                                    {{--                                                        </div>--}}
-                                    {{--                                                    </div>--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                            @endfor--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
-                                    {{--                                </div>--}}
-                                </div>
-                            </div>
+                            @include('shop::admin.products.additional_fields', ['language' => $language, 'maxFields' => 10])
 
                             <div class="additional-textareas-wrapper">
                                 <hr>
@@ -127,7 +87,7 @@
                 </div>
                 <ul class="nav nav-tabs-second">
                     @foreach($languages as $language)
-                        <li @if($language->code == env('DEF_LANG_CODE')) class="active" @endif><a langcode="{{$language->code}}">{{$language->code}}</a></li>
+                        <li @if($language->code === config('default.app.language.code')) class="active" @endif><a langcode="{{$language->code}}">{{$language->code}}</a></li>
                     @endforeach
                 </ul>
                 @include('admin.partials.on_edit.seo', ['model' => $product->seoFields])
@@ -148,7 +108,7 @@
 
                         <div class="row">
                             <div class="form-group">
-                                <label class="control-label col-md-3">Нов продукт:</label>
+                                <label class="control-label col-md-3">{{ __('shop::admin.products.label_new_product') }}:</label>
                                 <div class="col-md-6">
                                     <label class="switch pull-left">
                                         <input type="checkbox" name="is_new_product" class="success" data-size="small" {{ old('is_new_product') ? 'checked' : (($product->is_new_product) ? 'checked': '') }}>
@@ -157,7 +117,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3">Промо продукт:</label>
+                                <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>
                                 <div class="col-md-6">
                                     <label class="switch pull-left">
                                         <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{ old('is_in_promotion') ? 'checked' : (($product->is_in_promotion) ? 'checked': '')}}>
@@ -168,7 +128,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 p-r-30">
+                            <div class="col-md-6 col-xs-12">
                                 @include('admin.partials.on_edit.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'modelId' => $product->brand_id, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
                                 @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100', 'model' => $product])
                                 @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'product_id_code', 'label' => trans('shop::admin.products.sku_number'), 'required' => false, 'model' => $product])
@@ -176,7 +136,7 @@
                                 @include('admin.partials.on_edit.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: $product->units_in_stock, 'min' => 1, 'max'=> 999999999999])
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-xs-12">
                                 @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false, 'model' => $product])
                                 @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false, 'model' => $product])
                                 @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false, 'model' => $product])
