@@ -29,7 +29,7 @@ class ShopForgotPasswordController extends ShopResetPasswordController
             //TODO: Да се закачи имайла за пращане от системните настройки, да се вземе името на магазина от основните настройки
             $message->from('system@almatherapy.bg', env('app_name'));
             $message->to($request->email, 'Your name')
-                ->subject(trans('messages.reset_password'));
+                ->subject(trans('shop::front.login.reset_from_heading'));
         });
 
         return back()->with('success-message', 'Изпратихме e-mail на посочената от Вас електронна поща!');

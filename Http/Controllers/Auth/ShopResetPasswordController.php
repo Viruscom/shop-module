@@ -49,12 +49,12 @@ class ShopResetPasswordController extends ShopRegisteredUserController
     protected function validationErrorMessages()
     {
         return [
-            'token.required'     => 'The password reset token is required.',
-            'email.required'     => 'The email address is required.',
-            'email.email'        => 'The email address is not valid.',
-            'password.required'  => 'The new password is required.',
-            'password.min'       => 'The new password must be at least 8 characters.',
-            'password.confirmed' => 'The new password confirmation does not match.',
+            'token.required'     => trans('shop::front.login.reset_password_token_required'),
+            'email.required'     => trans('shop::front.login.email_required'),
+            'email.email'        => trans('shop::front.login.email_invalid'),
+            'password.required'  => trans('shop::front.login.password_required'),
+            'password.min'       => trans('shop::front.login.password_min'),
+            'password.confirmed' => trans('shop::front.login.password_confirmed'),
         ];
     }
 
