@@ -1,5 +1,4 @@
-@php use Modules\Shop\Entities\Basket; @endphp
-<h3 class="title-main title-border">@lang('shop::front.basket.summary')</h3>
+@php use Modules\Shop\Entities\Basket\Basket; @endphp<h3 class="title-main title-border">@lang('shop::front.basket.summary')</h3>
 
 <div class="col-inner">
     <div class="summary-boxes">
@@ -28,8 +27,7 @@
 
                                         <div class="prod-prices">
                                             <p class="main-price">
-                                                <b>{{ $basketProduct->product->getPrice() }}</b> лв.
-                                            </p>
+                                                <b>{{ $basketProduct->product->getPrice() }}</b> лв. </p>
                                         </div>
                                     </div>
                                 </div>
@@ -44,25 +42,25 @@
             <div class="box-row">
                 <span>@lang('shop::front.basket.products_prices')</span>
 
-                <strong>840.00  лв.</strong>
+                <strong>840.00 лв.</strong>
             </div>
 
             <div class="box-row">
                 <span>Общо отстъпки</span>
 
-                <strong>- 840.00  лв.</strong>
+                <strong>- 840.00 лв.</strong>
             </div>
 
             <div class="box-row">
                 <span>ДДС</span>
 
-                <strong>840.00  лв.</strong>
+                <strong>840.00 лв.</strong>
             </div>
 
             <div class="box-row">
                 <span>@lang('shop::front.basket.delivery')</span>
 
-{{--                <strong>{{$basket_product->free_delivery ? trans('shop:front.basket.free_delivery') :'3.00  лв.'}}</strong>--}}
+                {{--                <strong>{{$basket_product->free_delivery ? trans('shop:front.basket.free_delivery') :'3.00  лв.'}}</strong>--}}
             </div>
         </div>
 
@@ -70,13 +68,13 @@
             <div class="box-row box-row-big">
                 <span>Общо с ДДС</span>
 
-                <strong>655.00  лв.</strong>
+                <strong>655.00 лв.</strong>
             </div>
 
             <div class="box-row box-row-warning">
                 <span>Спестявате</span>
 
-                <strong>3.00  лв.</strong>
+                <strong>3.00 лв.</strong>
             </div>
 
             <div class="box-row">

@@ -7,8 +7,8 @@ use Auth;
 use DB;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Modules\Shop\Entities\City;
-use Modules\Shop\Entities\Country;
+use Modules\Shop\Entities\Settings\City;
+use Modules\Shop\Entities\Settings\Country;
 
 class HomeController extends Controller
 {

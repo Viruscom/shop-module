@@ -3,7 +3,7 @@
 namespace Modules\Shop\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Shop\Entities\Delivery;
+use Modules\Shop\Entities\Settings\Delivery;
 
 class OwnDeliverySeeder extends Seeder
 {

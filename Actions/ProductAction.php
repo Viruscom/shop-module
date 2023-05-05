@@ -10,8 +10,8 @@ use App\Models\AdBoxTranslation;
 use App\Models\Files\File;
 use Cache;
 use Illuminate\Http\Request;
-use Modules\Shop\Entities\AdBoxProduct;
-use Modules\Shop\Models\Admin\Brand;
+use Modules\Shop\Entities\AdBoxProduct\AdBoxProduct;
+use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 
 class ProductAction

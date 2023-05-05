@@ -6,7 +6,7 @@ use App\Helpers\LanguageHelper;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Modules\Shop\Entities\ShopRegisteredUser;
+use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
 use Modules\Shop\Http\Controllers\ShopRegisteredUserController;
 
 class ShopRegisterController extends ShopRegisteredUserController

@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
 use Modules\Shop\Actions\BasketAction;
-use Modules\Shop\Entities\Basket;
-use Modules\Shop\Entities\City;
-use Modules\Shop\Entities\Country;
-use Modules\Shop\Entities\Delivery;
-use Modules\Shop\Entities\Order;
-use Modules\Shop\Entities\Payment;
+use Modules\Shop\Entities\Basket\Basket;
+use Modules\Shop\Entities\Orders\Order;
+use Modules\Shop\Entities\Settings\City;
+use Modules\Shop\Entities\Settings\Country;
+use Modules\Shop\Entities\Settings\Delivery;
+use Modules\Shop\Entities\Settings\Payment;
 use Modules\Shop\Http\Requests\OrderRequest;
 use Modules\Shop\Models\Admin\Products\Product;
 

@@ -7,7 +7,7 @@ use Auth;
 use Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Modules\Shop\Entities\ShopRegisteredUser;
+use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
 use Password;
 use Validator;
 
@@ -47,12 +47,6 @@ class ShopRegisteredUserController extends Controller
     protected function broker()
     {
         return Password::broker('shop_users');
-    }
-    public function showResetForm(Request $request, $token = null)
-    {
-        return view('shop::reset-password')->with(
-            ['token' => $token, 'email' => $request->email]
-        );
     }
     public function reset(Request $request)
     {

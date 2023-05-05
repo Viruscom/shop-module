@@ -3,7 +3,7 @@
 namespace Modules\Shop\Actions;
 
 use App\Helpers\CacheKeysHelper;
-use Modules\Shop\Entities\AdBoxProduct;
+use Modules\Shop\Entities\AdBoxProduct\AdBoxProduct;
 
 class ProductAdBoxAction
 {

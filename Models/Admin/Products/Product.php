@@ -19,10 +19,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
-use Modules\Shop\Models\Admin\Brand;
+use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\ShopDiscounts\Entities\Discount;
-use Nwidart\Modules\Facades\Module;
 
 class Product extends Model implements TranslatableContract, ImageModelInterface
 {

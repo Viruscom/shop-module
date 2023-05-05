@@ -1,19 +1,22 @@
 <?php
 
-use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
 use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Modules\Shop\Http\Controllers\admin\AdBoxesProductsController;
-use Modules\Shop\Http\Controllers\admin\BrandController;
-use Modules\Shop\Http\Controllers\admin\Orders\OrderDocumentController;
+use Modules\Shop\Http\Controllers\admin\AdBoxesProducts\AdBoxesProductsController;
+use Modules\Shop\Http\Controllers\admin\Brands\BrandController;
+use Modules\Shop\Http\Controllers\admin\Orders\Documents\OrderDocumentController;
 use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
-use Modules\Shop\Http\Controllers\admin\Orders\OrderStatusController;
-use Modules\Shop\Http\Controllers\admin\ProductCategoriesController;
+use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
+use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
+use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
+use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
+use Modules\Shop\Http\Controllers\admin\Settings\Payments\PaymentsController;
+use Modules\Shop\Http\Controllers\admin\Settings\ShopSettingsController;
+use Modules\Shop\Http\Controllers\admin\Settings\Vats\VatsController;
+use Modules\Shop\Http\Controllers\admin\Settings\ZipCodes\CityZipCodesController;
 use Modules\Shop\Http\Controllers\admin\ShopAdminHomeController;
-use Modules\Shop\Http\Controllers\admin\ShopAdminRegisteredUsersController;
-use Modules\Shop\Http\Controllers\admin\ShopSettingsController;
 use Modules\Shop\Http\Controllers\Auth\ShopForgotPasswordController;
 use Modules\Shop\Http\Controllers\Auth\ShopLoginController;
 use Modules\Shop\Http\Controllers\Auth\ShopRegisterController;
@@ -21,12 +24,8 @@ use Modules\Shop\Http\Controllers\Auth\ShopResetPasswordController;
 use Modules\Shop\Http\Controllers\Auth\ShopVerificationController;
 use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
-use Modules\Shop\Http\Controllers\CityZipCodesController;
-use Modules\Shop\Http\Controllers\DeliveriesController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
-use Modules\Shop\Http\Controllers\PaymentsController;
-use Modules\Shop\Http\Controllers\VatsController;
 
 /*
 |--------------------------------------------------------------------------

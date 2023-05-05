@@ -3,7 +3,7 @@
 namespace Modules\Shop\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Shop\Entities\City;
+use Modules\Shop\Entities\Settings\City;
 
 class CityVatCategoryStoreRequest extends FormRequest
 {

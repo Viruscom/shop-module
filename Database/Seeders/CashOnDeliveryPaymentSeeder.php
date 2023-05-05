@@ -3,7 +3,7 @@
 namespace Modules\Shop\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Shop\Entities\Payment;
+use Modules\Shop\Entities\Settings\Payment;
 
 class CashOnDeliveryPaymentSeeder extends Seeder
 {

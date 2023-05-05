@@ -39,7 +39,7 @@ class ShopLoginController extends ShopRegisterController
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('shop.login');
+        return redirect()->route('shop.login', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code]);
     }
 
     protected function authenticated(Request $request, $user)

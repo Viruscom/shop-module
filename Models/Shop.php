@@ -3,12 +3,8 @@
 namespace Modules\Shop\Models;
 
 use App\Helpers\AdminHelper;
-use App\Helpers\LanguageHelper;
-use App\Models\Settings\Application;
-use App\Models\SpecialPage\SpecialPage;
-
 use Illuminate\Database\Eloquent\Model;
-use Modules\Shop\Models\Admin\Brand;
+use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\Shop\Models\Admin\Products\Product;
 

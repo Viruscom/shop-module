@@ -3,7 +3,7 @@
 namespace Modules\Shop\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Shop\Entities\VatCategory;
+use Modules\Shop\Entities\Settings\VatCategory;
 
 class VatCategoryUpdateRequest extends FormRequest
 {

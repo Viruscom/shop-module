@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Http\Controllers\Auth;
 
+use App\Helpers\LanguageHelper;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,9 +12,9 @@ use Modules\Shop\Http\Controllers\ShopRegisteredUserController;
 
 class ShopResetPasswordController extends ShopRegisteredUserController
 {
-    public function showResetForm(Request $request, $token = null)
+    public function showResetForm(Request $request, $languageSlug, $token = null)
     {
-        return view('shop::reset-password')->with(
+        return view('shop::auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
@@ -30,7 +31,7 @@ class ShopResetPasswordController extends ShopRegisteredUserController
         );
 
         if ($response == Password::PASSWORD_RESET) {
-            return redirect()->route('shop.login')->with('status', __($response));
+            return redirect()->route('shop.login', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('status', __($response));
         }
 
         throw ValidationException::withMessages([

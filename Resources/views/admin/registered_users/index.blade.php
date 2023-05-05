@@ -41,7 +41,7 @@
         @if(count($registeredUsers))
             @foreach($registeredUsers as $client)
                 <tr class="t-row">
-                    <td>{{ $client->name }}</td>
+                    <td>{{ $client->first_name . ' ' . $client->last_name }}</td>
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->countOrders() }}</td>
                     <td>
@@ -53,7 +53,7 @@
                     </td>
                     <td>{{ \Carbon\Carbon::parse($client->created_at)->format('d.m.Y') }}</td>
                     <td class="pull-right">
-                        <a href="{{ url('/admin/shop/clients/'.$client->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
+                        <a href="{{ route('admin.shop.registered-users.show', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
                         <a href="{{ url('/admin/shop/clients/'.$client->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                         @if(!$client->active)
                             <a href="{{ url('/admin/shop/clients/active/'.$client->id.'/1') }}" role="button" class="btn light-grey-eye visibility-activate"><i class="far fa-eye-slash"></i></a>
