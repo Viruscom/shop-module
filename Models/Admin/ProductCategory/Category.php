@@ -16,6 +16,8 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Shop\Models\Admin\Products\Product;
 
 class Category extends Model implements TranslatableContract, ImageModelInterface
 {
@@ -102,6 +104,10 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     {
         return AdminHelper::getSystemImage(self::$PRODUCT_CATEGORY_SYSTEM_IMAGE);
     }
+    public function getEncryptedPath($moduleName): string
+    {
+        return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
+    }
     public function headerGallery()
     {
         return $this->getHeaderGalleryRelation(get_class($this));
@@ -110,7 +116,6 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     {
         return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
     }
-
     public function seo($languageSlug)
     {
         $seo = $this->seoFields;
@@ -118,5 +123,9 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
             return null;
         }
         SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
+    }
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
     }
 }

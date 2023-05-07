@@ -8,6 +8,7 @@ use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PositionInterface;
+use App\Models\CategoryPage\CategoryPage;
 use Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -134,7 +135,6 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
-
     public function deleteImage($id, CommonControllerAction $action): RedirectResponse
     {
         $productCategory = Category::find($id);
@@ -145,5 +145,14 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
         }
 
         return redirect()->back()->withErrors(['admin.image_not_found']);
+    }
+
+    public function getCategoryProducts($id)
+    {
+        $productCategory = Category::where('id', $id)->withTranslation()->with('products')->first();
+        MainHelper::goBackIfNull($productCategory);
+
+
+        return view('shop::admin.product_categories.assigned_products', compact('productCategory'));
     }
 }

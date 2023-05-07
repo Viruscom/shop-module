@@ -22,10 +22,10 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
 {
     use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
-    public const FILES_PATH = "images/shop/brands";
-    const ALLOW_CATALOGS = true;
-    const ALLOW_ICONS = true;
-    const ALLOW_LOGOS = true;
+    public const FILES_PATH     = "images/shop/brands";
+    const        ALLOW_CATALOGS = true;
+    const        ALLOW_ICONS    = true;
+    const        ALLOW_LOGOS    = true;
 
     public static string $BRAND_SYSTEM_IMAGE  = 'brand_1_image.png';
     public static string $BRAND_RATIO         = '1/1';
@@ -122,6 +122,10 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     public function getSystemImage(): string
     {
         return AdminHelper::getSystemImage(self::$BRAND_SYSTEM_IMAGE);
+    }
+    public function getEncryptedPath($moduleName): string
+    {
+        return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
     }
     public function headerGallery()
     {

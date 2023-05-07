@@ -163,6 +163,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return number_format($this->price, 2, '.', '');
     }
+    public function getEncryptedPath($moduleName): string
+    {
+        return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
+    }
     public function headerGallery()
     {
         return $this->getHeaderGalleryRelation(get_class($this));

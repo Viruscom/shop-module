@@ -34,7 +34,7 @@ class ProductStoreRequest extends FormRequest
             'category_id'             => 'required',
             'brand_id'                => 'required',
             'supplier_delivery_price' => 'required',
-            'price'                   => 'required',
+            'price'                   => ['required', 'gt:supplier_delivery_price'],
             'units_in_stock'          => ['required', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
             'weight'                  => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
             'width'                   => ['nullable', 'min:0.01', 'max:99999.99', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -69,6 +69,7 @@ class ProductStoreRequest extends FormRequest
             'length.regex' => trans('shop::admin.products.length_regex'),
             'length.min'   => trans('shop::admin.products.length_min'),
             'length.max'   => trans('shop::admin.products.length_max'),
+            'price.gt'     => trans('shop::admin.products.price_greater_than_supplier_delivery_price'),
         ];
     }
 }

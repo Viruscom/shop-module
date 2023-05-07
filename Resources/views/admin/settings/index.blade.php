@@ -6,20 +6,15 @@
 @section('content')
     @include('admin.notify')
 
-
     <div class="row">
         <div class="col-xs-12">
             <h3>@lang('shop::admin.shop.settings_index')</h3><br>
-            <div class="alert alert-warning">
-                <strong>Внимание!</strong>
-                <br>
-                <span>Всяко действие в настройките може да доведе до каскадни промени. Ако сте обучен за работа с тази част от магазина, моля, продължете.</span>
-            </div>
+            <div class="alert alert-warning">{!! __('shop::admin.main_settings.warning') !!}</div>
             <div class="settings-icons-wrapper">
                 <div>
-                    <a href="#">
+                    <a href="{{ route('admin.shop.settings.main.index') }}">
                         <img src="{{ asset('admin/assets/images/cart.svg') }}">
-                        <span>Основни</span>
+                        <span>{{ __('shop::admin.main_settings.index') }}</span>
                     </a>
                 </div>
 
@@ -45,7 +40,7 @@
                 </div>
 
                 <div>
-                    <a href="#">
+                    <a href="{{ route('vats.countries.index') }}">
                         <img src="{{ asset('admin/assets/images/cart.svg') }}">
                         <span>{{ __('shop::admin.vats.index') }}</span>
                     </a>

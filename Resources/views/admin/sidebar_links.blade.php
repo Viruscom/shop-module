@@ -45,7 +45,7 @@
                 <li><a href="{{ route('admin.shop.registered-users.index') }}"><i class="fas fa-user-friends"></i> <span>{!! trans('shop::admin.registered_users.index') !!}</span></a></li>
                 <li><a href="https://main.reklamnipodaraci.com/admin/shop/h-18-reports"><i class="fas fa-user-friends"></i>
                         <span>{{ __('shop::admin.h18_reports.index') }}</span></a></li>
-                <li><a href="{{ route('shop.settings.index') }}"><i class="fas fa-cogs"></i> <span>{!! trans('shop::admin.shop.settings_index') !!}</span></a></li>
+                <li><a href="{{ route('admin.shop.settings.index') }}"><i class="fas fa-cogs"></i> <span>{!! trans('shop::admin.shop.settings_index') !!}</span></a></li>
             </ul>
         </div>
     </div>

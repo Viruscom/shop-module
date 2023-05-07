@@ -12,6 +12,7 @@ use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesContr
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
+use Modules\Shop\Http\Controllers\admin\Settings\Main\ShopMainSettingsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Payments\PaymentsController;
 use Modules\Shop\Http\Controllers\admin\Settings\ShopSettingsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Vats\VatsController;
@@ -103,13 +104,17 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.show');
             Route::post('active/{active}', [ShopAdminRegisteredUsersController::class, 'changeActiveStatus'])->name('admin.shop.registered-users.changeStatus');
         });
-
-        });
-
+    });
 
     /* Settings */
     Route::group(['prefix' => 'settings'], static function () {
-        Route::get('/', [ShopSettingsController::class, 'index'])->name('shop.settings.index');
+        Route::get('/', [ShopSettingsController::class, 'index'])->name('admin.shop.settings.index');
+
+        /* Main Settings */
+        Route::group(['prefix' => 'main-settings'], static function () {
+            Route::get('/', [ShopMainSettingsController::class, 'index'])->name('admin.shop.settings.main.index');
+            Route::post('update', [ShopMainSettingsController::class, 'update'])->name('admin.shop.settings.main.update');
+        });
 
         /* Payment settings */
         Route::prefix('payments')->group(function () {
@@ -234,6 +239,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/up', [ProductCategoriesController::class, 'positionUp'])->name('admin.product-categories.position-up');
             Route::get('position/down', [ProductCategoriesController::class, 'positionDown'])->name('admin.product-categories.position-down');
             Route::get('image/delete', [ProductCategoriesController::class, 'deleteImage'])->name('admin.product-categories.delete-image');
+            Route::get('/products', [ProductCategoriesController::class, 'getCategoryProducts'])->name('admin.product-categories.products');
         });
     });
 
@@ -349,8 +355,6 @@ Route::middleware(['web', 'set.sbuuid'])->group(function () {
             Route::get('verification/resend', [ShopVerificationController::class, 'resend'])->name('shop.verification.resend');
         });
     });
-
-
 });
 
 

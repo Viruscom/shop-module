@@ -1,8 +1,8 @@
 @extends('layouts.admin.app')
 @section('content')
-    @include('shop::admin.product_categories.breadcrumbs')
+    @include('shop::admin.products.breadcrumbs')
     @include('admin.notify')
-    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3)])
+    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(5)])
 
     <div class="row">
         <div class="col-xs-12">
@@ -15,13 +15,13 @@
                     <th class="width-220">{{ __('admin.actions') }}</th>
                     </thead>
                     <tbody>
-                    @if(!is_null($categories) && $categories->isNotEmpty())
+                    @if(!is_null($productCategory) && $productCategory->products->isNotEmpty())
                             <?php $i = 1; ?>
-                        @foreach($categories as $category)
-                            <tr class="t-row row-{{$category->id}}">
+                        @foreach($productCategory->products as $product)
+                            <tr class="t-row row-{{$product->id}}">
                                 <td class="width-2-percent">
                                     <div class="pretty p-default p-square">
-                                        <input type="checkbox" class="checkbox-row" name="check[]" value="{{$category->id}}"/>
+                                        <input type="checkbox" class="checkbox-row" name="check[]" value="{{$product->id}}"/>
                                         <div class="state p-primary">
                                             <label></label>
                                         </div>
@@ -29,29 +29,30 @@
                                 </td>
                                 <td class="width-2-percent">{{$i}}</td>
                                 <td>
-                                    {{ $category->title }}
+                                    {{ $product->title }}
                                 </td>
                                 <td class="pull-right">
-                                    @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $categories, 'model' => $category, 'showInPublicModal' => false])
+                                    @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(5), 'models' => $productCategory->products, 'model' => $product, 'showInPublicModal' => false])
+                                    <a href="{{ route('admin.products.send-to-product-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_product_adbox')"><i class="fas fa-ad"></i></a>
                                 </td>
                             </tr>
-                            <tr class="t-row-details row-{{$category->id}}-details hidden">
+                            <tr class="t-row-details row-{{$product->id}}-details hidden">
                                 <td colspan="2"></td>
                                 <td colspan="1">
-                                    @include('admin.partials.index.table_details', ['model' => $category, 'moduleName' => 'CategoryPage', 'hasChildrens' => true, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.product-categories.products', ['id' => $category->id])])
+                                    @include('admin.partials.index.table_details', ['model' => $product, 'moduleName' => 'Product'])
                                 </td>
                                 <td class="width-220">
-                                    <img class="thumbnail img-responsive" src="{{ $category->getFileUrl() }}"/>
+                                    <img class="thumbnail img-responsive" src="{{ $product->getFileUrl() }}"/>
                                 </td>
                             </tr>
                                 <?php $i++; ?>
                         @endforeach
                         <tr style="display: none;">
-                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_categories.no_records') }}</td>
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_categories.no_records') }}</td>
+                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
                         </tr>
                     @endif
                     </tbody>

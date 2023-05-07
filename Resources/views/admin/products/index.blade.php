@@ -39,13 +39,7 @@
                             <tr class="t-row-details row-{{$product->id}}-details hidden">
                                 <td colspan="2"></td>
                                 <td colspan="1">
-                                    <table class="table-details">
-                                        <tbody>
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    @include('admin.partials.index.table_details', ['model' => $product, 'moduleName' => 'Product'])
                                 </td>
                                 <td class="width-220">
                                     <img class="thumbnail img-responsive" src="{{ $product->getFileUrl() }}"/>
