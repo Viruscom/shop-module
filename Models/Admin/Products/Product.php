@@ -7,7 +7,10 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
+<<<<<<< HEAD
 use App\Models\ProductAditionalField;
+=======
+>>>>>>> origin/main
 use App\Models\Seo;
 use App\Traits\CommonActions;
 use App\Traits\HasGallery;
@@ -237,6 +240,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
     public function additionalFields()
     {
+<<<<<<< HEAD
         return $this->hasMany(ProductAditionalField::class);
+=======
+        //TODO: Make relation
+>>>>>>> origin/main
     }
 }

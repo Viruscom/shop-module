@@ -160,10 +160,13 @@ return [
         'choose_brand'             => 'Изберете марка',
         'choose_categories'        => 'Изберете категории',
         'order_amount'             => 'Стойност на поръчката',
+<<<<<<< HEAD
         'from_quantity'            => 'От количество',
         'to_quantity'              => 'До количество',
         'quantity_price'           => 'Цена',
         'for_product'              => 'За продукт',
+=======
+>>>>>>> origin/main
     ],
 
     'shop_settings' => [

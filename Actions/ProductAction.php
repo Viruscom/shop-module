@@ -13,10 +13,20 @@ use Illuminate\Http\Request;
 use Modules\Shop\Entities\AdBoxProduct\AdBoxProduct;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
+<<<<<<< HEAD
 use Modules\Shop\Models\Admin\Products\Product;
 
 class ProductAction
 {
+=======
+
+class ProductAction
+{
+    public function generateProductAdBox()
+    {
+
+    }
+>>>>>>> origin/main
     public function checkForFilesCache(): void
     {
         if (is_null(Cache::get(CacheKeysHelper::$FILES))) {
@@ -57,6 +67,7 @@ class ProductAction
 
         AdBoxProduct::create($data->all());
     }
+<<<<<<< HEAD
     public function storeAdditionalFields(Request $request)
     {
 
@@ -65,4 +76,6 @@ class ProductAction
     {
 
     }
+=======
+>>>>>>> origin/main
 }
