@@ -36,6 +36,8 @@ return [
         'additional_fields'                          => 'Допълнителни полета',
         'additional_field_title'                     => 'Заглавие на поле',
         'additional_field_value'                     => 'Стойност на поле',
+        'main_product_mage'                          => 'Основно изображение на продукта',
+        'product_labels'                             => 'Етикети на продукта',
         'label_new_product'                          => 'Нов продукт',
         'label_promo_product'                        => 'Промо продукт',
         'weight_regex'                               => 'Полето за тегло трябва да е от типа 0.00',
@@ -160,13 +162,10 @@ return [
         'choose_brand'             => 'Изберете марка',
         'choose_categories'        => 'Изберете категории',
         'order_amount'             => 'Стойност на поръчката',
-<<<<<<< HEAD
         'from_quantity'            => 'От количество',
         'to_quantity'              => 'До количество',
         'quantity_price'           => 'Цена',
         'for_product'              => 'За продукт',
-=======
->>>>>>> origin/main
     ],
 
     'shop_settings' => [

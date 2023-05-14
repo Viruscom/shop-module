@@ -7,10 +7,7 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
-<<<<<<< HEAD
-use App\Models\ProductAditionalField;
-=======
->>>>>>> origin/main
+use Modules\Shop\Models\Admin\Products\ProductAdditionalField;
 use App\Models\Seo;
 use App\Traits\CommonActions;
 use App\Traits\HasGallery;
@@ -31,10 +28,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 {
     use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
-    public const FILES_PATH = "images/shop/products";
-    const ALLOW_CATALOGS = true;
-    const ALLOW_ICONS = true;
-    const ALLOW_LOGOS = true;
+    public const FILES_PATH     = "images/shop/products";
+    const        ALLOW_CATALOGS = true;
+    const        ALLOW_ICONS    = true;
+    const        ALLOW_LOGOS    = true;
 
     public static string $PRODUCT_SYSTEM_IMAGE  = 'product_1_image.png';
     public static string $PRODUCT_RATIO         = '1/1';
@@ -219,12 +216,12 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
     public function isNewProduct(): bool
     {
-        return (boolean) $this->is_new;
+        return (boolean)$this->is_new;
     }
 
     public function isPromoProduct(): bool
     {
-        return (boolean) $this->is_promo;
+        return (boolean)$this->is_promo;
     }
 
     public function isInCollection(): bool
@@ -238,12 +235,8 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         return url($languageSlug . '/' . $this->url);
     }
 
-    public function additionalFields()
+    public function additionalFields(): HasMany
     {
-<<<<<<< HEAD
-        return $this->hasMany(ProductAditionalField::class);
-=======
-        //TODO: Make relation
->>>>>>> origin/main
+        return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
     }
 }

@@ -13,20 +13,11 @@ use Illuminate\Http\Request;
 use Modules\Shop\Entities\AdBoxProduct\AdBoxProduct;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
-<<<<<<< HEAD
 use Modules\Shop\Models\Admin\Products\Product;
+use Modules\Shop\Models\Admin\Products\ProductAdditionalField;
 
 class ProductAction
 {
-=======
-
-class ProductAction
-{
-    public function generateProductAdBox()
-    {
-
-    }
->>>>>>> origin/main
     public function checkForFilesCache(): void
     {
         if (is_null(Cache::get(CacheKeysHelper::$FILES))) {
@@ -67,15 +58,23 @@ class ProductAction
 
         AdBoxProduct::create($data->all());
     }
-<<<<<<< HEAD
-    public function storeAdditionalFields(Request $request)
+    public function createOrUpdateAdditionalFields(Request $request, $product)
     {
+        $languages = LanguageHelper::getActiveLanguages();
 
-    }
-    public function updateAdditionalFields(Product $product, Request $request)
-    {
+        $maxFields = ProductAdditionalField::MAX_FIELDS;
 
+        foreach ($languages as $language) {
+            for ($f = 1; $f <= $maxFields; $f++) {
+                $data = ProductAdditionalField::getData($language, $request, $f);
+
+                $additionalField = ProductAdditionalField::updateOrCreate(
+                    ['product_id' => $product->id, 'locale' => $data['locale'], 'field_id' => $data['field_id']],
+                    ['name' => $data['name'], 'text' => $data['text']]
+                );
+
+                $product->additionalFields()->save($additionalField);
+            }
+        }
     }
-=======
->>>>>>> origin/main
 }

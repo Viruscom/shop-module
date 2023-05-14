@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Entities\RegisteredUser;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,6 +10,7 @@ use Modules\Shop\Entities\Orders\Order;
 use Modules\Shop\Entities\RegisteredUser\Firms\Company;
 use Modules\Shop\Entities\RegisteredUser\PaymentAddresses\ShopPaymentAddress;
 use Modules\Shop\Entities\RegisteredUser\ShipmentAddresses\ShopShipmentAddress;
+use Modules\Shop\Models\Admin\Products\ProductFavorite;
 
 class ShopRegisteredUser extends Authenticatable
 {
@@ -33,17 +35,10 @@ class ShopRegisteredUser extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id', 'id')->count();
     }
-    //
-    //    public function favoriteProducts()
-    //    {
-    //        return $this->belongsToMany(ShopProduct::class, 'shop_favorite_products', 'user_id', 'product_id');
-    //    }
-    //
-    //    public function wantedProducts()
-    //    {
-    //        return $this->belongsToMany(ShopProduct::class, 'shop_wanted_products', 'user_id', 'product_id');
-    //    }
-    //
+    public function favoriteProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductFavorite::class, 'product_favorites', 'user_id', 'product_id');
+    }
     public function paymentAddresses(): HasMany
     {
         return $this->hasMany(ShopPaymentAddress::class);

@@ -1,17 +1,13 @@
 @extends('layouts.admin.app')
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/assets/css/select2.min.css') }}" rel="stylesheet"/>
 @endsection
 
 @section('scripts')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.js"></script>
-
-
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/ckeditor/ckeditor.js') }}"></script>
     <script>
-        // $(".select2").select2({language: "bg"});
+        $(".select2").select2({language: "bg"});
         var focusedEditor;
         CKEDITOR.timestamp = new Date();
         CKEDITOR.on('instanceReady', function (evt) {
@@ -45,12 +41,6 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-warning"><strong>Внимание! </strong>Промяната на загланието (името) или на активността (видимостта) на продукта ще се отрази в sitemap-a на сайта и може да доведе до промени в индексирането на Вашия сайт от търсачките.</div>
             </div>
         </div>
         <div class="row">
@@ -99,48 +89,68 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
-                                <hr>
+                            <hr>
+                            <div class="col-md-6">
+                                <h5><b><i>{{ __('shop::admin.products.main_product_mage') }}</i></b></h5>
                                 @include('admin.partials.on_edit.form_fields.upload_file', ['model' => $product, 'deleteRoute' => route('admin.products.delete-image', ['id'=>$product->id])])
-                                <hr>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5><b><i>{{ __('shop::admin.products.product_labels') }}</i></b></h5>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 text-left">{{ __('shop::admin.products.label_new_product') }}:</label>
+                                    <div class="col-md-6">
+                                        <label class="switch pull-left">
+                                            <input type="checkbox" name="is_new_product" class="success" data-size="small" {{ old('is_new_product') ? 'checked' : (($product->is_new_product) ? 'checked': '') }}>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>
+                                    <div class="col-md-6">
+                                        <label class="switch pull-left">
+                                            <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{ old('is_in_promotion') ? 'checked' : (($product->is_in_promotion) ? 'checked': '')}}>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group">
-                                <label class="control-label col-md-3">{{ __('shop::admin.products.label_new_product') }}:</label>
-                                <div class="col-md-6">
-                                    <label class="switch pull-left">
-                                        <input type="checkbox" name="is_new_product" class="success" data-size="small" {{ old('is_new_product') ? 'checked' : (($product->is_new_product) ? 'checked': '') }}>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>
-                                <div class="col-md-6">
-                                    <label class="switch pull-left">
-                                        <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{ old('is_in_promotion') ? 'checked' : (($product->is_in_promotion) ? 'checked': '')}}>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 col-xs-12">
+                            <hr>
+                            <div class="col-md-12">
                                 @include('admin.partials.on_edit.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'modelId' => $product->brand_id, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100', 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'product_id_code', 'label' => trans('shop::admin.products.sku_number'), 'required' => false, 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'barcode', 'label' => trans('shop::admin.products.barcode'), 'required' => false, 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: $product->units_in_stock, 'min' => 1, 'max'=> 999999999999])
-                            </div>
 
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 p-r-30">
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'supplier_delivery_price', 'label' => trans('shop::admin.products.supplier_delivery_price'), 'required' => true, 'class' => 'width-p100', 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100', 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: $product->units_in_stock, 'min' => 1, 'max'=> 999999999999])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'product_id_code', 'label' => trans('shop::admin.products.sku_number'), 'required' => false, 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'barcode', 'label' => trans('shop::admin.products.barcode'), 'required' => false, 'model' => $product])
+                        </div>
+
+                        <div class="col-md-6">
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false, 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false, 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false, 'model' => $product])
+                            @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false, 'model' => $product])
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>ДДС ставки</h4>
+                            </div>
                             <div class="col-md-6 col-xs-12">
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false, 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false, 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false, 'model' => $product])
-                                @include('admin.partials.on_edit.form_fields.input_text', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false, 'model' => $product])
+                                {{--                            TODO: VAT categories fields--}}
+                            </div>
+                            <div class="col-md-6 col-xs-12">
+
                             </div>
                         </div>
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductAdditionalField extends Model
 {
+    public const MAX_FIELDS = 10;
+
     public    $timestamps = false;
     protected $table      = "product_additional_fields";
     protected $guarded    = ['id'];

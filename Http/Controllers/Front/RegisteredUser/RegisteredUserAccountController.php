@@ -16,4 +16,9 @@ class RegisteredUserAccountController extends Controller
     {
         return view('shop::front.registered_users.profile.personal_data', ['registeredUser' => Auth::guard('shop')->user()]);
     }
+
+    public function getFavoriteProducts()
+    {
+        return Auth::guard('shop')->user()->favoriteProducts()->get();
+    }
 }

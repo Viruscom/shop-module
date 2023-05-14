@@ -33,10 +33,10 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
     }
     public function store(ProductStoreRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
     {
-        $productAction->storeAdditionalFields($request);
         $product = $action->doSimpleCreate(Product::class, $request);
         $action->updateUrlCache($product, ProductTranslation::class);
         $action->storeSeo($request, $product, 'Product');
+        $productAction->createOrUpdateAdditionalFields($request, $product);
 
         Product::cacheUpdate();
 
@@ -145,7 +145,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->doSimpleUpdate(Product::class, ProductTranslation::class, $product, $request);
         $action->updateUrlCache($product, ProductTranslation::class);
         $action->updateSeo($request, $product, 'Product');
-        $productAction->updateAdditionalFields($product, $request);
+        $productAction->createOrUpdateAdditionalFields($request, $product);
 
         if ($request->has('image')) {
             $request->validate(['image' => Product::getFileRules()], [Product::getUserInfoMessage()]);

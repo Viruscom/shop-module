@@ -88,15 +88,16 @@
                                 @include('admin.partials.common.import_file')
                                 @include('admin.partials.common.import_catalog')
                             </div>
+
                             <div class="row">
                                 <hr>
                                 <div class="col-md-6">
-                                    <h5><b><i>Основно изображение на продукта</i></b></h5>
+                                    <h5><b><i>{{ __('shop::admin.products.main_product_mage') }}</i></b></h5>
                                     @include('admin.partials.on_create.form_fields.upload_file')
                                 </div>
 
                                 <div class="col-md-6">
-                                    <h5><b><i>Етикети на продукта</i></b></h5>
+                                    <h5><b><i>{{ __('shop::admin.products.product_labels') }}</i></b></h5>
                                     <div class="form-group">
                                         <label class="control-label col-md-3 text-left">{{ __('shop::admin.products.label_new_product') }}:</label>
                                         <div class="col-md-6">
