@@ -340,7 +340,7 @@
                                     </div>
                                     <div class="info-wrapper">
                                         <div class="title">{{ $product->translations()->where('language_id', 1)->first()->title }}</div>
-                                        <div class="product-code">Продуктов код (ID номер): {{ $product->product_id_code }}</div>
+                                        <div class="product-code">Продуктов код (ID номер): {{ $product->sku }}</div>
                                         <div class="stock">Наличност: <span>{{ $product->units_in_stock }}</span> бр.</div>
                                         <div class="brand">Марка: {{ $product->brand->translations()->where('language_id', 1)->first()->title }}</div>
                                         <div class="unit-price">Ед.Цена с ДДС: {{ $product->formatedPrice($product->price) }} лв.</div>

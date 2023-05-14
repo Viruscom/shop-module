@@ -41,7 +41,8 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url', 'title_additional_1', 'title_additional_2', 'title_additional_3',
                                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
-    protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id'];
+    protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
+                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku'];
     protected    $table                = 'products';
 
     public static function getFileRules(): string
@@ -80,6 +81,54 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         if ($request->has('filename')) {
             $data['filename'] = $request->filename;
+        }
+
+        if ($request->has('supplier_delivery_price')) {
+            $data['supplier_delivery_price'] = $request->supplier_delivery_price;
+        }
+
+        if ($request->has('price')) {
+            $data['price'] = $request->price;
+        }
+
+        if ($request->has('barcode')) {
+            $data['barcode'] = $request->barcode;
+        }
+
+        if ($request->has('ean_code')) {
+            $data['ean_code'] = $request->ean_code;
+        }
+
+        if ($request->has('sku')) {
+            $data['sku'] = $request->sku;
+        }
+
+        if ($request->has('measure_unit')) {
+            $data['measure_unit'] = $request->measure_unit;
+        }
+
+        if ($request->has('is_new')) {
+            $data['is_new'] = $request->is_new;
+        }
+
+        if ($request->has('is_promo')) {
+            $data['is_promo'] = $request->is_promo;
+        }
+
+        if ($request->has('width')) {
+            $data['width'] = $request->width;
+        }
+
+        if ($request->has('height')) {
+            $data['height'] = $request->height;
+        }
+
+        if ($request->has('length')) {
+            $data['length'] = $request->length;
+        }
+
+        if ($request->has('weight')) {
+            $data['weight'] = $request->weight;
         }
 
         if ($request->hasFile('image')) {

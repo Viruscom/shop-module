@@ -94,15 +94,13 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
 
         Route::group(['prefix' => 'multiple'], static function () {
             Route::get('active/{active}', [ShopAdminRegisteredUsersController::class, 'activeMultiple'])->name('admin.shop.registered-users.active-multiple');
-            Route::get('delete', [ShopAdminRegisteredUsersController::class, 'deleteMultiple'])->name('admin.shop.registered-users.delete-multiple');
         });
 
         Route::group(['prefix' => '{id}'], static function () {
             Route::get('edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.edit');
             Route::post('update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.update');
-            Route::delete('delete', [ShopAdminRegisteredUsersController::class, 'delete'])->name('admin.shop.registered-users.delete');
             Route::get('show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.show');
-            Route::post('active/{active}', [ShopAdminRegisteredUsersController::class, 'changeActiveStatus'])->name('admin.shop.registered-users.changeStatus');
+            Route::get('active/{active}', [ShopAdminRegisteredUsersController::class, 'changeActiveStatus'])->name('admin.shop.registered-users.changeStatus');
         });
     });
 

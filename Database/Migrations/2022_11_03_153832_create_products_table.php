@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->decimal('supplier_delivery_price', 10, 2)->default(0);
             $table->decimal('price', 10, 2)->default(0);
             $table->string('barcode', 191)->nullable();
+            $table->string('sku', 191)->nullable();
             $table->string('ean_code', 191)->nullable();
             $table->string('measure_unit', 191)->nullable();
             $table->boolean('active')->default(true);

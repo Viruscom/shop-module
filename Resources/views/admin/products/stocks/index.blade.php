@@ -109,7 +109,7 @@
                                 @if($combosCount > 0)
                                 @endif
                             </td>
-                            <td class="width-130 text-right">{{ $product->product_id_code }}</td>
+                            <td class="width-130 text-right">{{ $product->sku }}</td>
                             <td class="width-130 text-right">
                                 <input type="number" value="{{ $product->units_in_stock }}" name="new_quantity" style="width: 90px">
                             </td>

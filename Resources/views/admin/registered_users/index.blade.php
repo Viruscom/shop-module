@@ -24,7 +24,7 @@
 @section('content')
     @include('shop::admin.registered_users.breadcrumbs')
     @include('admin.notify')
-    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(2).'.'.Request::segment(3), 'noCreate' => ''])
+    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(2).'.'.Request::segment(3), 'noMultipleDelete' => true])
 
     <table id="example" class="table table-striped">
         <thead>
@@ -54,11 +54,11 @@
                     <td>{{ \Carbon\Carbon::parse($client->created_at)->format('d.m.Y') }}</td>
                     <td class="pull-right">
                         <a href="{{ route('admin.shop.registered-users.show', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
-                        <a href="{{ url('/admin/shop/clients/'.$client->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{{ route('admin.shop.registered-users.edit', ['id' => $client->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                         @if(!$client->active)
-                            <a href="{{ url('/admin/shop/clients/active/'.$client->id.'/1') }}" role="button" class="btn light-grey-eye visibility-activate"><i class="far fa-eye-slash"></i></a>
+                            <a href="{{ route('admin.shop.registered-users.changeStatus', ['id' => $client->id, 'active' => 1]) }}" role="button" class="btn light-grey-eye visibility-activate"><i class="far fa-eye-slash"></i></a>
                         @else
-                            <a href="{{ url('/admin/shop/clients/active/'.$client->id.'/0') }}" role="button" class="btn grey-eye visibility-unactive"><i class="far fa-eye"></i></a>
+                            <a href="{{ route('admin.shop.registered-users.changeStatus', ['id' => $client->id, 'active' => 0]) }}" role="button" class="btn grey-eye visibility-unactive"><i class="far fa-eye"></i></a>
                         @endif
                     </td>
                 </tr>

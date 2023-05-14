@@ -23,6 +23,8 @@ class CreateShopRegisteredUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('active')->default(0);
+            $table->integer('newsletter_subscribed')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

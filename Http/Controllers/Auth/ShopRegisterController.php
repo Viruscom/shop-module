@@ -58,6 +58,7 @@ class ShopRegisterController extends ShopRegisteredUserController
                                               'phone'      => $data['phone'],
                                               'email'      => $data['email'],
                                               'password'   => Hash::make($data['password']),
+                                              'active'     => 0
                                           ]);
     }
 }

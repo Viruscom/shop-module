@@ -19,7 +19,7 @@ class ShopRegisteredUser extends Authenticatable
     public static int $DEFAULT_CLIENT_GROUP_ID = 1;
 
     protected $table    = 'shop_registered_users';
-    protected $fillable = ['group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password'];
+    protected $fillable = ['group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password', 'active', 'newsletter_subscribed'];
 
     public static function getClientGroups(): array
     {
@@ -28,12 +28,12 @@ class ShopRegisteredUser extends Authenticatable
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'user_id', 'id');
+        return $this->hasMany(Order::class, 'user_id', 'id')->orderBy('created_at', 'desc');
     }
 
     public function countOrders(): int
     {
-        return $this->hasMany(Order::class, 'user_id', 'id')->count();
+        return $this->orders->count();
     }
     public function favoriteProducts(): BelongsToMany
     {
