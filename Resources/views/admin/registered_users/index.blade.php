@@ -24,7 +24,7 @@
 @section('content')
     @include('shop::admin.registered_users.breadcrumbs')
     @include('admin.notify')
-    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(2).'.'.Request::segment(3), 'noMultipleDelete' => true])
+    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(2).'.'.Request::segment(3), 'noMultipleActive' => true, 'noMultipleDelete' => true])
 
     <table id="example" class="table table-striped">
         <thead>

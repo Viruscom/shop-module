@@ -92,10 +92,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::get('/create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.create');
         Route::post('/store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.store');
 
-        Route::group(['prefix' => 'multiple'], static function () {
-            Route::get('active/{active}', [ShopAdminRegisteredUsersController::class, 'activeMultiple'])->name('admin.shop.registered-users.active-multiple');
-        });
-
         Route::group(['prefix' => '{id}'], static function () {
             Route::get('edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.edit');
             Route::post('update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.update');

@@ -70,7 +70,7 @@ class ShopAdminRegisteredUsersController extends Controller
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
-    public function active($id, $active): RedirectResponse
+    public function changeActiveStatus($id, $active): RedirectResponse
     {
         $registeredUser = ShopRegisteredUser::find($id);
         MainHelper::goBackIfNull($registeredUser);
