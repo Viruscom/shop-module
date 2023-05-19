@@ -107,12 +107,14 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
             $data['measure_unit'] = $request->measure_unit;
         }
 
+        $data['is_new'] = false;
         if ($request->has('is_new')) {
-            $data['is_new'] = $request->is_new;
+            $data['is_new'] = filter_var($request->is_new, FILTER_VALIDATE_BOOLEAN);
         }
 
+        $data['is_promo'] = false;
         if ($request->has('is_promo')) {
-            $data['is_promo'] = $request->is_promo;
+            $data['is_promo'] = filter_var($request->is_promo, FILTER_VALIDATE_BOOLEAN);
         }
 
         if ($request->has('width')) {
@@ -287,5 +289,39 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public function additionalFields(): HasMany
     {
         return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
+    }
+
+    public function getAdditionalFields($languageSlug): HasMany
+    {
+        return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id')->where('locale', $languageSlug);
+    }
+
+    public function getPreviousProductUrl($languageSlug)
+    {
+        if ($this->position == 1) {
+            return null;
+        }
+        $previousProduct = $this->category->products()->where('position', $this->position - 1)->first();
+        if (is_null($previousProduct)) {
+            return null;
+        }
+
+        return $previousProduct->getUrl($languageSlug);
+    }
+
+    public function getNextProductUrl($languageSlug)
+    {
+        $query       = $this->category->products();
+        $lastProduct = $query->latest()->first();
+        if (is_null($lastProduct) || $this->position == $lastProduct->position) {
+            return null;
+        }
+
+        $nextProduct = $query->where('position', $this->position + 1)->first();
+        if (is_null($nextProduct)) {
+            return null;
+        }
+
+        return $nextProduct->getUrl($languageSlug);
     }
 }

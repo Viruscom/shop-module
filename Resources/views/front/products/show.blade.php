@@ -9,11 +9,95 @@
     <script type="text/javascript" src="{{ asset('/front/plugins/cubeportfolio/js/main.js') }}"></script>
 @endsection
 @section('content')
-    @include('front.partials.inner_header')
     @include('front.partials.breadcrumbs')
     @php
         $product = $viewArray['currentModel']->parent;
+        $category = $viewArray['currentModel']->parent->category;
     @endphp
+
+    <div class="page-product">
+        <div class="shell">
+            <div class="page-prod-head">
+                <div class="label" data-aos="fade-up" data-aos-delay="50"></div>
+
+                <h3 data-aos="fade-up" data-aos-delay="100">{{ $category->title }}</h3>
+            </div>
+        </div>
+
+{{--      Icons here --}}
+
+        <div class="shell">
+            <div class="prod-elements">
+                <div class="prod-image-wrapper" data-aos="fade-up" data-aos-delay="50">
+                    <a href="#"></a>
+
+                    <div class="prod-image parent-image-wrapper">
+                        <img src="{{ $product->getFileUrl() }}" alt="" class="bg-image">
+                    </div>
+                </div>
+
+                <div class="prod-content">
+                    <h3 data-aos="fade-up" data-aos-delay="50">{{ $viewArray['currentModel']->title }}</h3>
+
+                    <div class="prod-info">
+                        <p data-aos="fade-up" data-aos-delay="50">
+                            <span>{{ __('shop::front.product.category') }}:</span>{{ $category->title }} </p>
+
+                        <p data-aos="fade-up" data-aos-delay="100">
+                            <span>{{ __('shop::front.product.weight') }}:</span>{{ $product->weight }} </p>
+                    </div>
+
+                    <div class="page-price" data-aos="fade-up" data-aos-delay="150">
+{{--                        <div class="price price-old">--}}
+{{--                            {{ __('front.from') }} <strong>98.00</strong> <span>{{ __('front.currency') }}</span>--}}
+{{--                        </div>--}}
+
+                        <div class="price">
+{{--                            {{ __('front.from') }} --}}
+                            <strong>{{ $product->getPrice() }}</strong> <span>{{ __('front.currency') }}</span>
+                        </div>
+                    </div>
+
+                    <a href="" class="btn btn-prod" data-aos="fade-up" data-aos-delay="200">
+                        <span>inquiry</span>
+
+                        <i class="arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <p data-aos="fade-up" data-aos-delay="50">
+                Nulla elit quam, porta ac urna eu, eleifend commodo nisi. Nulla elementum nunc sed felis pretium, et viverra urna sollicitudin. Donec convallistempus sollicitudin. Phasellus ac tellus sit amet nulla tempus viverra ac at metus. Donec scelerisque ac felis vel pellentesque. Suspendisse pulvinar venenatis diam, id efficitur mauris tincidunt et. Nulla laoreet lorem sed scelerisque tempor. In hac habitasse platea dictumst. Maecenas augue ligula, elementum nec purus vitae, malesuada dictum erat. Sed venenatis et nunc sed sagittis. Mauris aliquet sagittis pretium. Nulla laoreet lorem
+                sed scelerisque tempor. </p>
+
+@include('shop::front.products.additional_fields')
+        </div>
+    </div>
+
+
+
+    <div class="page-gallery" data-aos="fade-up" data-aos-delay="100">
+        @include('front.partials.content.inner_gallery')
+    </div>
+
+    @if(!is_null($product->getPreviousProductUrl($languageSlug)) || !is_null($product->getNextProductUrl($languageSlug)))
+        <div class="page-nav">
+            @if(!is_null($product->getPreviousProductUrl($languageSlug)))
+                <a href="{{ $product->getPreviousProductUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100" class="page-prev">
+                    <span>{{ __('shop::front.product.previous') }}</span>
+                </a>
+            @endif
+
+            @if(!is_null($product->getNextProductUrl($languageSlug)))
+                    <a href="{{ $product->getNextProductUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100" class="page-next">
+                        <span>{{ __('shop::front.product.next') }}</span>
+                    </a>
+            @endif
+        </div>
+    @endif
+
+
+
     <section class="section-article">
         <article class="article-single">
             <div class="shell">
@@ -28,14 +112,14 @@
                         </p>
                     </div>
 
-                    <h3 class="article-title" data-aos="fade-up" data-aos-delay="150">{{ $viewArray['currentModel']->title }}</h3>
+                    <h3 class="article-title" data-aos="fade-up" data-aos-delay="150"></h3>
                 </div>
 
                 <div class="product-wrapper">
                     <div class="product-main">
                         <div class="prod-aside">
                             <div class="prod-image">
-                                <img src="{{ $product->getFileUrl() }}" alt="" class="">
+                                <img src="" alt="" class="">
                             </div>
 
                             <div class="promos-wrapper">
@@ -152,9 +236,9 @@
                             </p>
                         </div>
 
-{{--                        <div class="product-actions">--}}
-{{--                            <a href="" class="link-more-big">Request</a>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="product-actions">--}}
+                        {{--                            <a href="" class="link-more-big">Request</a>--}}
+                        {{--                        </div>--}}
                     </div>
 
                     <!-- <div class="article-dates">
@@ -166,7 +250,7 @@
             </div>
         </article>
 
-        @include('front.partials.content.inner_gallery')
+
     </section>
 
 @endsection

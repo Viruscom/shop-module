@@ -6,6 +6,7 @@ use App\Helpers\AdminHelper;
 use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
+use App\Helpers\UrlHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Models\Seo;
 use App\Traits\CommonActions;
@@ -88,6 +89,7 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
 
         return $data;
     }
+
     public function setKeys($array): array
     {
         //        Go to Shop Model

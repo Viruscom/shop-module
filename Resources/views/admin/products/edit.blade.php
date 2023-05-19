@@ -101,7 +101,7 @@
                                     <label class="control-label col-md-3 text-left">{{ __('shop::admin.products.label_new_product') }}:</label>
                                     <div class="col-md-6">
                                         <label class="switch pull-left">
-                                            <input type="checkbox" name="is_new_product" class="success" data-size="small" {{ old('is_new_product') ? 'checked' : (($product->is_new_product) ? 'checked': '') }}>
+                                            <input type="checkbox" name="is_new" class="success" data-size="small" {{ old('is_new') ? 'checked' : (($product->is_new) ? 'checked': '') }}>
                                             <span class="slider"></span>
                                         </label>
                                     </div>
@@ -111,7 +111,7 @@
                                     <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>
                                     <div class="col-md-6">
                                         <label class="switch pull-left">
-                                            <input type="checkbox" name="is_in_promotion" class="success" data-size="small" {{ old('is_in_promotion') ? 'checked' : (($product->is_in_promotion) ? 'checked': '')}}>
+                                            <input type="checkbox" name="is_promo" class="success" data-size="small" {{ old('is_promo') ? 'checked' : (($product->is_promo) ? 'checked': '')}}>
                                             <span class="slider"></span>
                                         </label>
                                     </div>

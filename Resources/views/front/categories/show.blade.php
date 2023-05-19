@@ -13,36 +13,27 @@
     @include('front.partials.inner_header')
     @include('front.partials.breadcrumbs')
 
-    <section class="section-article">
-        <article class="article-single">
-            <div class="shell">
-                <div class="article-head">
-                    <div class="article-info">
-                        <!-- //<p class="brand"></p> -->
+    <section class="section-top section-top-2">
+        <div class="shell">
+            <img src="{{ asset('front/assets/icons/attachment-6.svg') }}" alt="" data-aos="fade-up" data-aos-delay="50">
 
-                        <p class="path" data-aos="fade-up" data-aos-delay="50"><a href="" class="link-more link-more-alt">About Saffron</a></p>
-                    </div>
+            <div class="label" data-aos="fade-up" data-aos-delay="50"></div>
 
+            <div class="section-content">
+                <h3 data-aos="fade-up" data-aos-delay="100">{{ $viewArray['currentModel']->title }}<span class="color-red">:</span></h3>
 
-                    <h3 class="article-title" data-aos="fade-up" data-aos-delay="150">{{ $viewArray['currentModel']->title }}</h3>
-                </div>
-
-                <div class="article-body" data-aos="fade-up" data-aos-delay="200">
-                    <div class="article-inner">
-                        {!! $viewArray['currentModel']->description !!}
-
-                        @include('front.partials.content.additional_titles_and_texts', ['model' => $viewArray['currentModel']])
-                    </div>
-
-                    <div class="article-dates">
-                        <p>08.03.2020</p>
-
-                        <p>26.03.2020</p>
-                    </div>
-                </div>
+                <p data-aos="fade-up" data-aos-delay="150">{!! $viewArray['currentModel']->announce !!}</p>
             </div>
-        </article>
+        </div>
+    </section>
 
-        @include('front.partials.content.inner_gallery')
+    @include('shop::front.categories.list_products', ['products' => $viewArray['currentModel']->parent->products])
+
+    <section class="section-text section-text-alt section-text-3">
+        <div class="shell">
+            <div class="section-content" data-aos="fade-up" data-aos-delay="50">
+                <p>{!! $viewArray['currentModel']->description !!}</p>
+            </div>
+        </div>
     </section>
 @endsection
