@@ -291,9 +291,9 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
     }
 
-    public function getAdditionalFields($languageSlug): HasMany
+    public function getAdditionalFields($languageSlug)
     {
-        return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id')->where('locale', $languageSlug);
+        return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id')->where('locale', $languageSlug)->whereNotNull(['name', 'text'])->get();
     }
 
     public function getPreviousProductUrl($languageSlug)
