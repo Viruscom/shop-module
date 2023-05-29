@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @extends('layouts.admin.app')
+=======
+@extends('layouts.app')
+>>>>>>> origin/main
 
 @section('styles')
     <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
@@ -65,8 +69,11 @@
 @endsection
 
 @section('content')
+<<<<<<< HEAD
     @include('shop::admin.registered_users.breadcrumbs')
     @include('admin.notify')
+=======
+>>>>>>> origin/main
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             <div class="action-mass-buttons pull-right">
@@ -76,6 +83,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
+<<<<<<< HEAD
             <h3>Статистика</h3>
             <div class="flex" style="display: flex;justify-content: space-around;flex-direction: column;">
                 <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
@@ -108,12 +116,16 @@
         </div>
         <div class="col-md-6">
             <h3>@lang('shop::admin.registered_users.account')</h3>
+=======
+            <h4>Акаунт</h4>
+>>>>>>> origin/main
             <div class="padding-20 bg-f5">
                 <div class="form-group">
                     <label class="control-label p-b-10">Име и фамилия:</label>
                     <p><strong>{{ $registeredUser->first_name . ' ' . $registeredUser->last_name }}</strong></p>
                 </div>
                 <div class="form-group">
+<<<<<<< HEAD
                     <label class="control-label p-b-10">@lang('shop::admin.registered_users.email'):</label>
                     <p><strong><a href="mailto:{{ $registeredUser->email }}">{{ $registeredUser->email }}</a></strong></p>
                 </div>
@@ -135,11 +147,36 @@
                 </div>
                 <div class="form-group @if($errors->has('birtday')) has-error @endif">
                     <label class="control-label p-b-10">@lang('shop::admin.registered_users.birthday'):</label>
+=======
+                    <label class="control-label p-b-10">Email:</label>
+                    <p><strong><a href="mailto:{{ $registeredUser->email }}">{{ $registeredUser->email }}</a></strong></p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label p-b-10">Парола:</label>
+                    <p><strong>*******</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>Допълнителни данни</h4>
+            <div class="padding-20 bg-f5">
+                <div class="form-group">
+                    <label class="control-label p-b-10">Клиентска група:</label>
+                    <p><strong>{{ trans('administration_messages.client_group_'.$registeredUser->client_group_id) }}</strong></p>
+                </div>
+                <div class="form-group @if($errors->has('phone')) has-error @endif">
+                    <label class="control-label p-b-10">Телефон:</label>
+                    <p><strong><a href="tel:{{ $registeredUser->phone }}">{{ $registeredUser->phone }}</a></strong></p>
+                </div>
+                <div class="form-group @if($errors->has('birtday')) has-error @endif">
+                    <label class="control-label p-b-10">Рожден ден:</label>
+>>>>>>> origin/main
                     <p><strong>{{ $registeredUser->birtday != '' ? \Carbon\Carbon::parse($registeredUser->birtday)->format('d.m.Y') : '' }}</strong></p>
                 </div>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <div class="row">
         <div class="col-md-12">
             <hr>
@@ -226,6 +263,11 @@
     <div class="row m-t-40">
         <div class="col-md-9 col-sm-9">
             <h4>Адреси на доставка</h4>
+=======
+    <div class="row m-t-40">
+        <div class="col-md-9 col-sm-9">
+            <h4>Фирмени данни</h4>
+>>>>>>> origin/main
         </div>
         <div class="col-md-3 col-sm-3 text-right m-b-10">
             <a href="{{ url('/admin/shop/clients/'.$registeredUser->id.'/firm_accounts/create') }}" class="btn green">Добави фирмени данни</a>
@@ -262,6 +304,7 @@
                     @endforeach
                 @else
                     <tr>
+<<<<<<< HEAD
                         <td colspan="7" class="no-table-rows">{{ trans('shop::admin.registered_users.no_shipment_addresses') }}</td>
                     </tr>
                 @endif
@@ -311,6 +354,9 @@
                 @else
                     <tr>
                         <td colspan="7" class="no-table-rows">{{ trans('shop::admin.registered_users.no_payment_addresses') }}</td>
+=======
+                        <td colspan="7" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+>>>>>>> origin/main
                     </tr>
                 @endif
                 </tbody>
@@ -322,7 +368,11 @@
         <div class="col-sm-12 col-xs-12">
             <ul class="nav nav-tabs">
                 <li class="active">
+<<<<<<< HEAD
                     <a data-toggle="tab" href="#orders">{{ trans('shop::admin.orders.index') }}</a>
+=======
+                    <a data-toggle="tab" href="#orders">Поръчки</a>
+>>>>>>> origin/main
                 </li>
 
             </ul>
@@ -332,12 +382,21 @@
                         <thead>
                         <tr>
                             <th style="max-width: 50px">№</th>
+<<<<<<< HEAD
                             <th>{{ trans('shop::admin.orders.status') }}</th>
                             <th>{{ trans('shop::admin.orders.ordered_from') }}</th>
                             <th>{{ trans('shop::admin.orders.grand_total') }}</th>
                             <th>{{ trans('shop::admin.orders.payment') }}</th>
                             <th>{{ trans('shop::admin.orders.ordered_on_date') }}</th>
                             <th>{{ __('admin.actions') }}</th>
+=======
+                            <th>Статус на поръчката</th>
+                            <th>Име и фамилия</th>
+                            <th>Сума на поръчката</th>
+                            <th>Метод на плащане</th>
+                            <th>Регистрирана на</th>
+                            <th>Действия</th>
+>>>>>>> origin/main
                         </tr>
                         </thead>
                         <tbody>
@@ -366,10 +425,18 @@
                             @endforeach
                         @else
                             <tr>
+<<<<<<< HEAD
                                 <td colspan="7" class="no-table-rows">{{ trans('shop::admin.orders.no_orders_found') }}</td>
                             </tr>
                         @endif
                         </tbody>
+=======
+                                <td colspan="7" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+
+>>>>>>> origin/main
                     </table>
                 </div>
 
@@ -377,6 +444,51 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+
+    <!-- The Modal -->
+    <div id="firm_account_modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h4>Добавяне на фирмени дани</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger print-error-msg" style="display:none">
+                    <ul></ul>
+                </div>
+                <form class="form" style="z-index: 999;display: grid;">
+                    <div class="form-group">
+                        <label class="control-label p-l-0 p-b-10 col-md-3"><span class="text-purple">*</span> Фирма:</label>
+                        <input class="form-control col-md-9" type="text" name="name" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label p-l-0 p-b-10 col-md-3"><span class="text-purple">*</span> М.О.Л.:</label>
+                        <input class="form-control col-md-9" type="text" name="mol" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label p-l-0 p-b-10 col-md-3"><span class="text-purple">*</span> ЕИК:</label>
+                        <input class="form-control col-md-9" type="text" name="eik" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label p-l-0 p-b-10 col-md-3">ЕИК по ДДС:</label>
+                        <input class="form-control col-md-9" type="text" name="eik_dds" autocomplete="off">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12 p-t-b-10 text-left">
+                        <span class="btn btn-success firm-account-submit">Запис</span>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+>>>>>>> origin/main
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="text" class="hidden" name="client_id" value="{{ $registeredUser->id }}">
 @endsection

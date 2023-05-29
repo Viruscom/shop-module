@@ -326,7 +326,6 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $nextProduct->getUrl($languageSlug);
     }
-
     public function vatCategories($countryId): Collection
     {
         return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->get();

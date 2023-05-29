@@ -16,9 +16,13 @@
     </script>
 @endsection
 @section('content')
+<<<<<<< HEAD
     @include('shop::admin.registered_users.breadcrumbs')
     @include('admin.notify')
     <form class="my-form" action="{{ route('admin.shop.registered-users.update', ['id' => $registeredUser->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+=======
+    <form class="my-form" action="{{ url('/admin/shop/clients/'.$registeredUser->id.'/update') }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+>>>>>>> origin/main
         <div class="col-xs-12 p-0">
             @csrf
             @include('admin.partials.on_edit.form_actions_top')
@@ -27,9 +31,19 @@
             <div class="col-md-6">
                 <h4>Акаунт</h4>
                 <div class="padding-20 bg-f5">
+<<<<<<< HEAD
                     @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['fieldName' => 'first_name', 'label' => trans('shop::admin.registered_users.first_name'), 'required' => true, 'class' => 'width-p100', 'model' => $registeredUser])
                     @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['fieldName' => 'last_name', 'label' => trans('shop::admin.registered_users.last_name'), 'required' => true, 'class' => 'width-p100', 'model' => $registeredUser])
 
+=======
+                    <div class="form-group @if($errors->has('name')) has-error @endif">
+                        <label class="control-label p-b-10"><span class="text-purple">*</span> Име и фамилия:</label>
+                        <input class="form-control" type="text" name="name" value="{{ old('name') ? old('name') : (!is_null($registeredUser) ? $registeredUser->name : '') }}" required>
+                        @if($errors->has('name'))
+                            <span class="help-block">{{ trans($errors->first('name')) }}</span>
+                        @endif
+                    </div>
+>>>>>>> origin/main
                     <div class="form-group @if($errors->has('email')) has-error @endif">
                         <label class="control-label p-b-10"><span class="text-purple">*</span> Email:</label>
                         <input class="form-control" type="email" name="email" value="{{ old('email') ? old('email') : (!is_null($registeredUser) ? $registeredUser->email : '') }}" required>

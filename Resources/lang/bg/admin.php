@@ -109,11 +109,14 @@ return array(
         array(
             'index'           => 'Поръчки',
             'no_orders_found' => 'Няма намерени поръчки',
+<<<<<<< HEAD
             'status'          => 'Статус на поръчката',
             'ordered_from'    => 'Име и фамилия',
             'grand_total'     => 'Сума на поръчката',
             'payment'         => 'Метод на плащане',
             'ordered_on_date' => 'Регистрирана на',
+=======
+>>>>>>> origin/main
         ),
     'returned_products'       =>
         array(
@@ -151,6 +154,7 @@ return array(
             'birthday_required'        => 'Полето "Дата на раждане" е задължително.',
             'birthday_date'            => 'Полето "Дата на раждане" трябва да бъде валидна дата.',
             'birthday_before_or_equal' => 'Трябва да имате поне 18 години или повече.',
+<<<<<<< HEAD
             'account'                  => 'Акаунт',
             'additional_info'          => 'Допълнителни данни',
             'company_info'             => 'Фирмени данни',
@@ -161,6 +165,8 @@ return array(
             ''                         => '',
             ''                         => '',
             ''                         => '',
+=======
+>>>>>>> origin/main
         ),
     'h18_reports'             =>
         array(

@@ -24,7 +24,11 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         {{--      Icons here --}}
+=======
+{{--      Icons here --}}
+>>>>>>> origin/main
 
         <div class="shell">
             <div class="prod-elements">
@@ -48,16 +52,26 @@
                     </div>
 
                     <div class="page-price" data-aos="fade-up" data-aos-delay="150">
+<<<<<<< HEAD
                         {{--                        <div class="price price-old">--}}
                         {{--                            {{ __('front.from') }} <strong>98.00</strong> <span>{{ __('front.currency') }}</span>--}}
                         {{--                        </div>--}}
 
                         <div class="price">
                             {{--                            {{ __('front.from') }} --}}
+=======
+{{--                        <div class="price price-old">--}}
+{{--                            {{ __('front.from') }} <strong>98.00</strong> <span>{{ __('front.currency') }}</span>--}}
+{{--                        </div>--}}
+
+                        <div class="price">
+{{--                            {{ __('front.from') }} --}}
+>>>>>>> origin/main
                             <strong>{{ $product->getPrice() }}</strong> <span>{{ __('front.currency') }}</span>
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     <form action="">
                         <button class="btn btn-prod" type="submit" data-aos="fade-up" data-aos-delay="200">
                             <span>{{ __('front.inquiry') }}</span>
@@ -65,6 +79,13 @@
                             <i class="arrow-right"></i>
                         </button>
                     </form>
+=======
+                    <a href="" class="btn btn-prod" data-aos="fade-up" data-aos-delay="200">
+                        <span>inquiry</span>
+
+                        <i class="arrow-right"></i>
+                    </a>
+>>>>>>> origin/main
                 </div>
             </div>
 
@@ -72,12 +93,17 @@
                 {!! $viewArray['currentModel']->description !!}
 
                 @include('front.partials.content.after_description_modules', ['model' => $viewArray['currentModel']])
+<<<<<<< HEAD
+=======
+                @include('front.partials.content.additional_titles_and_texts', ['model' => $viewArray['currentModel']])
+>>>>>>> origin/main
             </p>
 
             @include('shop::front.products.additional_fields')
         </div>
     </div>
 
+<<<<<<< HEAD
     <div class="page-content">
         <div class="shell">
             <div class="article">
@@ -93,6 +119,9 @@
             </div>
         </div>
     </div>
+=======
+
+>>>>>>> origin/main
 
     <div class="page-gallery" data-aos="fade-up" data-aos-delay="100">
         @include('front.partials.content.inner_gallery')
@@ -107,9 +136,15 @@
             @endif
 
             @if(!is_null($product->getNextProductUrl($languageSlug)))
+<<<<<<< HEAD
                 <a href="{{ $product->getNextProductUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100" class="page-next">
                     <span>{{ __('shop::front.product.next') }}</span>
                 </a>
+=======
+                    <a href="{{ $product->getNextProductUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100" class="page-next">
+                        <span>{{ __('shop::front.product.next') }}</span>
+                    </a>
+>>>>>>> origin/main
             @endif
         </div>
     @endif
