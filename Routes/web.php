@@ -10,10 +10,7 @@ use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
 use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
-<<<<<<< HEAD
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserCompaniesController;
-=======
->>>>>>> origin/main
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
 use Modules\Shop\Http\Controllers\admin\Settings\Main\ShopMainSettingsController;
@@ -101,7 +98,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::post('update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.update');
             Route::get('show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.show');
             Route::get('active/{active}', [ShopAdminRegisteredUsersController::class, 'changeActiveStatus'])->name('admin.shop.registered-users.changeStatus');
-<<<<<<< HEAD
 
             /* Companies */
             Route::group(['prefix' => 'companies'], static function () {
@@ -125,8 +121,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                     Route::get('image/delete', [ShopAdminRegisteredUserCompaniesController::class, 'deleteImage'])->name('admin.shop.registered-users.companies.delete-image');
                 });
             });
-=======
->>>>>>> origin/main
         });
     });
 
