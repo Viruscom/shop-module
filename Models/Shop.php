@@ -26,7 +26,7 @@ class Shop extends Model
 
     public function setKeys($array): array
     {
-        $array[1]['sys_image_name'] = trans('shop::admin.brand.index');
+        $array[1]['sys_image_name'] = trans('shop::admin.product_brands.index');
         $array[1]['sys_image']      = Brand::$BRAND_SYSTEM_IMAGE;
         $array[1]['sys_image_path'] = AdminHelper::getSystemImage(Brand::$BRAND_SYSTEM_IMAGE);
         $array[1]['ratio']          = Brand::$BRAND_RATIO;

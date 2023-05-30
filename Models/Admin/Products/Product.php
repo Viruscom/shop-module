@@ -172,11 +172,32 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         if (is_null($country) && is_null($city)) {
             return 0;
         }
-        $defaultVat = self::getDefaultVat($country, $city);
-        //select product city vat category or product state vat category or country vat category
-        //of any of above is not null return it else
-        //TODO: nqma kak da go napish sega zashtoto nqmam funkcionalnost za dobavqne na produkti, Kato se dobavqt productite se dobavqt i suotvetnite vat katogrii
-        return $defaultVat;
+        $countryId = null;
+        if (!is_null($country)) {
+            $countryId = $country->id;
+        }
+        if (!is_null($city)) {
+            $countryId = $city->country()->id;
+        }
+        if (!is_null($countryId)) {
+            $vatCategory = $this->getVatCategory($countryId);
+            if (!is_null($vatCategory)){
+                if(!is_null($city)){
+                    $cityVatCategory = $vatCategory->cityVatCategories->where('city_id',$city->id)->first();
+                    if(!is_null($cityVatCategory)){
+                        return $cityVatCategory->vat;
+                    }else{
+                        $stateVatCategory = $vatCategory->stateVatCategories->where('state_id',$city->state_id)->first();
+                        if(!is_null($stateVatCategory)){
+                            return $stateVatCategory->vat;
+                        }
+                    }
+                }
+                return $vatCategory->vat;
+            }
+        }
+
+        return self::getDefaultVat($country, $city);
     }
     private static function getDefaultVat($country, $city)
     {
@@ -326,8 +347,8 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $nextProduct->getUrl($languageSlug);
     }
-    public function vatCategories($countryId): Collection
+    public function getVatCategory($countryId): Collection
     {
-        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->get();
+        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
     }
 }

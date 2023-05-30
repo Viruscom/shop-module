@@ -23,4 +23,14 @@ class VatCategory extends Model
         return $this->belongsTo(Country::class);
     }
 
+    public function cityVatCategories()
+    {
+        return $this->hasMany(CityVatCategory::class);
+    }
+
+    public function stateVatCategories()
+    {
+        return $this->hasMany(StateVatCategory::class);
+    }
+
 }
