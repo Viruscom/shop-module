@@ -32,6 +32,7 @@
                                     {{ $product->title }}
                                 </td>
                                 <td class="pull-right">
+                                    <a href="{{ route('admin.products.send-to-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_adbox')"><i class="fas fa-ad"></i></a>
                                     <a href="{{ route('admin.products.send-to-product-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_product_adbox')"><i class="fas fa-ad"></i></a>
                                     @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $products, 'model' => $product, 'showInPublicModal' => false])
                                 </td>
@@ -57,21 +58,6 @@
                     @endif
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document" style="width: 90%; margin: 30px auto;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Изглед в публичната част</h4>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
             </div>
         </div>
     </div>

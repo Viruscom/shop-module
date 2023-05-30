@@ -39,7 +39,7 @@
 
                 <div class="prod-content">
                     <h3 data-aos="fade-up" data-aos-delay="50">{{ $viewArray['currentModel']->title }}</h3>
-{{ dd($viewArray['currentModel']->parent->vatCategories(1)) }}
+
                     <div class="prod-info">
                         <p data-aos="fade-up" data-aos-delay="50">
                             <span>{{ __('shop::front.product.category') }}:</span>{{ $category->title }} </p>

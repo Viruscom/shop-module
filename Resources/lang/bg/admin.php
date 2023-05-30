@@ -33,6 +33,7 @@ return array(
             'supplier_delivery_price'                    => 'Доставна Цена без ДДС',
             'price'                                      => 'Цена без ДДС',
             'attach_to_category'                         => 'Прикрепи към Категория',
+            'make_adbox'                                 => 'Създай рекламно каре',
             'make_product_adbox'                         => 'Създай продуктово каре',
             'create_not_allowed_add_product_category'    => '<strong>Внимание!</strong> Първо трябва да добавите продуктова категория и марка. След това ще можете да добавите продукт.',
             'additional_fields'                          => 'Допълнителни полета',

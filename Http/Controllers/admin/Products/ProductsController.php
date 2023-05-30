@@ -203,4 +203,14 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
     }
+
+    public function makeAdBox($id, ProductAction $action)
+    {
+        $product = Product::find($id);
+        MainHelper::goBackIfNull($product);
+
+        $action->sendToAdBox($product);
+
+        return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
+    }
 }
