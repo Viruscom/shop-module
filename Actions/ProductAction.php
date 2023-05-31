@@ -83,9 +83,11 @@ class ProductAction
         $data      = new Request();
         foreach ($languages as $language) {
             $productTitle = is_null($product->translate($language->code)) ? $product->title : $product->translate($language->code)->title;
+            $productUrl = is_null($product->translate($language->code)) ? $product->url : $product->translate($language->code)->url;
             $data[$language->code] = [
                 'locale'  => $language->code,
                 'title'   => $productTitle,
+                'url'   => $productUrl,
                 'visible' => true
             ];
         }
