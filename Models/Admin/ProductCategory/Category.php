@@ -55,7 +55,7 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
         });
 
         cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::active(true)->with('translations')->orderBy('position')->withTranslation()->get();
+            return self::active(true)->with('translations')->orderBy('position')->with('translations')->get();
         });
     }
     public static function getRequestData($request): array

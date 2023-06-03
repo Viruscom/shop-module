@@ -52,7 +52,7 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
         });
 
         cache()->remember(CacheKeysHelper::$SHOP_BRAND_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::active(true)->orderBy('position')->withTranslation()->get();
+            return self::active(true)->orderBy('position')->with('translations')->get();
         });
     }
     public static function getRequestData($request): array

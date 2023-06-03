@@ -64,7 +64,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         });
 
         cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::with('category')->with('brand')->active(true)->orderBy('position')->withTranslation()->get();
+            return self::with('category')->with('brand')->active(true)->orderBy('position')->with('translations')->get();
         });
     }
     public static function getRequestData($request): array
