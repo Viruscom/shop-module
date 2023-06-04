@@ -10,7 +10,7 @@ use Modules\Shop\Http\Requests\ProductUpdateRequest;
 interface ShopProductInterface
 {
     public function index();
-    public function create(ProductAction $action);
+    public function create($category_id, ProductAction $action);
     public function store(ProductStoreRequest $request, CommonControllerAction $action, ProductAction $productAction);
     public function edit($id, ProductAction $action);
     public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction);

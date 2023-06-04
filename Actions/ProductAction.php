@@ -56,7 +56,7 @@ class ProductAction
         $data['active']     = true;
 
         AdBoxProduct::create($data->all());
-
+        AdBoxProduct::cacheUpdate();
     }
     public function createOrUpdateAdditionalFields(Request $request, $product)
     {
@@ -97,5 +97,6 @@ class ProductAction
         $data['active']   = true;
 
         AdBox::create($data->all());
+        AdBox::cacheUpdate();
     }
 }

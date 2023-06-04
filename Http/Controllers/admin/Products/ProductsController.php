@@ -18,6 +18,7 @@ use Modules\Shop\Actions\ProductAction;
 use Modules\Shop\Http\Requests\ProductStoreRequest;
 use Modules\Shop\Http\Requests\ProductUpdateRequest;
 use Modules\Shop\Interfaces\ShopProductInterface;
+use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\Shop\Models\Admin\Products\Product;
 use Modules\Shop\Models\Admin\Products\ProductTranslation;
 
@@ -25,11 +26,11 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 {
     public function index()
     {
-        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN))) {
-            Product::cacheUpdate();
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN))) {
+            Category::cacheUpdate();
         }
 
-        return view('shop::admin.products.index', ['products' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN)]);
+        return view('shop::admin.products.categories', ['categories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN)]);
     }
     public function store(ProductStoreRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
     {
@@ -42,10 +43,15 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         $product->storeAndAddNew($request);
 
-        return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
+        return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', trans('admin.common.successful_create'));
     }
-    public function create(ProductAction $action): Renderable
+    public function create($category_id, ProductAction $action): Renderable
     {
+        $productCategory = Category::where('id', $category_id)->with(['products' => function ($query) {
+            $query->with('translations')->orderBy('position');
+        }])->first();
+        MainHelper::goBackIfNull($productCategory);
+
         $action->checkForFilesCache();
         $action->checkForBrandsCache();
         $action->checkForProductCategoriesAdminCache();
@@ -55,7 +61,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'files'             => Cache::get(CacheKeysHelper::$FILES),
             'filesPathUrl'      => File::getFilesPathUrl(),
             'fileRulesInfo'     => Product::getUserInfoMessage(),
-            'products'          => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
+            'products'          => $productCategory->products,
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
         ];
@@ -76,12 +82,12 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->checkForBrandsCache();
         $action->checkForProductCategoriesAdminCache();
 
-        $product = Product::whereId($id)->with('translations')->first();
+        $product = Product::whereId($id)->with('translations', 'category', 'category.products')->first();
         MainHelper::goBackIfNull($product);
 
         $data = [
             'product'           => $product,
-            'products'          => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ADMIN),
+            'products'          => $product->category->products,
             'languages'         => LanguageHelper::getActiveLanguages(),
             'files'             => Cache::get(CacheKeysHelper::$FILES),
             'filesPathUrl'      => File::getFilesPathUrl(),
@@ -154,7 +160,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         Product::cacheUpdate();
 
-        return redirect()->route('admin.products.index')->with('success-message', 'admin.common.successful_edit');
+        return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
     }
     public function positionUp($id, CommonControllerAction $action): RedirectResponse
     {
@@ -201,7 +207,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         $action->sendToProductAdbox($product->id);
 
-        return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
+        return redirect()->back()->with('success-message', trans('admin.common.successful_create'));
     }
 
     public function makeAdBox($id, ProductAction $action)
@@ -211,6 +217,19 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
 
         $action->sendToAdBox($product);
 
-        return redirect()->route('admin.products.index')->with('success-message', trans('admin.common.successful_create'));
+        return redirect()->back()->with('success-message', trans('admin.common.successful_create'));
+    }
+
+    public function getCategoryProducts($category_id)
+    {
+        $productCategory = Category::where('id', $category_id)->with(['products' => function ($query) {
+            $query->with('translations')->orderBy('position');
+        }])->first();
+        MainHelper::goBackIfNull($productCategory);
+
+        return view('shop::admin.products.index', [
+            'productCategory' => $productCategory,
+            'products'        => $productCategory->products
+        ]);
     }
 }

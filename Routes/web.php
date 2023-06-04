@@ -264,8 +264,13 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
     /* Products */
     Route::group(['prefix' => 'products'], static function () {
         Route::get('/', [ProductsController::class, 'index'])->name('admin.products.index');
-        Route::get('/create', [ProductsController::class, 'create'])->name('admin.products.create');
-        Route::post('/store', [ProductsController::class, 'store'])->name('admin.products.store');
+
+        /* Load products by category */
+        Route::group(['prefix' => 'category/{category_id}'], static function () {
+        Route::get('/', [ProductsController::class, 'getCategoryProducts'])->name('admin.products.index_by_category');
+            Route::get('/create', [ProductsController::class, 'create'])->name('admin.products.create');
+            Route::post('/store', [ProductsController::class, 'store'])->name('admin.products.store');
+        });
 
         Route::group(['prefix' => 'multiple'], static function () {
             Route::get('active/{active}', [ProductsController::class, 'activeMultiple'])->name('admin.products.active-multiple');

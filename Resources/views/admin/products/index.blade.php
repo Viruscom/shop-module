@@ -2,7 +2,49 @@
 @section('content')
     @include('shop::admin.products.breadcrumbs')
     @include('admin.notify')
-    @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3)])
+    @include('admin.partials.modals.delete_confirm')
+    <div class="col-xs-12 p-0">
+        <div class="bg-grey top-search-bar">
+            <div class="checkbox-all pull-left p-10 p-l-0">
+                <div class="pretty p-default p-square">
+                    <input type="checkbox" id="selectAll" class="tooltips" data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.common.mark_demark_all_elements') }}" data-trigger="hover"/>
+                    <div class="state p-primary">
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse-buttons pull-left p-7">
+                <a class="btn btn-xs expand-btn"><i class="fas fa-angle-down fa-2x tooltips" data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.common.expand_all_marked_elements') }}"></i></a>
+                <a class="btn btn-xs collapse-btn hidden"><i class="fas fa-angle-up fa-2x tooltips" data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.common.collapse_all_marked_elements') }}"></i></a>
+            </div>
+            <div class="search pull-left hidden-xs">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control input-sm search-text" placeholder="{{ __('admin.common.search') }}">
+                    <span class="input-group-btn">
+					<button class="btn btn-sm submit"><i class="fa fa-search"></i></button>
+				</span>
+                </div>
+            </div>
+
+            <div class="action-mass-buttons pull-right">
+                    <a href="{{ route('admin.products.create', ['category_id' => Request::segment(5)]) }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.create_new') }}">
+                        <i class="fas fa-plus"></i>
+                    </a>
+
+                    <a href="{{ route('admin.products.active-multiple', ['active' => 0]) }}" class="btn btn-lg tooltips light-grey-eye mass-unvisible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.deactivate_all_marked_elements') }}">
+                        <i class="far fa-eye-slash"></i>
+                    </a>
+                    <a href="{{ route('admin.products.active-multiple', ['active' => 1]) }}" class="btn btn-lg tooltips grey-eye mass-visible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.activate_all_marked_elements') }}">
+                        <i class="far fa-eye"></i>
+                    </a>
+
+                    <a href="{{ route('admin.products.delete-multiple') }}" class="btn btn-lg red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.delete_all_marked_elements') }}">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-xs-12">

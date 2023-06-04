@@ -146,13 +146,4 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
 
         return redirect()->back()->withErrors(['admin.image_not_found']);
     }
-
-    public function getCategoryProducts($id)
-    {
-        $productCategory = Category::where('id', $id)->withTranslation()->with('products')->first();
-        MainHelper::goBackIfNull($productCategory);
-
-
-        return view('shop::admin.product_categories.assigned_products', compact('productCategory'));
-    }
 }
