@@ -149,6 +149,61 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $data;
     }
+    public static function generatePosition($request)
+    {
+        $models = self::where('category_id', $request->category_id)->orderBy('position', 'desc')->get();
+        if (count($models) < 1) {
+            return 1;
+        }
+        if (!$request->has('position') || is_null($request['position'])) {
+            return $models->first()->position + 1;
+        }
+
+        if ($request['position'] > $models->first()->position) {
+            return $models->first()->position + 1;
+        }
+        $modelsToUpdate = self::where('category_id', $request->category_id)->where('position', '>=', $request['position'])->get();
+        foreach ($modelsToUpdate as $modelToUpdate) {
+            $modelToUpdate->update(['position' => $modelToUpdate->position + 1]);
+        }
+
+        return $request['position'];
+    }
+    public function updatedPosition($request)
+    {
+        if (!$request->has('position') || is_null($request->position) || $request->position == $this->position) {
+            return $this->position;
+        }
+
+        $models = self::where('category_id', $this->category_id)->orderBy('position', 'desc')->get();
+        if (count($models) == 1) {
+            $request['position'] = 1;
+
+            return $request['position'];
+        }
+
+        if ($request['position'] > $models->first()->position) {
+            $request['position'] = $models->first()->position;
+        } elseif ($request['position'] < $models->last()->position) {
+            $request['position'] = $models->last()->position;
+        }
+
+        if ($request['position'] >= $this->position) {
+            $modelsToUpdate = self::where('category_id', $this->category_id)->where('id', '<>', $this->id)->where('position', '>', $this->position)->where('position', '<=', $request['position'])->get();
+            foreach ($modelsToUpdate as $modelToUpdate) {
+                $modelToUpdate->update(['position' => $modelToUpdate->position - 1]);
+            }
+
+            return $request['position'];
+        }
+
+        $modelsToUpdate = self::where('category_id', $this->category_id)->where('id', '<>', $this->id)->where('position', '<', $this->position)->where('position', '>=', $request['position'])->get();
+        foreach ($modelsToUpdate as $modelToUpdate) {
+            $modelToUpdate->update(['position' => $modelToUpdate->position + 1]);
+        }
+
+        return $request['position'];
+    }
     public function discounts(): HasMany
     {
         return $this->hasMany(Discount::class);
