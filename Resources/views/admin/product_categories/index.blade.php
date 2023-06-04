@@ -38,7 +38,7 @@
                             <tr class="t-row-details row-{{$category->id}}-details hidden">
                                 <td colspan="2"></td>
                                 <td colspan="1">
-                                    @include('admin.partials.index.table_details', ['model' => $category, 'moduleName' => 'CategoryPage', 'hasChildrens' => true, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.product-categories.products', ['id' => $category->id])])
+                                    @include('admin.partials.index.table_details', ['model' => $category, 'moduleName' => 'CategoryPage', 'hasChildrens' => true, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.admin.products.index_by_category', ['category_id' => $category->id])])
                                 </td>
                                 <td class="width-220">
                                     <img class="thumbnail img-responsive" src="{{ $category->getFileUrl() }}"/>
@@ -56,21 +56,6 @@
                     @endif
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document" style="width: 90%; margin: 30px auto;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Изглед в публичната част</h4>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
             </div>
         </div>
     </div>
