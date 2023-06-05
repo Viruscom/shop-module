@@ -1,15 +1,8 @@
-@extends('layouts.app')
-@section('scripts')
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-    </script>
-@endsection
+@extends('layouts.admin.app')
 @section('content')
-    <form action="{{ route('products.characteristics-by-product.update', ['id'=> $mainProduct->id]) }}" method="POST">
+    @include('shop::admin.products.characteristics.breadcrumbs')
+    @include('admin.notify')
+    <form action="{{ route('admin.products.characteristics-by-product.update', ['id'=> $mainProduct->id]) }}" method="POST">
         @csrf
         <div class="col-xs-12 p-0">
             <div class="bg-grey top-search-bar">
@@ -25,40 +18,29 @@
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
-                        <th class="width-2-percent">Ред</th>
-                        <th>Заглавие</th>
+                        <th class="width-2-percent">{{ __('admin.number') }}</th>
+                        <th>{{ __('admin.title') }}</th>
                         <th>Стойност</th>
                         </thead>
                         <tbody>
-                        @if(count($characteristics))
-                            <?php $i = 1;?>
-                            @foreach($characteristics as $characteristic)
+                        <?php $i = 1; ?>
+                        @forelse($characteristics as $characteristic)
                                 <?php
-                                $characteristicDefaultTranslation = $characteristic->characteristic->defaultTranslation;
-                                if (is_null($characteristicDefaultTranslation)) {
-                                    continue;
-                                }
+                                $characteristicTranslation = $characteristic->characteristic;
                                 ?>
-                                <tr class="t-row row-{{$characteristic->id}}">
-                                    <td class="width-2-percent text-center">{{$i}}</td>
-                                    <td>
-                                        <span class="text-uppercase">{{ $characteristicDefaultTranslation->language->code }}: </span>
-                                        {{ $characteristicDefaultTranslation->title}}
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" name="characteristicValue[{{ $characteristic->characteristic->id }}]" value="{{ (is_null($characteristic->value)) ? '': $characteristic->value->value  }}">
-                                    </td>
-                                </tr>
-                                <?php $i++;?>
-                            @endforeach
-                            <tr style="display: none;">
-                                <td colspan="4" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                            <tr class="t-row row-{{$characteristic->id}}">
+                                <td class="width-2-percent text-center">{{$i}}</td>
+                                <td>{{ $characteristicTranslation->title}}</td>
+                                <td>
+                                    <input type="text" class="form-control" name="characteristicValue[{{ $characteristic->characteristic->id }}]" value="{{ (is_null($characteristic->value)) ? '': $characteristic->value->value  }}">
+                                </td>
                             </tr>
-                        @else
+                                <?php $i++; ?>
+                        @empty
                             <tr>
-                                <td colspan="4" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                                <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_characteristics.no_records_found') }}</td>
                             </tr>
-                        @endif
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
