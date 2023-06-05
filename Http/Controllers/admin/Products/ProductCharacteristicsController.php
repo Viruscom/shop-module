@@ -105,7 +105,7 @@ class ProductCharacteristicsController extends Controller implements PositionInt
             return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
         }
 
-//        $request['position'] = $productCharacteristic->updatedPosition($request);
+        //        $request['position'] = $productCharacteristic->updatedPosition($request);
         $action->doSimpleUpdate(ProductCharacteristic::class, ProductCharacteristicTranslation::class, $productCharacteristic, $request);
 
         if ($request->has('productCategories')) {
@@ -189,8 +189,8 @@ class ProductCharacteristicsController extends Controller implements PositionInt
         $mainProduct = Product::find($id);
         WebsiteHelper::redirectBackIfNull($mainProduct);
 
-        $characteristics = ProductCharacteristicPivot::where('product_category_id', $mainProduct->product_category_id)
-            ->with('characteristic', 'characteristic.defaultTranslation')
+        $characteristics = ProductCharacteristicPivot::where('product_category_id', $mainProduct->category_id)
+            ->with('characteristic', 'characteristic.translations')
             ->get();
         $characteristics->map(function ($item) use ($mainProduct) {
             $item['value'] = ProductCharacteristicValue::select('value')->where('product_id', $mainProduct->id)->where('characteristic_id', $item->product_characteristic_id)->first();
@@ -212,8 +212,8 @@ class ProductCharacteristicsController extends Controller implements PositionInt
                 ['value' => $value]
             );
         }
-        $characteristics = ProductCharacteristicPivot::where('product_category_id', $mainProduct->product_category_id)
-            ->with('characteristic', 'characteristic.defaultTranslation')
+        $characteristics = ProductCharacteristicPivot::where('product_category_id', $mainProduct->category_id)
+            ->with('characteristic', 'characteristic.translations')
             ->get();
         $characteristics->map(function ($item) use ($mainProduct) {
             $item['value'] = ProductCharacteristicValue::select('value')->where('product_id', $mainProduct->id)->where('characteristic_id', $item->product_characteristic_id)->first();

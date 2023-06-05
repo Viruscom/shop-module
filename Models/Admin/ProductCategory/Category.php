@@ -51,11 +51,11 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN);
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT);
         cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN, config('default.app.cache.ttl_seconds'), function () {
-            return self::withTranslation()->with('translations')->orderBy('position')->get();
+            return self::with('translations')->orderBy('position')->get();
         });
 
         cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::active(true)->with('translations')->orderBy('position')->with('translations')->get();
+            return self::active(true)->with('translations')->orderBy('position')->get();
         });
     }
     public static function getRequestData($request): array
