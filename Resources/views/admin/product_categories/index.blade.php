@@ -38,7 +38,7 @@
                             <tr class="t-row-details row-{{$category->id}}-details hidden">
                                 <td colspan="2"></td>
                                 <td colspan="1">
-                                    @include('admin.partials.index.table_details', ['model' => $category, 'moduleName' => 'CategoryPage', 'hasChildrens' => true, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.admin.products.index_by_category', ['category_id' => $category->id])])
+                                    @include('admin.partials.index.table_details', ['model' => $category, 'moduleName' => 'CategoryPage', 'hasChildrens' => true, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.products.index_by_category', ['category_id' => $category->id])])
                                 </td>
                                 <td class="width-220">
                                     <img class="thumbnail img-responsive" src="{{ $category->getFileUrl() }}"/>
