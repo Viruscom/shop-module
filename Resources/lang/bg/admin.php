@@ -88,7 +88,10 @@ return array(
         ),
     'product_characteristics' =>
         array(
-            'index' => 'Характеристики',
+            'index'            => 'Характеристики',
+            'create'           => 'Добавяне на характеристика',
+            'edit'             => 'Резактиране на характеристика',
+            'no_records_found' => 'Няма намерени продуктови характеристики'
         ),
     'product_combinations'    =>
         array(

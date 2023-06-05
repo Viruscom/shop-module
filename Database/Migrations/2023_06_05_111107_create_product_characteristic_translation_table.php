@@ -13,15 +13,15 @@ class CreateProductCharacteristicTranslationTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_characteristic_translation', function (Blueprint $table) {
+        Schema::create('product_char_translation', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('pch_id');
+            $table->unsignedBigInteger('product_characteristic_id');
             $table->string('locale')->index();
             $table->string('title');
             $table->timestamps();
 
-            $table->unique(['pch_id', 'locale']);
-            $table->foreign('pch_id')->references('id')->on('product_characteristics')->onDelete('cascade')->onUpdate('cascade');
+            $table->unique(['product_characteristic_id', 'locale']);
+            $table->foreign('product_characteristic_id')->references('id')->on('product_characteristics')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

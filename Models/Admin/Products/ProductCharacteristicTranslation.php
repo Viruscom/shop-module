@@ -11,10 +11,10 @@ use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductCharacteristicsTranslation extends Model implements CommonModelTranslationInterfaces
+class ProductCharacteristicTranslation extends Model implements CommonModelTranslationInterfaces
 {
-    protected $table    = "product_characteristic_translation";
-    protected $fillable = ['locale', 'pch_id', 'title'];
+    protected $table    = "product_char_translation";
+    protected $fillable = ['locale', 'product_characteristic_id', 'title'];
 
     public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
     {
@@ -34,7 +34,7 @@ class ProductCharacteristicsTranslation extends Model implements CommonModelTran
     }
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(ProductCharacteristic::class, 'pch_id');
+        return $this->belongsTo(ProductCharacteristic::class, 'product_characteristic_id');
     }
     public function language(): BelongsTo
     {
