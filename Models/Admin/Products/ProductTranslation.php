@@ -24,8 +24,11 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
         $data = [
             'locale' => $language->code,
             'title'  => $request['title_' . $language->code],
-            'url'    => UrlHelper::generate($request['title_' . $language->code], ProductTranslation::class, $modelId, $isUpdate)
         ];
+
+        if (!$isUpdate) {
+            $data['url'] = UrlHelper::generate($request['title_' . $language->code], self::class, $modelId, $isUpdate);
+        }
 
         return self::langArray($data, $language, $request);
     }
