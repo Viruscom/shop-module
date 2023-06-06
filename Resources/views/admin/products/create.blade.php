@@ -25,7 +25,7 @@
     @if($productCategories->isEmpty() || $brands->isEmpty())
         <div class="alert alert-warning">{!! __('shop::admin.products.create_not_allowed_add_product_category') !!}</div>
     @else
-        <form class="my-form" action="{{ route('admin.products.store') }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+        <form class="my-form" action="{{ route('admin.products.store', ['category_id' => Request::segment(5)]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
             <div class="col-xs-12 p-0">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="position" value="{{old('position')}}">
