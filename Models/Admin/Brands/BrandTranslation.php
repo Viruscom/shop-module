@@ -19,7 +19,7 @@ class BrandTranslation extends Model implements CommonModelTranslationInterfaces
     {
         $data = [
             'locale' => $language->code,
-            'title'  => UrlHelper::makeUniqueTitle($request['title_' . $language->code], $language->code, BrandTranslation::class, $modelId, $isUpdate),
+            'title'  => $request['title_' . $language->code],
             'url'    => UrlHelper::generate($request['title_' . $language->code], BrandTranslation::class, $modelId, $isUpdate)
         ];
 

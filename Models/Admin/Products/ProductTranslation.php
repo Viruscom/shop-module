@@ -4,9 +4,7 @@ namespace Modules\Shop\Models\Admin\Products;
 
 use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
-use App\Models\CategoryPage\CategoryPage;
 use App\Models\Language;
-use App\Models\Pages\PageTranslation;
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +23,7 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
     {
         $data = [
             'locale' => $language->code,
-            'title'  => UrlHelper::makeUniqueTitle($request['title_' . $language->code], $language->code, ProductTranslation::class, $modelId, $isUpdate),
+            'title'  => $request['title_' . $language->code],
             'url'    => UrlHelper::generate($request['title_' . $language->code], ProductTranslation::class, $modelId, $isUpdate)
         ];
 
@@ -118,7 +116,7 @@ class ProductTranslation extends Model implements CommonModelTranslationInterfac
         $title = $request['title_' . $language->code] . '-' . $language->code;
         $data  = [
             'locale' => $language->code,
-            'title'  => UrlHelper::makeUniqueTitle($title, $language->code, self::class, $model->id, false),
+            'title'  => $title,
             'url'    => UrlHelper::generate($title, self::class, $model->id, false)
         ];
         $model->translations()->create(self::langArray($data, $language, $request));

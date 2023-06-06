@@ -5,7 +5,6 @@ namespace Modules\Shop\Models\Admin\ProductCategory;
 use App\Helpers\UrlHelper;
 use App\Interfaces\Models\CommonModelTranslationInterfaces;
 use App\Models\Language;
-use App\Models\Pages\PageTranslation;
 use App\Traits\StorageActions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,26 +19,14 @@ class CategoryTranslation extends Model implements CommonModelTranslationInterfa
     {
         $data = [
             'locale' => $language->code,
-            'title'  => UrlHelper::makeUniqueTitle($request['title_' . $language->code], $language->code, CategoryTranslation::class, $modelId, $isUpdate),
+            'title'  => $request['title_' . $language->code],
             'url'    => UrlHelper::generate($request['title_' . $language->code], CategoryTranslation::class, $modelId, $isUpdate)
         ];
 
         return self::langArray($data, $language, $request);
     }
-
-    public static function createMissingLanguageRow($language, $request, $model)
+    private static function langArray($data, $language, $request)
     {
-        $title = $request['title_' . $language->code] . '-' . $language->code;
-        $data  = [
-            'locale' => $language->code,
-            'title'  => UrlHelper::makeUniqueTitle($title, $language->code, self::class, $model->id, false),
-            'url'    => UrlHelper::generate($title, self::class, $model->id, false)
-        ];
-
-        $model->translations()->create(self::langArray($data, $language, $request));
-    }
-
-    private static function langArray($data, $language, $request) {
         if ($request->has('announce_' . $language->code)) {
             $data['announce'] = $request['announce_' . $language->code];
         }
@@ -55,7 +42,17 @@ class CategoryTranslation extends Model implements CommonModelTranslationInterfa
 
         return $data;
     }
+    public static function createMissingLanguageRow($language, $request, $model)
+    {
+        $title = $request['title_' . $language->code] . '-' . $language->code;
+        $data  = [
+            'locale' => $language->code,
+            'title'  => $title,
+            'url'    => UrlHelper::generate($title, self::class, $model->id, false)
+        ];
 
+        $model->translations()->create(self::langArray($data, $language, $request));
+    }
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
