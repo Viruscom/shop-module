@@ -100,6 +100,36 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.show');
             Route::get('active/{active}', [ShopAdminRegisteredUsersController::class, 'changeActiveStatus'])->name('admin.shop.registered-users.changeStatus');
 
+            /* Orders */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'orders'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.orders.index');
+                Route::get('/{order_id}/edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.orders.edit');
+                Route::post('/{order_id}/update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.orders.update');
+                Route::get('/{order_id}/show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.orders.show');
+            });
+
+            /* Returned products */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'returned-products'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.returned-products.index');
+                Route::get('/{returned_product_id}/edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.returned-products.edit');
+                Route::post('/{returned_product_id}/update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.returned-products.update');
+                Route::get('/{returned_product_id}/show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.returned-products.show');
+            });
+
+            /* Abandoned baskets */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'abandoned-baskets'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.abandoned-baskets.index');
+            });
+
+            /* Favorite products */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'favorite-products'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.favorite-products.index');
+            });
+
             /* Companies */
             Route::group(['prefix' => 'companies'], static function () {
                 Route::get('/', [ShopAdminRegisteredUserCompaniesController::class, 'index'])->name('admin.shop.registered-users.companies.index');
@@ -121,6 +151,22 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                     Route::get('position/down', [ShopAdminRegisteredUserCompaniesController::class, 'positionDown'])->name('admin.shop.registered-users.companies.position-down');
                     Route::get('image/delete', [ShopAdminRegisteredUserCompaniesController::class, 'deleteImage'])->name('admin.shop.registered-users.companies.delete-image');
                 });
+            });
+
+            /* Shipment addresses */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'shipment-addresses'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.shipment-addresses.index');
+                Route::get('create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.shipment-addresses.create');
+                Route::get('store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.shipment-addresses.store');
+            });
+
+            /* Payment addresses */
+            //            TODO: Ne e napisano
+            Route::group(['prefix' => 'payment-addresses'], static function () {
+                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.payment-addresses.index');
+                Route::get('create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.payment-addresses.create');
+                Route::get('store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.payment-addresses.store');
             });
         });
     });

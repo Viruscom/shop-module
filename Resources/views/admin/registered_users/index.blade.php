@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@php use Carbon\Carbon; @endphp@extends('layouts.admin.app')
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
@@ -51,8 +51,9 @@
                             <label class="label label-danger">Не</label>
                         @endif
                     </td>
-                    <td>{{ \Carbon\Carbon::parse($client->created_at)->format('d.m.Y') }}</td>
+                    <td>{{ Carbon::parse($client->created_at)->format('d.m.Y') }}</td>
                     <td class="pull-right">
+                        <a href="{{ route('admin.shop.registered-users.orders.index', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-box"></i></a>
                         <a href="{{ route('admin.shop.registered-users.show', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
                         <a href="{{ route('admin.shop.registered-users.edit', ['id' => $client->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                         @if(!$client->active)
