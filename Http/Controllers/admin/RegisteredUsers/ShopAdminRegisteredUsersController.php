@@ -3,29 +3,22 @@
 namespace Modules\Shop\Http\Controllers\admin\RegisteredUsers;
 
 use App\Actions\CommonControllerAction;
-use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
 use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\ClientRequest;
-use App\Models\CategoryPage\CategoryPage;
 use App\Models\Shop_Models\Clients\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
+use Modules\Shop\Http\Requests\Admin\RegisteredUser\AdminRegisteredUserStoreRequest;
 use Modules\Shop\Http\Requests\Admin\RegisteredUser\AdminRegisteredUserUpdateRequest;
-use Modules\Shop\Http\Requests\AdminRegisteredUserStoreRequest;
 
 class ShopAdminRegisteredUsersController extends Controller
 {
     public function index()
     {
         return view('shop::admin.registered_users.index', ['registeredUsers' => ShopRegisteredUser::with('orders')->get()]);
-    }
-
-    public function create()
-    {
-        return view('shop::admin.registered_users.create');
     }
     public function store(AdminRegisteredUserStoreRequest $request)
     {
@@ -39,7 +32,10 @@ class ShopAdminRegisteredUsersController extends Controller
 
         return redirect()->route('admin.shop.registered-users.index')->with('success-message', 'admin.common.successful_create');
     }
-
+    public function create()
+    {
+        return view('shop::admin.registered_users.create');
+    }
     public function edit($id)
     {
         $registeredUser = ShopRegisteredUser::where('id', $id)->first();
@@ -47,16 +43,6 @@ class ShopAdminRegisteredUsersController extends Controller
 
         return view('shop::admin.registered_users.edit', ['registeredUser' => $registeredUser]);
     }
-
-    public function update($id, AdminRegisteredUserUpdateRequest $request)
-    {
-        $registeredUser = ShopRegisteredUser::find($id);
-        WebsiteHelper::redirectBackIfNull($registeredUser);
-        $registeredUser->update($registeredUser->getUpdateData($request));
-
-        return redirect()->route('admin.shop.registered-users.index')->with('success-message', 'admin.common.successful_edit');
-    }
-
     public function show($id)
     {
         $registeredUser = ShopRegisteredUser::where('id', $id)->with('orders', 'favoriteProducts', 'paymentAddresses', 'shipmentAddresses', 'companies')->first();
@@ -64,7 +50,6 @@ class ShopAdminRegisteredUsersController extends Controller
 
         return view('shop::admin.registered_users.show', ['registeredUser' => $registeredUser]);
     }
-
     public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
     {
         $action->activeMultiple(ShopRegisteredUser::class, $request, $active);
@@ -79,5 +64,18 @@ class ShopAdminRegisteredUsersController extends Controller
         $registeredUser->update(['active' => $active]);
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function update($id, AdminRegisteredUserUpdateRequest $request)
+    {
+        $registeredUser = ShopRegisteredUser::find($id);
+        WebsiteHelper::redirectBackIfNull($registeredUser);
+        $registeredUser->update($registeredUser->getUpdateData($request));
+
+        return redirect()->route('admin.shop.registered-users.index')->with('success-message', 'admin.common.successful_edit');
+    }
+
+    public function favoriteProductsIndex()
+    {
+
     }
 }

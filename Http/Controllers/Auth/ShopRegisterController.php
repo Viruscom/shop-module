@@ -32,7 +32,7 @@ class ShopRegisterController extends ShopRegisteredUserController
             'first_name' => 'required',
             'last_name'  => 'required',
             'phone'      => 'required',
-            'email'      => 'required|email|unique:shop_users',
+            'email'      => 'required|email|unique:shop_registered_users',
             'password'   => 'required|min:8|confirmed',
         ];
     }

@@ -2,19 +2,53 @@
 
 namespace Modules\Shop\Http\Controllers\admin\RegisteredUsers;
 
-use App\Actions\CommonControllerAction;
-use App\Helpers\LanguageHelper;
-use App\Helpers\MainHelper;
 use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Shop\ClientRequest;
-use App\Models\CategoryPage\CategoryPage;
-use App\Models\Shop_Models\Clients\Client;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
+use Modules\Shop\Entities\RegisteredUser\Firms\Company;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
-use Modules\Shop\Http\Requests\Admin\RegisteredUser\AdminRegisteredUserUpdateRequest;
-use Modules\Shop\Http\Requests\AdminRegisteredUserStoreRequest;
 
 class ShopAdminRegisteredUserCompaniesController extends Controller
-{}
+{
+    public function store(Request $request)
+    {
+        Company::create($request->all());
+
+        return back()->with('success-message', 'admin.common.successful_add');
+    }
+    public function create()
+    {
+        return view('shop::admin.registered_users.firms.create');
+    }
+    public function setAsDefault($id, $company_id)
+    {
+        $company = Company::find($company_id);
+        WebsiteHelper::redirectBackIfNull($company);
+
+        $registeredUser = ShopRegisteredUser::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($registeredUser);
+
+        $registeredUser->companies()->update(['is_default', false]);
+        $company->update(['is_default', true]);
+
+        return back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function update($id, Request $request)
+    {
+        $company = Company::find($id);
+        WebsiteHelper::redirectBackIfNull($company);
+
+        $company->update($request->all());
+
+        return back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function delete($id)
+    {
+        $company = Company::find($id);
+        WebsiteHelper::redirectBackIfNull($company);
+
+        $company->delete();
+
+        return back()->with('success-message', 'admin.common.successful_edit');
+    }
+}

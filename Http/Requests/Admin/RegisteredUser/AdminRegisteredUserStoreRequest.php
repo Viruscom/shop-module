@@ -1,10 +1,8 @@
 <?php
 
-namespace Modules\Shop\Http\Requests;
+namespace Modules\Shop\Http\Requests\Admin\RegisteredUser;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class AdminRegisteredUserStoreRequest extends FormRequest

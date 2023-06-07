@@ -12,7 +12,7 @@
                     <h3 class="page-title">{{ __('shop::front.registered_user_profile.personal_data') }}</h3>
 
                     <div class="form-wrapper form-wrapper-alt">
-                        <form method="post" enctype="multipart/form-data" id="personal-data" action="">
+                        <form method="post" enctype="multipart/form-data" id="personal-data" action="{{ route('shop.registered_user.account.personal-data.update', ['languageSlug' => $languageSlug, 'id' => $registeredUser->id]) }}">
                             @csrf
                             <div class="form-body">
                                 <div class="form-row">
@@ -35,7 +35,7 @@
                                             </label>
 
                                             <div class="input-container">
-                                                <input id="lastName2" type="text" placeholder="" value="{{ old('last_name') ?: $registeredUser->last_name }}" required>
+                                                <input id="lastName2" type="text" name="last_name" value="{{ old('last_name') ?: $registeredUser->last_name }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -48,7 +48,7 @@
                                     </label>
 
                                     <div class="input-container">
-                                        <input id="email" type="email" placeholder="" value="{{ old('email') ?: $registeredUser->email }}" required>
+                                        <input id="email" type="email" name="email" value="{{ old('email') ?: $registeredUser->email }}" required>
                                     </div>
                                 </div>
 
@@ -61,7 +61,7 @@
                                             </label>
 
                                             <div class="input-container">
-                                                <input id="currentPass" type="password" placeholder="">
+                                                <input id="currentPass" type="password" name="current_password">
 
                                                 <div class="tooltip-box">
                                                     <span>{{ __('shop::front.login.hide_password') }}</span>
@@ -84,7 +84,7 @@
                                             </label>
 
                                             <div class="input-container">
-                                                <input id="newPass" type="password" placeholder="">
+                                                <input id="newPass" type="password" name="new_password">
 
                                                 <div class="tooltip-box">
                                                     <span>{{ __('shop::front.login.hide_password') }}</span>
@@ -103,7 +103,7 @@
                                             </label>
 
                                             <div class="input-container">
-                                                <input id="confirmPass" type="password" placeholder="">
+                                                <input id="confirmPass" type="password" name="confirm_new_password">
 
                                                 <div class="tooltip-box">
                                                     <span>{{ __('shop::front.login.hide_password') }}</span>
