@@ -7,18 +7,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Modules\Shop\Entities\RegisteredUser\Firms\Company;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
+use Modules\Shop\Http\Requests\Admin\RegisteredUser\Companies\AdminRegUserCompanyStoreRequest;
 
 class ShopAdminRegisteredUserCompaniesController extends Controller
 {
-    public function store(Request $request)
+    public function store(AdminRegUserCompanyStoreRequest $request)
     {
         Company::create($request->all());
 
         return back()->with('success-message', 'admin.common.successful_add');
     }
-    public function create()
+    public function create($id)
     {
-        return view('shop::admin.registered_users.firms.create');
+        $registeredUser = ShopRegisteredUser::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($registeredUser);
+
+        return view('shop::admin.registered_users.firms.create', compact('registeredUser'));
     }
     public function setAsDefault($id, $company_id)
     {
