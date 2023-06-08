@@ -1,50 +1,10 @@
-@php use Carbon\Carbon; @endphp@extends('layouts.admin.app')
+@extends('layouts.admin.app')
 
 @section('styles')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('admin/assets/css/shop.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
     <script src="{{ asset('admin/shop/js/client.js') }}"></script>
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script>
-
-        $(document).ready(function () {
-
-            $('[data-toggle="popover"]').popover({
-                placement: 'auto',
-                trigger: 'hover',
-                html: true,
-            }).on("show.bs.popover", function () {
-                $(this).data("bs.popover").tip().css("max-width", "80%");
-            });
-
-            var table = $('#example').DataTable({
-                "order": [[6, "desc"]],
-                orderCellsTop: true,
-                fixedHeader: true,
-                language: {
-                    "sProcessing": "Обработка на резултатите...",
-                    "sLengthMenu": "Показване на _MENU_ резултата",
-                    "sZeroRecords": "Няма намерени резултати",
-                    "sInfo": "Показване на резултати от _START_ до _END_ от общо _TOTAL_",
-                    "sInfoEmpty": "Показване на резултати от 0 до 0 от общо 0",
-                    "sInfoFiltered": "(филтрирани от общо _MAX_ резултата)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Търсене:",
-                    "sUrl": "",
-                    "oPaginate": {
-                        "sFirst": "Първа",
-                        "sPrevious": "Предишна",
-                        "sNext": "Следваща",
-                        "sLast": "Последна"
-                    }
-                }
-            });
-        });
-    </script>
 @endsection
 
 @section('content')
@@ -173,7 +133,7 @@
             @if($registeredUser->companies->isNotEmpty())
                 <div class="cards-wrapper">
                     @foreach($registeredUser->companies as $company)
-                        @include('shop::admin.registered_users.firms.partials.firm_card', ['company'=> $company])
+                        @include('shop::admin.registered_users.firms.partials.firm_card', ['registeredUser' => $registeredUser, 'company'=> $company])
                     @endforeach
                 </div>
             @else

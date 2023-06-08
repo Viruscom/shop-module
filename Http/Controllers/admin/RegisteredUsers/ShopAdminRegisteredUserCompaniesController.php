@@ -11,11 +11,27 @@ use Modules\Shop\Http\Requests\Admin\RegisteredUser\Companies\AdminRegUserCompan
 
 class ShopAdminRegisteredUserCompaniesController extends Controller
 {
-    public function store(AdminRegUserCompanyStoreRequest $request)
+    public function store($id, AdminRegUserCompanyStoreRequest $request)
     {
-        Company::create($request->all());
+        $registeredUser = ShopRegisteredUser::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        return back()->with('success-message', 'admin.common.successful_add');
+        if ($request->has('is_default') && $request->is_default === true) {
+            $registeredUser->companies()->update(['is_default', false]);
+        }
+
+        $registeredUser->companies()->create($request->all());
+
+        return redirect()->route('admin.shop.registered-users.show', ['id' => $registeredUser->id])->with('success-message', 'admin.common.successful_create');
+    }
+    public function update($id, Request $request)
+    {
+        $company = Company::find($id);
+        WebsiteHelper::redirectBackIfNull($company);
+
+        $company->update($request->all());
+
+        return back()->with('success-message', 'admin.common.successful_edit');
     }
     public function create($id)
     {
@@ -32,17 +48,8 @@ class ShopAdminRegisteredUserCompaniesController extends Controller
         $registeredUser = ShopRegisteredUser::where('id', $id)->first();
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        $registeredUser->companies()->update(['is_default', false]);
-        $company->update(['is_default', true]);
-
-        return back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function update($id, Request $request)
-    {
-        $company = Company::find($id);
-        WebsiteHelper::redirectBackIfNull($company);
-
-        $company->update($request->all());
+        $registeredUser->companies()->update(['is_default' => false]);
+        $company->update(['is_default' => true]);
 
         return back()->with('success-message', 'admin.common.successful_edit');
     }

@@ -136,20 +136,11 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('/create', [ShopAdminRegisteredUserCompaniesController::class, 'create'])->name('admin.shop.registered-users.companies.create');
                 Route::post('/store', [ShopAdminRegisteredUserCompaniesController::class, 'store'])->name('admin.shop.registered-users.companies.store');
 
-                Route::group(['prefix' => 'multiple'], static function () {
-                    Route::get('active/{active}', [ShopAdminRegisteredUserCompaniesController::class, 'activeMultiple'])->name('admin.shop.registered-users.companies.active-multiple');
-                    Route::get('delete', [ShopAdminRegisteredUserCompaniesController::class, 'deleteMultiple'])->name('admin.shop.registered-users.companies.delete-multiple');
-                });
-
                 Route::group(['prefix' => '{company_id}'], static function () {
                     Route::get('edit', [ShopAdminRegisteredUserCompaniesController::class, 'edit'])->name('admin.shop.registered-users.companies.edit');
                     Route::post('update', [ShopAdminRegisteredUserCompaniesController::class, 'update'])->name('admin.shop.registered-users.companies.update');
                     Route::get('delete', [ShopAdminRegisteredUserCompaniesController::class, 'delete'])->name('admin.shop.registered-users.companies.delete');
-                    Route::get('show', [ShopAdminRegisteredUserCompaniesController::class, 'show'])->name('admin.shop.registered-users.companies.show');
-                    Route::get('/active/{active}', [ShopAdminRegisteredUserCompaniesController::class, 'active'])->name('admin.shop.registered-users.companies.changeStatus');
-                    Route::get('position/up', [ShopAdminRegisteredUserCompaniesController::class, 'positionUp'])->name('admin.shop.registered-users.companies.position-up');
-                    Route::get('position/down', [ShopAdminRegisteredUserCompaniesController::class, 'positionDown'])->name('admin.shop.registered-users.companies.position-down');
-                    Route::get('image/delete', [ShopAdminRegisteredUserCompaniesController::class, 'deleteImage'])->name('admin.shop.registered-users.companies.delete-image');
+                    Route::get('make-default', [ShopAdminRegisteredUserCompaniesController::class, 'setAsDefault'])->name('admin.shop.registered-users.companies.make-default');
                 });
             });
 

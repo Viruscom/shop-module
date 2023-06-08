@@ -45,6 +45,20 @@
                         <span>{{ __('shop::admin.vats.index') }}</span>
                     </a>
                 </div>
+
+                <div>
+                    <a href="{{ route('vats.countries.index') }}" class="text-center">
+                        <i class="fas fa-pound-sign fa-5x"></i>
+                        <span>Валути</span>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('vats.countries.index') }}">
+                        <i class="fas fa-balance-scale-right fa-5x"></i>
+                        <span>Мерни единици</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

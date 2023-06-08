@@ -24,7 +24,6 @@ class AdminRegUserCompanyStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'         => 'required|integer',
             'email'           => 'required|email',
             'phone'           => 'required',
             'street'          => 'required',
@@ -50,8 +49,6 @@ class AdminRegUserCompanyStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required'         => trans('shop::admin.registered_users.user_id_required'),
-            'user_id.integer'          => trans('shop::admin.registered_users.user_id_integer'),
             'email.required'           => trans('shop::admin.registered_users.email_required'),
             'email.email'              => trans('shop::admin.registered_users.email_email'),
             'phone.required'           => trans('shop::admin.registered_users.phone_required'),
