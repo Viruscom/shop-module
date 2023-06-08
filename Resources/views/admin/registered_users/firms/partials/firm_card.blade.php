@@ -44,8 +44,8 @@
                 <a href="{{ route('admin.shop.registered-users.companies.make-default', ['id' => $registeredUser->id, 'company_id' => $company->id]) }}" class="btn-sm btn-mark-as-default tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Маркирай като фирма по подразбиране"><i class="far fa-check-circle fa-2x"></i></a>
             @endif
             <a href="https://www.google.bg/maps/place/#######" class="btn-sm btn-blue tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Покажи адрес на доставка на картата" target="_blank"><i class="fas fa-map-marked-alt fa-2x"></i></a>
-            <a href="http://iwish-modules/admin/category-page/4/edit" class="btn green tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.edit') }}"><i class="fas fa-pencil-alt"></i></a>
-            <a href="http://iwish-modules/admin/category-page/6/delete" class="btn red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.delete') }}" aria-describedby="tooltip96384"><i class="fas fa-trash-alt"></i></a>
+            <a href="{{ route('admin.shop.registered-users.companies.edit', ['id' => $registeredUser->id, 'company_id' => $company->id]) }}" class="btn green tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.edit') }}"><i class="fas fa-pencil-alt"></i></a>
+            <a href="{{ route('admin.shop.registered-users.companies.delete', ['id' => $registeredUser->id, 'company_id' => $company->id]) }}" class="btn red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.delete') }}" aria-describedby="tooltip96384"><i class="fas fa-trash-alt"></i></a>
         </div>
     </div>
 </div>

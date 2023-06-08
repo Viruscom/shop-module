@@ -10,6 +10,7 @@
 @section('content')
     @include('shop::admin.registered_users.breadcrumbs')
     @include('admin.notify')
+    @include('admin.partials.modals.delete_confirm')
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             <div class="action-mass-buttons pull-right">

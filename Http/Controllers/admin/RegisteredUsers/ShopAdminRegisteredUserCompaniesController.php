@@ -53,10 +53,18 @@ class ShopAdminRegisteredUserCompaniesController extends Controller
 
         return back()->with('success-message', 'admin.common.successful_edit');
     }
-    public function delete($id)
+    public function delete($id, $company_id)
     {
-        $company = Company::find($id);
+        $registeredUser = ShopRegisteredUser::find($id);
+        WebsiteHelper::redirectBackIfNull($registeredUser);
+
+        $company = Company::find($company_id);
         WebsiteHelper::redirectBackIfNull($company);
+
+        $nextDefaultCompany = $registeredUser->companies()->where('id', '!=', $company->id)->first();
+        if ($company->isDefault(true) && !is_null($nextDefaultCompany)) {
+            $nextDefaultCompany->update(['is_default' => true]);
+        }
 
         $company->delete();
 
