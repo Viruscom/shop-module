@@ -12,6 +12,8 @@ use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesContr
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserCompaniesController;
+use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserFavProductsController;
+use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserOrdersController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserPaymentAddressController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserShipmentAddressController;
@@ -105,10 +107,10 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             /* Orders */
             //            TODO: Ne e napisano
             Route::group(['prefix' => 'orders'], static function () {
-                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.orders.index');
-                Route::get('/{order_id}/edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.orders.edit');
-                Route::post('/{order_id}/update', [ShopAdminRegisteredUsersController::class, 'update'])->name('admin.shop.registered-users.orders.update');
-                Route::get('/{order_id}/show', [ShopAdminRegisteredUsersController::class, 'show'])->name('admin.shop.registered-users.orders.show');
+                Route::get('/', [ShopAdminRegisteredUserOrdersController::class, 'index'])->name('admin.shop.registered-users.orders.index');
+                Route::get('/{order_id}/show', [ShopAdminRegisteredUserOrdersController::class, 'show'])->name('admin.shop.registered-users.orders.show');
+                Route::get('/{order_id}/edit', [ShopAdminRegisteredUserOrdersController::class, 'edit'])->name('admin.shop.registered-users.orders.edit');
+                Route::post('/{order_id}/update', [ShopAdminRegisteredUserOrdersController::class, 'update'])->name('admin.shop.registered-users.orders.update');
             });
 
             /* Returned products */
@@ -127,9 +129,8 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             });
 
             /* Favorite products */
-            //            TODO: Ne e napisano
             Route::group(['prefix' => 'favorite-products'], static function () {
-                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.favorite-products.index');
+                Route::get('/', [ShopAdminRegisteredUserFavProductsController::class, 'index'])->name('admin.shop.registered-users.favorite-products.index');
             });
 
             /* Companies */

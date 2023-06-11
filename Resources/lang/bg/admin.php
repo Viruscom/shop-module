@@ -208,6 +208,11 @@ return array(
             'city_id_exists'           => 'Избраният град не съществува.',
             'zip_code_required'        => 'Полето за пощенски код е задължително.',
         ),
+    'favorite_products'       => array(
+        'index'      => 'Любими продукти',
+        'no_records' => 'Няма добавени любими продукти',
+        'for_user'   => 'за потребител',
+    ),
     'h18_reports'             =>
         array(
             'index' => 'Н-18 отчети',
