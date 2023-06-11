@@ -5,30 +5,30 @@ namespace Modules\Shop\Http\Controllers\admin\RegisteredUsers;
 use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\Shop\Entities\RegisteredUser\ShipmentAddresses\ShopShipmentAddress;
+use Modules\Shop\Entities\RegisteredUser\PaymentAddresses\ShopPaymentAddress;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
 use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Entities\Settings\Main\CountrySale;
 use Modules\Shop\Entities\Settings\State;
-use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressStoreRequest;
-use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressUpdateRequest;
+use Modules\Shop\Http\Requests\Admin\RegisteredUser\PaymentAddresses\AdminRegUserPaymentAddressStoreRequest;
+use Modules\Shop\Http\Requests\Admin\RegisteredUser\PaymentAddresses\AdminRegUserPaymentAddressUpdateRequest;
 
-class ShopAdminRegisteredUserShipmentAddressController extends Controller
+class ShopAdminRegisteredUserPaymentAddressController extends Controller
 {
-    public function store($id, AdminRegUserShipmentAddressStoreRequest $request)
+    public function store($id, AdminRegUserPaymentAddressStoreRequest $request)
     {
-        $registeredUser = ShopRegisteredUser::where('id', $id)->with('shipmentAddresses')->first();
+        $registeredUser = ShopRegisteredUser::where('id', $id)->with('paymentAddresses')->first();
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        if ($request->has('is_default') && $request->is_default === 1 && $registeredUser->shipmentAddresses->isNotEmpty()) {
-            $registeredUser->shipmentAddresses()->update(['is_default', false]);
+        if ($request->has('is_default') && $request->is_default === 1 && $registeredUser->paymentAddresses->isNotEmpty()) {
+            $registeredUser->paymentAddresses()->update(['is_default', false]);
         }
 
-        if ($registeredUser->shipmentAddresses->isEmpty()) {
+        if ($registeredUser->paymentAddresses->isEmpty()) {
             $request['is_default'] = true;
         }
 
-        $registeredUser->shipmentAddresses()->create($request->all());
+        $registeredUser->paymentAddresses()->create($request->all());
 
         if ($request->has('submitaddnew')) {
             return redirect()->back()->with('success-message', 'administration_messages.successful_create');
@@ -36,12 +36,12 @@ class ShopAdminRegisteredUserShipmentAddressController extends Controller
 
         return redirect()->route('admin.shop.registered-users.show', ['id' => $registeredUser->id])->with('success-message', 'admin.common.successful_create');
     }
-    public function update($id, $address_id, AdminRegUserShipmentAddressUpdateRequest $request)
+    public function update($id, $address_id, AdminRegUserPaymentAddressUpdateRequest $request)
     {
         $registeredUser = ShopRegisteredUser::where('id', $id)->first();
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        $address = ShopShipmentAddress::find($address_id);
+        $address = ShopPaymentAddress::find($address_id);
         WebsiteHelper::redirectBackIfNull($address);
 
         $address->update($request->all());
@@ -55,29 +55,29 @@ class ShopAdminRegisteredUserShipmentAddressController extends Controller
 
         $saleCountries = CountrySale::with('country')->get();
 
-        return view('shop::admin.registered_users.shipment_addresses.create', compact('registeredUser', 'saleCountries'));
+        return view('shop::admin.registered_users.payment_addresses.create', compact('registeredUser', 'saleCountries'));
     }
     public function edit($id, $address_id)
     {
         $registeredUser = ShopRegisteredUser::where('id', $id)->first();
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        $address = ShopShipmentAddress::find($address_id);
+        $address = ShopPaymentAddress::find($address_id);
         WebsiteHelper::redirectBackIfNull($address);
 
         $saleCountries = CountrySale::with('country')->get();
 
-        return view('shop::admin.registered_users.shipment_addresses.edit', compact('registeredUser', 'address', 'saleCountries'));
+        return view('shop::admin.registered_users.payment_addresses.edit', compact('registeredUser', 'address', 'saleCountries'));
     }
     public function setAsDefault($id, $address_id)
     {
-        $address = ShopShipmentAddress::find($address_id);
+        $address = ShopPaymentAddress::find($address_id);
         WebsiteHelper::redirectBackIfNull($address);
 
         $registeredUser = ShopRegisteredUser::where('id', $id)->first();
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        $registeredUser->shipmentAddresses()->update(['is_default' => false]);
+        $registeredUser->paymentAddresses()->update(['is_default' => false]);
         $address->update(['is_default' => true]);
 
         return back()->with('success-message', 'admin.common.successful_edit');
@@ -87,10 +87,10 @@ class ShopAdminRegisteredUserShipmentAddressController extends Controller
         $registeredUser = ShopRegisteredUser::find($id);
         WebsiteHelper::redirectBackIfNull($registeredUser);
 
-        $address = ShopShipmentAddress::find($address_id);
+        $address = ShopPaymentAddress::find($address_id);
         WebsiteHelper::redirectBackIfNull($address);
 
-        $nextDefaultAddress = $registeredUser->shipmentAddresses()->where('id', '!=', $address->id)->first();
+        $nextDefaultAddress = $registeredUser->paymentAddresses()->where('id', '!=', $address->id)->first();
         if ($address->isDefault(true) && !is_null($nextDefaultAddress)) {
             $nextDefaultAddress->update(['is_default' => true]);
         }

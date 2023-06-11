@@ -12,6 +12,7 @@ use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesContr
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserCompaniesController;
+use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserPaymentAddressController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserShipmentAddressController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
@@ -146,11 +147,12 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             });
 
             /* Shipment addresses */
-            //            TODO: Ne e napisano
             Route::group(['prefix' => 'shipment-addresses'], static function () {
                 Route::get('/', [ShopAdminRegisteredUserShipmentAddressController::class, 'index'])->name('admin.shop.registered-users.shipment-addresses.index');
                 Route::get('create', [ShopAdminRegisteredUserShipmentAddressController::class, 'create'])->name('admin.shop.registered-users.shipment-addresses.create');
-                Route::get('store', [ShopAdminRegisteredUserShipmentAddressController::class, 'store'])->name('admin.shop.registered-users.shipment-addresses.store');
+                Route::post('store', [ShopAdminRegisteredUserShipmentAddressController::class, 'store'])->name('admin.shop.registered-users.shipment-addresses.store');
+                Route::get('getStates', [ShopAdminRegisteredUserShipmentAddressController::class, 'getStates'])->name('admin.shop.registered-users.shipment-addresses.get-states');
+                Route::get('getCities', [ShopAdminRegisteredUserShipmentAddressController::class, 'getCities'])->name('admin.shop.registered-users.shipment-addresses.get-cities');
 
                 Route::group(['prefix' => '{address_id}'], static function () {
                     Route::get('edit', [ShopAdminRegisteredUserShipmentAddressController::class, 'edit'])->name('admin.shop.registered-users.shipment-addresses.edit');
@@ -161,17 +163,18 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             });
 
             /* Payment addresses */
-            //            TODO: Ne e napisano
             Route::group(['prefix' => 'payment-addresses'], static function () {
-                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.payment-addresses.index');
-                Route::get('create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.payment-addresses.create');
-                Route::get('store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.payment-addresses.store');
+                Route::get('/', [ShopAdminRegisteredUserPaymentAddressController::class, 'index'])->name('admin.shop.registered-users.payment-addresses.index');
+                Route::get('create', [ShopAdminRegisteredUserPaymentAddressController::class, 'create'])->name('admin.shop.registered-users.payment-addresses.create');
+                Route::post('store', [ShopAdminRegisteredUserPaymentAddressController::class, 'store'])->name('admin.shop.registered-users.payment-addresses.store');
+                Route::get('getStates', [ShopAdminRegisteredUserPaymentAddressController::class, 'getStates'])->name('admin.shop.registered-users.payment-addresses.get-states');
+                Route::get('getCities', [ShopAdminRegisteredUserPaymentAddressController::class, 'getCities'])->name('admin.shop.registered-users.payment-addresses.get-cities');
 
                 Route::group(['prefix' => '{address_id}'], static function () {
-                    Route::get('edit', [ShopAdminRegisteredUserCompaniesController::class, 'edit'])->name('admin.shop.registered-users.payment-addresses.edit');
-                    Route::post('update', [ShopAdminRegisteredUserCompaniesController::class, 'update'])->name('admin.shop.registered-users.payment-addresses.update');
-                    Route::get('delete', [ShopAdminRegisteredUserCompaniesController::class, 'delete'])->name('admin.shop.registered-users.payment-addresses.delete');
-                    Route::get('make-default', [ShopAdminRegisteredUserCompaniesController::class, 'setAsDefault'])->name('admin.shop.registered-users.payment-addresses.make-default');
+                    Route::get('edit', [ShopAdminRegisteredUserPaymentAddressController::class, 'edit'])->name('admin.shop.registered-users.payment-addresses.edit');
+                    Route::post('update', [ShopAdminRegisteredUserPaymentAddressController::class, 'update'])->name('admin.shop.registered-users.payment-addresses.update');
+                    Route::get('delete', [ShopAdminRegisteredUserPaymentAddressController::class, 'delete'])->name('admin.shop.registered-users.payment-addresses.delete');
+                    Route::get('make-default', [ShopAdminRegisteredUserPaymentAddressController::class, 'setAsDefault'])->name('admin.shop.registered-users.payment-addresses.make-default');
                 });
             });
         });

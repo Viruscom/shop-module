@@ -162,7 +162,7 @@
             @if($registeredUser->shipmentAddresses->isNotEmpty())
                 <div class="cards-wrapper">
                     @foreach($registeredUser->shipmentAddresses as $address)
-                        @include('shop::admin.registered_users.firms.partials.address', ['address'=> $address])
+                        @include('shop::admin.registered_users.partials.address', ['address'=> $address, 'type' => 'shipment'])
                     @endforeach
                 </div>
             @else
@@ -184,7 +184,7 @@
             @if($registeredUser->paymentAddresses->isNotEmpty())
                 <div class="cards-wrapper">
                     @foreach($registeredUser->paymentAddresses as $address)
-                        @include('shop::admin.registered_users.firms.partials.address', ['address'=> $address])
+                        @include('shop::admin.registered_users.partials.address', ['address'=> $address, 'type' => 'payment'])
                     @endforeach
                 </div>
             @else
