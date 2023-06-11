@@ -13,6 +13,7 @@ use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsControlle
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserCompaniesController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
+use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserShipmentAddressController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
 use Modules\Shop\Http\Controllers\admin\Settings\Main\ShopMainSettingsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Payments\PaymentsController;
@@ -147,9 +148,16 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             /* Shipment addresses */
             //            TODO: Ne e napisano
             Route::group(['prefix' => 'shipment-addresses'], static function () {
-                Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.shipment-addresses.index');
-                Route::get('create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.shipment-addresses.create');
-                Route::get('store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.shipment-addresses.store');
+                Route::get('/', [ShopAdminRegisteredUserShipmentAddressController::class, 'index'])->name('admin.shop.registered-users.shipment-addresses.index');
+                Route::get('create', [ShopAdminRegisteredUserShipmentAddressController::class, 'create'])->name('admin.shop.registered-users.shipment-addresses.create');
+                Route::get('store', [ShopAdminRegisteredUserShipmentAddressController::class, 'store'])->name('admin.shop.registered-users.shipment-addresses.store');
+
+                Route::group(['prefix' => '{address_id}'], static function () {
+                    Route::get('edit', [ShopAdminRegisteredUserShipmentAddressController::class, 'edit'])->name('admin.shop.registered-users.shipment-addresses.edit');
+                    Route::post('update', [ShopAdminRegisteredUserShipmentAddressController::class, 'update'])->name('admin.shop.registered-users.shipment-addresses.update');
+                    Route::get('delete', [ShopAdminRegisteredUserShipmentAddressController::class, 'delete'])->name('admin.shop.registered-users.shipment-addresses.delete');
+                    Route::get('make-default', [ShopAdminRegisteredUserShipmentAddressController::class, 'setAsDefault'])->name('admin.shop.registered-users.shipment-addresses.make-default');
+                });
             });
 
             /* Payment addresses */
@@ -158,6 +166,13 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.payment-addresses.index');
                 Route::get('create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.payment-addresses.create');
                 Route::get('store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.payment-addresses.store');
+
+                Route::group(['prefix' => '{address_id}'], static function () {
+                    Route::get('edit', [ShopAdminRegisteredUserCompaniesController::class, 'edit'])->name('admin.shop.registered-users.payment-addresses.edit');
+                    Route::post('update', [ShopAdminRegisteredUserCompaniesController::class, 'update'])->name('admin.shop.registered-users.payment-addresses.update');
+                    Route::get('delete', [ShopAdminRegisteredUserCompaniesController::class, 'delete'])->name('admin.shop.registered-users.payment-addresses.delete');
+                    Route::get('make-default', [ShopAdminRegisteredUserCompaniesController::class, 'setAsDefault'])->name('admin.shop.registered-users.payment-addresses.make-default');
+                });
             });
         });
     });

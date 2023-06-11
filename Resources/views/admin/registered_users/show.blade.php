@@ -3,9 +3,6 @@
 @section('styles')
     <link href="{{ asset('admin/assets/css/shop.css') }}" rel="stylesheet"/>
 @endsection
-@section('scripts')
-    <script src="{{ asset('admin/shop/js/client.js') }}"></script>
-@endsection
 
 @section('content')
     @include('shop::admin.registered_users.breadcrumbs')
@@ -20,41 +17,43 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3>Статистика</h3>
+            <h3>@lang('shop::admin.registered_users.statistics')</h3>
+
             <div class="flex" style="display: flex;justify-content: space-around;flex-direction: column;">
                 <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
                     <span style="font-size: 50px;font-weight: 400;color: deepskyblue;">{{ $registeredUser->countOrders() }}</span>
-                    <span class="m-t-10">Направени поръчки</span>
+                    <span class="m-t-10">@lang('shop::admin.registered_users.orders')</span>
                 </div>
 
                 <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
                     <span style="font-size: 50px;font-weight: 400;color: #1de071;">213355622.65 лв.</span>
-                    <span class="m-t-10">Обща стойност</span>
+                    <span class="m-t-10">@lang('shop::admin.registered_users.total_value')</span>
                 </div>
 
                 <div style="display: flex;justify-content: space-around;">
                     <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
                         <span style="font-size: 50px;font-weight: 400;color: deepskyblue;">5550</span>
-                        <span class="m-t-10">Изоставени колички</span>
+                        <span class="m-t-10">@lang('shop::admin.registered_users.abandoned_carts')</span>
                     </div>
 
                     <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
                         <span style="font-size: 50px;font-weight: 400;color: deepskyblue;">2034</span>
-                        <span class="m-t-10">Върнати продукти</span>
+                        <span class="m-t-10">@lang('shop::admin.registered_users.returned_products')</span>
                     </div>
 
                     <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;padding-bottom: 20px;">
                         <span style="font-size: 50px;font-weight: 400;color: deepskyblue;">22340</span>
-                        <span class="m-t-10">Любими продукти</span>
+                        <span class="m-t-10">@lang('shop::admin.registered_users.favorite_products')</span>
                     </div>
                 </div>
             </div>
+
         </div>
         <div class="col-md-6">
             <h3>@lang('shop::admin.registered_users.account')</h3>
             <div class="padding-20 bg-f5">
                 <div class="form-group">
-                    <label class="control-label p-b-10">Име и фамилия:</label>
+                    <label class="control-label p-b-10">@lang('shop::admin.registered_users.name_surname')</label>
                     <p><strong>{{ $registeredUser->first_name . ' ' . $registeredUser->last_name }}</strong></p>
                 </div>
                 <div class="form-group">
@@ -93,26 +92,33 @@
         <div class="col-md-12">
             <div class="flex" style="display: flex;justify-content: space-around;">
                 <div>
-                    <a href="" style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;">
+                    <a href="{{ route('admin.shop.registered-users.orders.index', ['id' => $registeredUser->id]) }}" class="flex-href" target="_blank">
                         <i class="fas fa-box fa-3x"></i>
-                        <span class="m-t-10">Поръчки</span>
+                        <span class="m-t-10">{{ trans('shop::admin.registered_users.orders') }}</span>
                     </a>
                 </div>
 
-                <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;">
-                    <i class="fas fa-undo-alt fa-3x"></i>
-                    <span class="m-t-10">Върнати продукти</span>
+                <div>
+                    <a href="{{ route('admin.shop.registered-users.returned-products.index', ['id' => $registeredUser->id]) }}" class="flex-href" target="_blank">
+                        <i class="fas fa-undo-alt fa-3x"></i>
+                        <span class="m-t-10">{{ trans('shop::admin.registered_users.returned_products') }}</span>
+                    </a>
                 </div>
 
-                <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;">
-                    <i class="fas fa-shopping-basket fa-3x"></i>
-                    <span class="m-t-10">Изоставени колички</span>
+                <div>
+                    <a href="{{ route('admin.shop.registered-users.abandoned-baskets.index', ['id' => $registeredUser->id]) }}" class="flex-href" target="_blank">
+                        <i class="fas fa-shopping-basket fa-3x"></i>
+                        <span class="m-t-10">{{ trans('shop::admin.registered_users.abandoned_carts') }}</span>
+                    </a>
                 </div>
 
-                <div style="display: flex;flex-direction: column;align-items: center;justify-content: flex-end;">
-                    <i class="fas fa-box fa-3x"></i>
-                    <span class="m-t-10">Любими продукти</span>
+                <div>
+                    <a href="{{ route('admin.shop.registered-users.favorite-products.index', ['id' => $registeredUser->id]) }}" class="flex-href" target="_blank">
+                        <i class="fas fa-box fa-3x"></i>
+                        <span class="m-t-10">{{ trans('shop::admin.registered_users.favorite_products') }}</span>
+                    </a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -146,8 +152,8 @@
     <div class="row m-t-40">
         <div class="col-xs-12">
             <div class="caption-wrapper">
-                <h3>@lang('shop::admin.registered_users.company_info')</h3>
-                <a href="{{ route('admin.shop.registered-users.shipment-addresses.create', ['id' => $registeredUser->id]) }}" class="btn green">@lang('shop::admin.registered_users.add_company')</a>
+                <h3>@lang('shop::admin.registered_users.shipment_addresses')</h3>
+                <a href="{{ route('admin.shop.registered-users.shipment-addresses.create', ['id' => $registeredUser->id]) }}" class="btn green">@lang('shop::admin.registered_users.add_shipment_address')</a>
             </div>
         </div>
     </div>
@@ -168,8 +174,8 @@
     <div class="row m-t-40">
         <div class="col-xs-12">
             <div class="caption-wrapper">
-                <h3>@lang('shop::admin.registered_users.company_info')</h3>
-                <a href="{{ route('admin.shop.registered-users.payment-addresses.create', ['id' => $registeredUser->id]) }}" class="btn green">@lang('shop::admin.registered_users.add_company')</a>
+                <h3>@lang('shop::admin.registered_users.payment_addresses')</h3>
+                <a href="{{ route('admin.shop.registered-users.payment-addresses.create', ['id' => $registeredUser->id]) }}" class="btn green">@lang('shop::admin.registered_users.add_payment_address')</a>
             </div>
         </div>
     </div>

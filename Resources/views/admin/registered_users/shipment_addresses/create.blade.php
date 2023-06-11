@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
-    <form class="my-form" action="{{ url('/admin/shop/clients/'.$client->id.'/shippment_addresses/store') }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+    <form class="my-form" action="{{ route('admin.shop.registered-users.shipment-addresses.store', ['id' => $registeredUser->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="position" value="{{old('position')}}">
@@ -60,7 +60,7 @@
                 <div class="form-group @if($errors->has('landline_phone')) has-error @endif">
                     <label class="control-label p-b-10">Стационарен телефон:</label>
                     <input class="form-control" type="text" name="landline_phone" value="{{ old('landline_phone') }}" autocomplete="off">
-                    <input class="form-control hidden" type="text" name="client_id" value="{{ $client->id }}">
+                    <input class="form-control hidden" type="text" name="client_id" value="">
                     @if($errors->has('landline_phone'))
                         <span class="help-block">{{ trans($errors->first('landline_phone')) }}</span>
                     @endif
