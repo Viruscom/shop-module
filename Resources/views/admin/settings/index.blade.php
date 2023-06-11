@@ -4,6 +4,7 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.settings.main.breadcrumbs')
     @include('admin.notify')
 
     <div class="row">

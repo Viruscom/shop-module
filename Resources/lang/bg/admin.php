@@ -259,6 +259,12 @@ return array(
             'active_sales_country'   => 'Продажби',
             'you_sale_here'          => 'Вие продавате тук',
             'sales_counties_warning' => '<strong>Внимание!</strong><br><span>Маркирайте само държавите, в които желаете да продавате. Винаги трябва да има поне една избрана държава.</span>',
+            'email_required'         => 'Полето за имейл е задължително.',
+            'email_invalid'          => 'Моля, въведете валиден имейл адрес.',
+            'countries_required'     => 'Моля, изберете поне една държава.',
+            'countries_array'        => 'Полето за държави трябва да бъде във формат на масив.',
+            'country_id_invalid'     => 'Невалидно ID на държава.',
+            'country_not_exists'     => 'Избраната държава не съществува.',
         ),
     'payments'                =>
         array(

@@ -5,9 +5,9 @@ namespace Modules\Shop\Http\Controllers\admin\Settings\Main;
 use App\Http\Controllers\Controller;
 use App\Models\Settings\Post;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Entities\Settings\Main\CountrySale;
+use Modules\Shop\Http\Requests\Admin\Settings\MainSettingsUpdateRequest;
 
 class ShopMainSettingsController extends Controller
 {
@@ -29,11 +29,18 @@ class ShopMainSettingsController extends Controller
         return view('shop::admin.settings.main.index', compact('postSetting', 'countries', 'salesCountries'));
     }
 
-    public function update(Request $request)
+    public function update(MainSettingsUpdateRequest $request)
     {
         $postSetting = Post::first();
 
-        $postSetting->update($request->all());
+        $postSetting->update(['shop_orders_email' => $request->shop_orders_email]);
         Post::updateCache();
+
+        CountrySale::truncate();
+        foreach ($request->sales_countries as $key => $countryId) {
+            CountrySale::create(['country_id' => $countryId]);
+        }
+
+        return redirect()->route('admin.shop.settings.index')->with('success-message', 'admin.common.successful_edit');
     }
 }

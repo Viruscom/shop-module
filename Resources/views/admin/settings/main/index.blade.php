@@ -2,25 +2,34 @@
 
 @section('styles')
     <link href="{{ asset('admin/assets/css/shop.css') }}" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
-@endsection
-
-@section('scripts')
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#countries').DataTable({
-                fixedHeader: true,
-            });
-        });
-    </script>
 @endsection
 
 @section('content')
     @include('shop::admin.settings.main.breadcrumbs')
     @include('admin.notify')
+
+    <script>
+        var selectedCountries = [];
+
+        function pushToArray(countryId, sale) {
+            if (sale) {
+                selectedCountries.push(countryId);
+            }
+        }
+
+        function checkboxChecked() {
+            console.log(selectedCountries);
+            for (var i = 0; i < selectedCountries.length; i++) {
+                var checkbox     = document.querySelector('.checkbox-row[value="' + selectedCountries[i] + '"]');
+                checkbox.checked = true;
+                checkbox.dispatchEvent(new Event('change'));
+            }
+        }
+
+        window.onload = function () {
+            checkboxChecked();
+        };
+    </script>
     <form action="{{ route('admin.shop.settings.main.update') }}" method="POST">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -96,7 +105,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="table-responsive">
-                            <table class="table" id="countries">
+                            <table class="table">
                                 <thead>
                                 <th class="width-2-percent"></th>
                                 <th class="width-2-percent">{{ __('admin.number') }}</th>
@@ -108,15 +117,15 @@
                                         <?php $i = 1; ?>
                                     @foreach($countries as $country)
                                         @php
-                                            $sale = false;
+                                            $sale = 0;
                                             if (in_array($country->id, $salesCountries)) {
-                                                $sale = true;
+                                                $sale = 1;
                                             }
                                         @endphp
                                         <tr class="t-row row-{{$country->id}} {{ $sale ? 'sale-background':'' }}">
                                             <td class="width-2-percent">
                                                 <div class="pretty p-default p-square">
-                                                    <input type="checkbox" class="checkbox-row" name="sales_countries[]" value="{{$country->id}}"/>
+                                                    <input type="checkbox" class="checkbox-row" name="sales_countries[]" value="{{$country->id}}" {{ $sale ? 'checked':'' }}/>
                                                     <div class="state p-primary">
                                                         <label></label>
                                                     </div>
@@ -130,6 +139,9 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        <script>
+                                            pushToArray({{ $country->id }}, {{ $sale }});
+                                        </script>
                                             <?php $i++; ?>
                                     @endforeach
                                     <tr style="display: none;">
