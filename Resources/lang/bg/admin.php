@@ -70,10 +70,16 @@ return array(
         ),
     'product_categories'      =>
         array(
-            'index'      => 'Категории',
-            'create'     => 'Добавяне на категория',
-            'edit'       => 'Редактиране на категория',
-            'no_records' => 'Няма намерени продуктови категории',
+            'index'                                => 'Категории',
+            'create'                               => 'Добавяне на категория',
+            'edit'                                 => 'Редактиране на категория',
+            'no_records'                           => 'Няма намерени продуктови категории',
+            'show_sub_categories'                  => 'Преглед на подкатегории',
+            'error_cant_delete_has_sub_categories' => 'Не може да изтриете категорията. Има подкатегории към нея.',
+            'error_cant_delete_has_products'       => 'Не може да изтриете категорията. Има продукти към нея.',
+            'sub_categories_to'                    => 'Подкатегории към',
+            'add_sub_category_to'                  => 'Добавяне на подкатегория към',
+            'edit_sub_category_to'                 => 'Редактиране на подкатегория към',
         ),
     'product_brands'          =>
         array(

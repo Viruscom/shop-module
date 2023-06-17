@@ -14,6 +14,7 @@ use Cache;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Modules\Catalogs\Models\MainCatalog;
 use Modules\Shop\Actions\ProductAction;
 use Modules\Shop\Http\Requests\ProductStoreRequest;
 use Modules\Shop\Http\Requests\ProductUpdateRequest;
@@ -61,6 +62,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'files'             => Cache::get(CacheKeysHelper::$FILES),
             'filesPathUrl'      => File::getFilesPathUrl(),
             'fileRulesInfo'     => Product::getUserInfoMessage(),
+            'productCategoryId' => $productCategory->id,
             'products'          => $productCategory->products,
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
@@ -69,7 +71,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $activeModules = ModuleHelper::getActiveModules();
         if (array_key_exists('Catalogs', $activeModules)) {
             if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
-                \Modules\Catalogs\Models\MainCatalog::cacheUpdate();
+                MainCatalog::cacheUpdate();
             }
             $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
         }
@@ -92,6 +94,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'files'             => Cache::get(CacheKeysHelper::$FILES),
             'filesPathUrl'      => File::getFilesPathUrl(),
             'fileRulesInfo'     => Product::getUserInfoMessage(),
+            'productCategoryId' => $product->category->id,
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
             'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
         ];
@@ -99,7 +102,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $activeModules = ModuleHelper::getActiveModules();
         if (array_key_exists('Catalogs', $activeModules)) {
             if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
-                \Modules\Catalogs\Models\MainCatalog::cacheUpdate();
+                MainCatalog::cacheUpdate();
             }
             $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
         }

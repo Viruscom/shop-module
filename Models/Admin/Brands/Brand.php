@@ -47,11 +47,11 @@ class Brand extends Model implements TranslatableContract, ImageModelInterface
     {
         cache()->forget(CacheKeysHelper::$SHOP_BRAND_ADMIN);
         cache()->forget(CacheKeysHelper::$SHOP_BRAND_FRONT);
-        cache()->remember(CacheKeysHelper::$SHOP_BRAND_ADMIN, config('default.app.cache.ttl_seconds'), function () {
+        cache()->rememberForever(CacheKeysHelper::$SHOP_BRAND_ADMIN, function () {
             return self::withTranslation()->with('translations')->orderBy('position')->get();
         });
 
-        cache()->remember(CacheKeysHelper::$SHOP_BRAND_FRONT, config('default.app.cache.ttl_seconds'), function () {
+        cache()->rememberForever(CacheKeysHelper::$SHOP_BRAND_FRONT, function () {
             return self::active(true)->orderBy('position')->with('translations')->get();
         });
     }

@@ -17,8 +17,10 @@ use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserO
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserPaymentAddressController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsersController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserShipmentAddressController;
+use Modules\Shop\Http\Controllers\admin\Settings\Currencies\CurrenciesController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
 use Modules\Shop\Http\Controllers\admin\Settings\Main\ShopMainSettingsController;
+use Modules\Shop\Http\Controllers\admin\Settings\MeasuringUnits\MeasuringUnitsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Payments\PaymentsController;
 use Modules\Shop\Http\Controllers\admin\Settings\ShopSettingsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Vats\VatsController;
@@ -266,6 +268,37 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 });
             });
         });
+
+        /* Currencies */
+        //TODO: Ne e praveno
+        Route::prefix('currencies')->group(function () {
+            Route::get('/', [CurrenciesController::class, 'index'])->name('currencies.index');
+            Route::get('create', [CurrenciesController::class, 'create'])->name('currencies.create');
+            Route::get('edit/{id}', [CurrenciesController::class, 'edit'])->name('currencies.edit');
+            Route::post('update/{id}', [CurrenciesController::class, 'update'])->name('currencies.update');
+        });
+
+        /* Measuring Units */
+        //TODO: Ne e praveno
+        Route::group(['prefix' => 'measuring-units'], static function () {
+            Route::get('/', [MeasuringUnitsController::class, 'index'])->name('measuring-units.index');
+            Route::get('create', [MeasuringUnitsController::class, 'create'])->name('measuring-units.create');
+            Route::post('store', [MeasuringUnitsController::class, 'store'])->name('measuring-units.store');
+
+            Route::group(['prefix' => 'multiple'], static function () {
+                Route::get('active/{active}', [MeasuringUnitsController::class, 'activeMultiple'])->name('measuring-units.active-multiple');
+                Route::get('delete', [MeasuringUnitsController::class, 'deleteMultiple'])->name('measuring-units.delete-multiple');
+            });
+
+            Route::group(['prefix' => '{id}'], static function () {
+                Route::get('edit', [MeasuringUnitsController::class, 'edit'])->name('measuring-units.edit');
+                Route::post('update', [MeasuringUnitsController::class, 'update'])->name('measuring-units.update');
+                Route::get('delete', [MeasuringUnitsController::class, 'delete'])->name('measuring-units.delete');
+                Route::get('active/{active}', [MeasuringUnitsController::class, 'active'])->name('measuring-units.changeStatus');
+                Route::get('position/up', [MeasuringUnitsController::class, 'positionUp'])->name('measuring-units.position-up');
+                Route::get('position/down', [MeasuringUnitsController::class, 'positionDown'])->name('measuring-units.position-down');
+            });
+        });
     });
 
     Route::post('/user/location', [App\Http\Controllers\HomeController::class, 'setUserLocation'])->name('user.location.set');
@@ -315,6 +348,12 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/down', [ProductCategoriesController::class, 'positionDown'])->name('admin.product-categories.position-down');
             Route::get('image/delete', [ProductCategoriesController::class, 'deleteImage'])->name('admin.product-categories.delete-image');
             Route::get('/products', [ProductCategoriesController::class, 'getCategoryProducts'])->name('admin.product-categories.products');
+
+            /* Subcategories */
+            Route::group(['prefix' => 'sub-categories'], static function () {
+                Route::get('/', [ProductCategoriesController::class, 'subCategoriesIndex'])->name('admin.product-categories.sub-categories.index');
+                Route::get('/create', [ProductCategoriesController::class, 'subCategoriesCreate'])->name('admin.product-categories.sub-categories.create');
+            });
         });
     });
 

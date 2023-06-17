@@ -6,7 +6,6 @@ use App\Helpers\AdminHelper;
 use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
-use App\Helpers\UrlHelper;
 use App\Interfaces\Models\ImageModelInterface;
 use App\Models\Seo;
 use App\Traits\CommonActions;
@@ -17,6 +16,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Shop\Models\Admin\Products\Product;
 
@@ -24,10 +24,10 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
 {
     use Translatable, Scopes, StorageActions, CommonActions, HasGallery;
 
-    public const FILES_PATH = "images/shop/product_categories";
-    const ALLOW_CATALOGS = true;
-    const ALLOW_ICONS = true;
-    const ALLOW_LOGOS = true;
+    public const FILES_PATH     = "images/shop/product_categories";
+    const        ALLOW_CATALOGS = true;
+    const        ALLOW_ICONS    = true;
+    const        ALLOW_LOGOS    = true;
 
     public static string $PRODUCT_CATEGORY_SYSTEM_IMAGE  = 'product_category_1_image.png';
     public static string $PRODUCT_CATEGORY_RATIO         = '1/1';
@@ -35,7 +35,7 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     public static string $PRODUCT_CATEGORY_MAX_FILE_SIZE = '3000';
 
     public array $translatedAttributes = ['title', 'announce', 'description'];
-    protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id'];
+    protected    $fillable             = ['main_category', 'active', 'position', 'filename', 'creator_user_id'];
     protected    $table                = 'product_categories';
 
     public static function getFileRules(): string
@@ -50,17 +50,18 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     {
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN);
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT);
-        cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN, config('default.app.cache.ttl_seconds'), function () {
-            return self::with('translations')->orderBy('position')->get();
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN, function () {
+            return self::whereNull('main_category')->with('translations', 'mainCategory', 'subCategories')->orderBy('position')->get();
         });
 
-        cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT, config('default.app.cache.ttl_seconds'), function () {
-            return self::active(true)->with('translations')->orderBy('position')->get();
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT, function () {
+            return self::active(true)->with('translations', 'mainCategory', 'subCategories')->orderBy('position')->get();
         });
     }
     public static function getRequestData($request): array
     {
         $data = [
+            'main_category'   => $request->main_category,
             'position'        => $request->position,
             'creator_user_id' => Auth::user()->id
         ];
@@ -129,5 +130,15 @@ class Category extends Model implements TranslatableContract, ImageModelInterfac
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');
+    }
+
+    public function mainCategory(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'main_category', 'id');
+    }
+
+    public function subCategories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'main_category');
     }
 }

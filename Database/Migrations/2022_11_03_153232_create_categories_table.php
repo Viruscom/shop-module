@@ -15,6 +15,7 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
+            $table->integer('main_category')->nullable()->default(null);
             $table->boolean('active')->default(true);
             $table->integer('position');
             $table->string('filename')->nullable()->default(null);

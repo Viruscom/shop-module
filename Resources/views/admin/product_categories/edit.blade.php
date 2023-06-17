@@ -33,6 +33,13 @@
                 </div>
             </div>
         </div>
+        @if(!is_null($category->main_category))
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3>@lang('shop::admin.product_categories.edit_sub_category_to'): <strong>{{ $category->mainCategory->title }}</strong></h3>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-warning"><strong>Внимание! </strong>Промяната на загланието (името) или на активността (видимостта) на марката ще се отрази в sitemap-a на сайта и може да доведе до промени в индексирането на Вашия сайт от търсачките.</div>

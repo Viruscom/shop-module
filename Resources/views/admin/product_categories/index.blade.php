@@ -4,6 +4,13 @@
     @include('admin.notify')
     @include('admin.partials.index.top_search_with_mass_buttons', ['mainRoute' => Request::segment(3)])
 
+    @if(isset($mainCategory))
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>@lang('shop::admin.product_categories.sub_categories_to'): <strong>{{ $mainCategory->title }}</strong></h3>
+            </div>
+        </div>
+    @endif
     <div class="row">
         <div class="col-xs-12">
             <div class="table-responsive">
@@ -32,6 +39,8 @@
                                     {{ $category->title }}
                                 </td>
                                 <td class="pull-right">
+                                    <a class="btn purple-a" href="{{ route('admin.product-categories.sub-categories.index', ['id' => $category->id]) }}" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.product_categories.show_sub_categories')"><i class="fa fa-bars"></i></a>
+
                                     @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $categories, 'model' => $category, 'showInPublicModal' => false])
                                 </td>
                             </tr>

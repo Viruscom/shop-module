@@ -7,9 +7,6 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Helpers\SeoHelper;
 use App\Interfaces\Models\ImageModelInterface;
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Shop\Entities\Settings\VatCategory;
-use Modules\Shop\Models\Admin\Products\ProductAdditionalField;
 use App\Models\Seo;
 use App\Traits\CommonActions;
 use App\Traits\HasGallery;
@@ -18,10 +15,12 @@ use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Modules\Shop\Entities\Settings\VatCategory;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\ShopDiscounts\Entities\Discount;
@@ -59,11 +58,11 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ADMIN);
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_FRONT);
-        cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_ADMIN, config('default.app.cache.ttl_seconds'), function () {
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ADMIN, function () {
             return self::with('category')->with('brand')->withTranslation()->with('translations')->orderBy('position')->get();
         });
 
-        cache()->remember(CacheKeysHelper::$SHOP_PRODUCT_FRONT, config('default.app.cache.ttl_seconds'), function () {
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_FRONT, function () {
             return self::with('category')->with('brand')->active(true)->orderBy('position')->with('translations')->get();
         });
     }
@@ -236,23 +235,28 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         }
         if (!is_null($countryId)) {
             $vatCategory = $this->getVatCategory($countryId);
-            if (!is_null($vatCategory)){
-                if(!is_null($city)){
-                    $cityVatCategory = $vatCategory->cityVatCategories->where('city_id',$city->id)->first();
-                    if(!is_null($cityVatCategory)){
+            if (!is_null($vatCategory)) {
+                if (!is_null($city)) {
+                    $cityVatCategory = $vatCategory->cityVatCategories->where('city_id', $city->id)->first();
+                    if (!is_null($cityVatCategory)) {
                         return $cityVatCategory->vat;
-                    }else{
-                        $stateVatCategory = $vatCategory->stateVatCategories->where('state_id',$city->state_id)->first();
-                        if(!is_null($stateVatCategory)){
+                    } else {
+                        $stateVatCategory = $vatCategory->stateVatCategories->where('state_id', $city->state_id)->first();
+                        if (!is_null($stateVatCategory)) {
                             return $stateVatCategory->vat;
                         }
                     }
                 }
+
                 return $vatCategory->vat;
             }
         }
 
         return self::getDefaultVat($country, $city);
+    }
+    public function getVatCategory($countryId): Collection
+    {
+        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
     }
     private static function getDefaultVat($country, $city)
     {
@@ -283,12 +287,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         //        Go to Shop Model
     }
-
     public function getAnnounce(): string
     {
         return Str::limit($this->announce, 255, ' ...');
     }
-
     public function getPrice()
     {
         return number_format($this->price, 2, '.', '');
@@ -333,7 +335,6 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
     }
-
     public function seo($languageSlug)
     {
         $seo = $this->seoFields;
@@ -342,28 +343,19 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         }
         SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
     }
-
     public function isNewProduct(): bool
     {
         return (boolean)$this->is_new;
     }
-
     public function isPromoProduct(): bool
     {
         return (boolean)$this->is_promo;
     }
-
     public function isInCollection(): bool
     {
         //TODO: Make collection check
         return false;
     }
-
-    public function getUrl($languageSlug)
-    {
-        return url($languageSlug . '/' . $this->url);
-    }
-
     public function additionalFields(): HasMany
     {
         return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
@@ -386,7 +378,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $previousProduct->getUrl($languageSlug);
     }
-
+    public function getUrl($languageSlug)
+    {
+        return url($languageSlug . '/' . $this->url);
+    }
     public function getNextProductUrl($languageSlug)
     {
         $query       = $this->category->products();
@@ -401,9 +396,5 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         }
 
         return $nextProduct->getUrl($languageSlug);
-    }
-    public function getVatCategory($countryId): Collection
-    {
-        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
     }
 }

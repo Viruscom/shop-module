@@ -7,6 +7,7 @@
     <script>
         $(document).ready(function () {
             $(".select2").select2({language: "bg"});
+            $('.select2').css('min-width', '100%');
         });
     </script>
 @endsection
@@ -17,12 +18,13 @@
         <div class="form-group">
             <label class="control-label page-label col-md-3"><span class="text-purple">* </span>Категория:</label>
             <div class="col-md-4">
-                <select class="form-control select2 products-select" name="category_id">
-                    <option value="">@lang('admin.common.please_select')</option>
-                    @foreach($categories as $category)
-                        <option value="{{ route('admin.products.index_by_category', ['category_id' => $category->id]) }}">{{ $category->title }}</option>
+                <select class="form-control select2 products-select select2-hidden-accessible" name="category_id" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                    <option value="" data-select2-id="3">@lang('admin.common.please_select')</option>
+                    @foreach($categories as $index => $category)
+                        @include('shop::admin.products.categories_options', ['category' => $category, 'depth' => [$index + 1]])
                     @endforeach
                 </select>
+
             </div>
         </div>
     </div>

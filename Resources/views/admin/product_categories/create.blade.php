@@ -25,9 +25,17 @@
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="position" value="{{old('position')}}">
+            <input type="hidden" name="main_category" value="{{ isset($mainCategory) ? $mainCategory->id : null }}">
 
             @include('admin.partials.on_create.form_actions_top')
         </div>
+        @if(isset($mainCategory))
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3>@lang('shop::admin.product_categories.add_sub_category_to'): <strong>{{ $mainCategory->title }}</strong></h3>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs">

@@ -8,6 +8,7 @@
     <script src="{{ asset('admin/plugins/ckeditor/ckeditor.js') }}"></script>
     <script>
         $(".select2").select2({language: "bg"});
+        $('.select2').css('min-width', '100%');
         var focusedEditor;
         CKEDITOR.timestamp = new Date();
         CKEDITOR.on('instanceReady', function (evt) {
@@ -37,9 +38,10 @@
                 <div class="form-group">
                     <label class="control-label page-label col-md-3"><span class="text-purple">* </span>@lang('shop::admin.products.attach_to_category'):</label>
                     <div class="col-md-5">
-                        <select class="form-control select2 inner-page-products-select" name="category_id">
-                            @foreach($productCategories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id')===$category->id ? 'selected': '' }}>  {{ $category->title }}</option>
+                        <select class="form-control select2 products-select select2-hidden-accessible" name="category_id" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                            <option value="" data-select2-id="3">@lang('admin.common.please_select')</option>
+                            @foreach($productCategories as $index => $category)
+                                @include('shop::admin.products.categories_options_integer_value', ['category' => $category, 'depth' => [$index + 1]])
                             @endforeach
                         </select>
                     </div>
@@ -122,13 +124,10 @@
 
                             <div class="row">
                                 <hr>
-                                <div class="col-md-12">
-                                    @include('admin.partials.on_create.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
-
-                                </div>
                             </div>
 
                             <div class="col-md-6 p-r-30">
+                                @include('admin.partials.on_create.form_fields.select', ['fieldName' => 'brand_id', 'label' => trans('shop::admin.products.brand'), 'models' => $brands, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
                                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'supplier_delivery_price', 'label' => trans('shop::admin.products.supplier_delivery_price'), 'required' => true, 'class' => 'width-p100'])
                                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100'])
                                 @include('admin.partials.on_create.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: 1, 'min' => 1, 'max'=> 999999999999])

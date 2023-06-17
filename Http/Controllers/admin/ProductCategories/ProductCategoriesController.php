@@ -8,7 +8,6 @@ use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PositionInterface;
-use App\Models\CategoryPage\CategoryPage;
 use Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,6 +36,10 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
 
         $productCategory->storeAndAddNew($request);
 
+        if (!is_null($productCategory->main_category)) {
+            return redirect()->route('admin.product-categories.sub-categories.index', ['id' => $productCategory->main_category])->with('success-message', trans('admin.common.successful_create'));
+        }
+
         return redirect()->route('admin.product-categories.index')->with('success-message', trans('admin.common.successful_create'));
     }
     public function create()
@@ -62,7 +65,42 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
     {
         if (!is_null($request->ids[0])) {
-            $action->deleteMultiple($request, Category::class);
+            $ids = array_map('intval', explode(',', $request->ids[0]));
+            foreach ($ids as $id) {
+                $model = Category::find($id);
+                if (is_null($model)) {
+                    continue;
+                }
+
+                if ($model->subCategories->isNotEmpty()) {
+                    return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_sub_categories']);
+                }
+                if ($model->products->isNotEmpty()) {
+                    return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_products']);
+                }
+
+                if ($model->existsFile($model->filename)) {
+                    $model->deleteFile($model->filename);
+                }
+
+                if (is_null($model->main_category)) {
+                    $action->deleteFromUrlCache($model);
+                    $action->delete(Category::class, $model);
+                } else {
+                    $modelsToUpdate = Category::where('main_category', $model->main_category)->where('position', '>', $model->position)->get();
+                    if (method_exists(get_class($model), 'seoFields')) {
+                        $model->seoFields()->delete();
+                    }
+
+                    $action->deleteFromUrlCache($model);
+                    $model->delete();
+                    foreach ($modelsToUpdate as $currentModel) {
+                        $currentModel->update(['position' => $currentModel->position - 1]);
+                    }
+                }
+            }
+
+            Category::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
@@ -74,10 +112,55 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
         $productCategory = Category::find($id);
         MainHelper::goBackIfNull($productCategory);
 
-        $action->deleteFromUrlCache($productCategory);
-        $action->delete(Category::class, $productCategory);
+        if ($productCategory->subCategories->isNotEmpty()) {
+            return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_sub_categories']);
+        }
+        if ($productCategory->products->isNotEmpty()) {
+            return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_products']);
+        }
+
+        if (is_null($productCategory->main_category)) {
+            $action->deleteFromUrlCache($productCategory);
+            $action->delete(Category::class, $productCategory);
+        } else {
+            $modelsToUpdate = Category::where('main_category', $productCategory->main_category)->where('position', '>', $productCategory->position)->get();
+            if (method_exists(get_class($productCategory), 'seoFields')) {
+                $productCategory->seoFields()->delete();
+            }
+
+            $action->deleteFromUrlCache($productCategory);
+            $productCategory->delete();
+            foreach ($modelsToUpdate as $currentModel) {
+                $currentModel->update(['position' => $currentModel->position - 1]);
+            }
+
+            Category::cacheUpdate();
+        }
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');
+    }
+    public function update($id, ProductCategoryUpdateRequest $request, CommonControllerAction $action): RedirectResponse
+    {
+        $productCategory = Category::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($productCategory);
+
+        $request['main_category'] = $productCategory->main_category;
+        $action->doSimpleUpdate(Category::class, CategoryTranslation::class, $productCategory, $request);
+        $action->updateUrlCache($productCategory, CategoryTranslation::class);
+        $action->updateSeo($request, $productCategory, 'Category');
+
+        if ($request->has('image')) {
+            $request->validate(['image' => Category::getFileRules()], [Category::getUserInfoMessage()]);
+            $productCategory->saveFile($request->image);
+        }
+
+        Category::cacheUpdate();
+
+        if (!is_null($productCategory->main_category)) {
+            return redirect()->route('admin.product-categories.sub-categories.index', ['id' => $productCategory->main_category])->with('success-message', trans('admin.common.successful_create'));
+        }
+
+        return redirect()->route('admin.product-categories.index')->with('success-message', 'admin.common.successful_edit');
     }
     public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
     {
@@ -96,30 +179,21 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
-    public function update($id, ProductCategoryUpdateRequest $request, CommonControllerAction $action): RedirectResponse
-    {
-        $productCategory = Category::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($productCategory);
-
-        $action->doSimpleUpdate(Category::class, CategoryTranslation::class, $productCategory, $request);
-        $action->updateUrlCache($productCategory, CategoryTranslation::class);
-        $action->updateSeo($request, $productCategory, 'Category');
-
-        if ($request->has('image')) {
-            $request->validate(['image' => Category::getFileRules()], [Category::getUserInfoMessage()]);
-            $productCategory->saveFile($request->image);
-        }
-
-        Category::cacheUpdate();
-
-        return redirect()->route('admin.product-categories.index')->with('success-message', 'admin.common.successful_edit');
-    }
     public function positionUp($id, CommonControllerAction $action): RedirectResponse
     {
         $productCategory = Category::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($productCategory);
 
-        $action->positionUp(Category::class, $productCategory);
+        if (is_null($productCategory->main_category)) {
+            $action->positionUp(Category::class, $productCategory);
+        } else {
+            $previousModel = Category::where('main_category', $productCategory->main_category)->where('position', $productCategory->position - 1)->first();
+            if (!is_null($previousModel)) {
+                $previousModel->update(['position' => $previousModel->position + 1]);
+                $productCategory->update(['position' => $productCategory->position - 1]);
+            }
+        }
+
         Category::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
@@ -130,7 +204,16 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
         $productCategory = Category::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($productCategory);
 
-        $action->positionDown(Category::class, $productCategory);
+        if (is_null($productCategory->main_category)) {
+            $action->positionDown(Category::class, $productCategory);
+        } else {
+            $nextModel = Category::where('main_category', $productCategory->main_category)->where('position', $productCategory->position + 1)->first();
+            if (!is_null($nextModel)) {
+                $nextModel->update(['position' => $nextModel->position - 1]);
+                $productCategory->update(['position' => $productCategory->position + 1]);
+            }
+        }
+
         Category::cacheUpdate();
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
@@ -145,5 +228,28 @@ class ProductCategoriesController extends Controller implements ShopProductCateg
         }
 
         return redirect()->back()->withErrors(['admin.image_not_found']);
+    }
+
+    public function subCategoriesIndex($id)
+    {
+        $productCategory = Category::find($id);
+        MainHelper::goBackIfNull($productCategory);
+
+        $categories = Category::where('main_category', $productCategory->id)->with('translations')->orderBy('position')->get();
+
+        return view('shop::admin.product_categories.index', ['categories' => $categories, 'mainCategory' => $productCategory]);
+    }
+
+    public function subCategoriesCreate($id)
+    {
+        $productCategory = Category::find($id);
+        MainHelper::goBackIfNull($productCategory);
+
+        return view('shop::admin.product_categories.create', [
+            'languages'     => LanguageHelper::getActiveLanguages(),
+            'fileRulesInfo' => Category::getUserInfoMessage(),
+            'categories'    => Category::where('main_category', $productCategory->id)->with('translations')->orderBy('position')->get(),
+            'mainCategory'  => $productCategory
+        ]);
     }
 }

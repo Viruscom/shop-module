@@ -19,7 +19,7 @@ class Language extends Model
     public static function updateCache()
     {
         cache()->forget('activeLanguages');
-        cache()->remember('activeLanguages', config('default.app.cache.ttl_seconds'), function () {
+        cache()->rememberForever('activeLanguages', function () {
             return Language::where('active', true)->get();
         });
     }
