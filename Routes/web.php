@@ -8,6 +8,7 @@ use Modules\Shop\Http\Controllers\admin\Brands\BrandController;
 use Modules\Shop\Http\Controllers\admin\Orders\Documents\OrderDocumentController;
 use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
 use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
+use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributesController;
 use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
@@ -393,6 +394,46 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
     });
 
+    /* Product attributes */
+    Route::group(['prefix' => 'product_attributes'], static function () {
+        Route::get('/', [ProductAttributesController::class, 'index'])->name('admin.product-attributes.index');
+        Route::get('/create', [ProductAttributesController::class, 'create'])->name('admin.product-attributes.create');
+        Route::post('/store', [ProductAttributesController::class, 'store'])->name('admin.product-attributes.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [ProductAttributesController::class, 'activeMultiple'])->name('admin.product-attributes.active-multiple');
+            Route::get('delete', [ProductAttributesController::class, 'deleteMultiple'])->name('admin.product-attributes.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [ProductAttributesController::class, 'edit'])->name('admin.product-attributes.edit');
+            Route::post('update', [ProductAttributesController::class, 'update'])->name('admin.product-attributes.update');
+            Route::get('delete', [ProductAttributesController::class, 'delete'])->name('admin.product-attributes.delete');
+            Route::get('show', [ProductAttributesController::class, 'show'])->name('admin.product-attributes.show');
+            Route::get('/active/{active}', [ProductAttributesController::class, 'active'])->name('admin.product-attributes.changeStatus');
+            Route::get('position/up', [ProductAttributesController::class, 'positionUp'])->name('admin.product-attributes.position-up');
+            Route::get('position/down', [ProductAttributesController::class, 'positionDown'])->name('admin.product-attributes.position-down');
+
+            /* Product attribute values */
+            Route::group(['prefix' => 'values'], static function () {
+                Route::get('/', [ProductAttributeValuesController::class, 'index'])->name('admin.product-attribute.values.index');
+                Route::get('create', [ProductAttributeValuesController::class, 'create'])->name('admin.product-attribute.values.create');
+                Route::post('store', [ProductAttributeValuesController::class, 'store'])->name('admin.product-attribute.values.store');
+
+                Route::group(['prefix' => 'multiple'], static function () {
+                    Route::get('delete', [ProductAttributeValuesController::class, 'deleteMultiple'])->name('admin.product-attribute.values.delete-multiple');
+                });
+
+                Route::group(['prefix' => '{id}'], static function () {
+                    Route::get('edit', [ProductAttributeValuesController::class, 'edit'])->name('admin.product-attribute.values.edit');
+                    Route::post('update', [ProductAttributeValuesController::class, 'update'])->name('admin.product-attribute.values.update');
+                    Route::get('delete', [ProductAttributeValuesController::class, 'delete'])->name('admin.product-attribute.values.delete');
+                    Route::get('position/up', [ProductAttributeValuesController::class, 'positionUp'])->name('admin.product-attribute.values.position-up');
+                    Route::get('position/down', [ProductAttributeValuesController::class, 'positionDown'])->name('admin.product-attribute.values.position-down');
+                });
+            });
+        });
+    });
     /* Product characteristics */
     Route::group(['prefix' => 'product_characteristics'], static function () {
         Route::get('/', [ProductCharacteristicsController::class, 'index'])->name('admin.products.characteristics.index');
