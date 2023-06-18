@@ -13,19 +13,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Shop\Http\Requests\ProductCategoryStoreRequest;
 use Modules\Shop\Http\Requests\ProductCategoryUpdateRequest;
-use Modules\Shop\Interfaces\ShopProductCategoryInterface;
+use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\Shop\Models\Admin\ProductCategory\CategoryTranslation;
 
-class ProductAttributeValuesController extends Controller implements ShopProductCategoryInterface, PositionInterface
+class ProductAttributeValuesController extends Controller implements PositionInterface
 {
-    public function index()
+    public function index($id)
     {
-        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN))) {
+        $productAttribute = ProductAttribute::find($id);
+        MainHelper::goBackIfNull($productAttribute);
+
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_ADMIN))) {
             Category::cacheUpdate();
         }
 
-        return view('shop::admin.product_categories.index', ['categories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN)]);
+        return view('shop::admin.product_attributes.values.index', ['categories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_ADMIN)]);
     }
     public function store(ProductCategoryStoreRequest $request, CommonControllerAction $action): RedirectResponse
     {

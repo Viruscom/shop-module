@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'shop'                    =>
+    'shop'                     =>
         array(
             'index'          => 'Магазин',
             'create'         => 'Добавяне на',
@@ -9,14 +9,14 @@ return array(
             'settings_index' => 'Магазин настройки',
             'dashboard'      => 'Табло',
         ),
-    'common'                  =>
+    'common'                   =>
         array(
             'number'  => '№',
             'type'    => 'Тип',
             'title'   => 'Заглавие',
             'actions' => 'Действия',
         ),
-    'products'                =>
+    'products'                 =>
         array(
             'index'                                      => 'Продукти',
             'create'                                     => 'Добавяне на продукт',
@@ -57,7 +57,7 @@ return array(
             'length_max'                                 => 'Полето за дължина трябва да е максимум 99999.99',
             'price_greater_than_supplier_delivery_price' => 'Цената трябва да е по-голяма от цената за доставка на доставчика.',
         ),
-    'product_adboxes'         =>
+    'product_adboxes'          =>
         array(
             'index'                         => 'Продуктови карета',
             'create'                        => 'Добавяне на каре',
@@ -68,7 +68,7 @@ return array(
             'waiting_action'                => 'Продуктови карета очакващи действие',
             'product_ad_box_already_exists' => 'Продуктовото каре вече съществува',
         ),
-    'product_categories'      =>
+    'product_categories'       =>
         array(
             'index'                                => 'Категории',
             'create'                               => 'Добавяне на категория',
@@ -81,44 +81,51 @@ return array(
             'add_sub_category_to'                  => 'Добавяне на подкатегория към',
             'edit_sub_category_to'                 => 'Редактиране на подкатегория към',
         ),
-    'product_brands'          =>
+    'product_brands'           =>
         array(
             'index'      => 'Марки',
             'create'     => 'Добавяне на марка',
             'edit'       => 'Редактиране на марка',
             'no_records' => 'Няма намерени марки',
         ),
-    'product_attributes'      =>
+    'product_attributes'       =>
         array(
-            'index'      => 'Атрибути',
-            'create'     => 'Добавяне на атрибути',
-            'edit'       => 'Редактиране на атрибути',
-            'no_records' => 'Няма намерени атрибути',
+            'index'          => 'Атрибути',
+            'create'         => 'Добавяне на атрибути',
+            'edit'           => 'Редактиране на атрибути',
+            'no_records'     => 'Няма намерени атрибути',
+            'values_tooltip' => 'Стойности на атрибута'
         ),
-    'product_characteristics' =>
+    'product_attribute_values' => array(
+        'index'      => 'Стойности на атрибути',
+        'create'     => 'Добавяне на стойност към атрибут',
+        'edit'       => 'Редактиране на стойност към атрибут',
+        'no_records' => 'Няма намерени стойности към атрибута',
+    ),
+    'product_characteristics'  =>
         array(
             'index'            => 'Характеристики',
             'create'           => 'Добавяне на характеристика',
             'edit'             => 'Резактиране на характеристика',
             'no_records_found' => 'Няма намерени продуктови характеристики'
         ),
-    'product_combinations'    =>
+    'product_combinations'     =>
         array(
             'index' => 'Комбинации',
         ),
-    'product_collections'     =>
+    'product_collections'      =>
         array(
             'index' => 'Колекции',
         ),
-    'product_stocks'          =>
+    'product_stocks'           =>
         array(
             'index' => 'Наличности',
         ),
-    'abandoned_baskets'       =>
+    'abandoned_baskets'        =>
         array(
             'index' => 'Изоставени колички',
         ),
-    'orders'                  =>
+    'orders'                   =>
         array(
             'index'           => 'Поръчки',
             'no_orders_found' => 'Няма намерени поръчки',
@@ -128,15 +135,15 @@ return array(
             'payment'         => 'Метод на плащане',
             'ordered_on_date' => 'Регистрирана на',
         ),
-    'returned_products'       =>
+    'returned_products'        =>
         array(
             'index' => 'Върнати продукти',
         ),
-    'product_gifts'           =>
+    'product_gifts'            =>
         array(
             'index' => 'Подаръци',
         ),
-    'registered_users'        =>
+    'registered_users'         =>
         array(
             'index'                    => 'Рег. потребители',
             'create'                   => 'Добавяне на потребител',
@@ -217,16 +224,16 @@ return array(
             'city_id_exists'           => 'Избраният град не съществува.',
             'zip_code_required'        => 'Полето за пощенски код е задължително.',
         ),
-    'favorite_products'       => array(
+    'favorite_products'        => array(
         'index'      => 'Любими продукти',
         'no_records' => 'Няма добавени любими продукти',
         'for_user'   => 'за потребител',
     ),
-    'h18_reports'             =>
+    'h18_reports'              =>
         array(
             'index' => 'Н-18 отчети',
         ),
-    'discounts'               =>
+    'discounts'                =>
         array(
             'index'                    => 'Отстъпки',
             'edit'                     => 'Редактиране на отстъпка',
@@ -266,11 +273,11 @@ return array(
             'quantity_price'           => 'Цена',
             'for_product'              => 'За продукт',
         ),
-    'shop_settings'           =>
+    'shop_settings'            =>
         array(
             'index' => 'Магазин настройки',
         ),
-    'main_settings'           =>
+    'main_settings'            =>
         array(
             'warning'                => '<strong>Внимание!</strong><br><span>Всяко действие в настройките може да доведе до каскадни промени. Ако сте обучен за работа с тази част от магазина, моля, продължете.</span>',
             'index'                  => 'Основни настройки',
@@ -286,7 +293,7 @@ return array(
             'country_id_invalid'     => 'Невалидно ID на държава.',
             'country_not_exists'     => 'Избраната държава не съществува.',
         ),
-    'payments'                =>
+    'payments'                 =>
         array(
             'index'          => 'Плащания',
             'position'       => 'Позиция',
@@ -294,15 +301,15 @@ return array(
             'status'         => 'Статус',
             'no-payments'    => 'Няма добавени разплащателни системи',
         ),
-    'deliveries'              =>
+    'deliveries'               =>
         array(
             'index' => 'Доставки',
         ),
-    'post_codes'              =>
+    'post_codes'               =>
         array(
             'index' => 'Пощенски кодове',
         ),
-    'vats'                    =>
+    'vats'                     =>
         array(
             'index' => 'ДДС ставки',
         ),
