@@ -90,7 +90,10 @@ return array(
         ),
     'product_attributes'      =>
         array(
-            'index' => 'Атрибути',
+            'index'      => 'Атрибути',
+            'create'     => 'Добавяне на атрибути',
+            'edit'       => 'Редактиране на атрибути',
+            'no_records' => 'Няма намерени атрибути',
         ),
     'product_characteristics' =>
         array(

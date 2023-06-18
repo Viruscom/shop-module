@@ -8,51 +8,66 @@ use App\Helpers\LanguageHelper;
 use App\Helpers\MainHelper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PositionInterface;
+use App\Models\ProductCategory;
 use Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Modules\Shop\Http\Requests\ProductCategoryStoreRequest;
-use Modules\Shop\Http\Requests\ProductCategoryUpdateRequest;
-use Modules\Shop\Interfaces\ShopProductCategoryInterface;
+use Modules\Shop\Http\Requests\ProductAttributeStoreRequest;
+use Modules\Shop\Http\Requests\ProductAttributeUpdateRequest;
+use Modules\Shop\Interfaces\ShopProductAttributeInterface;
+use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
+use Modules\Shop\Models\Admin\ProductAttribute\ProductAttributePivot;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\Shop\Models\Admin\ProductCategory\CategoryTranslation;
 
-class ProductAttributesController extends Controller implements ShopProductCategoryInterface, PositionInterface
+class ProductAttributesController extends Controller implements ShopProductAttributeInterface, PositionInterface
 {
     public function index()
     {
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN))) {
+            ProductAttribute::cacheUpdate();
+        }
+
+        return view('shop::admin.product_attributes.index', ['productAttributes' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN)]);
+    }
+    public function store(ProductAttributeStoreRequest $request, CommonControllerAction $action): RedirectResponse
+    {
+        $productAttribute = $action->doSimpleCreate(ProductAttribute::class, $request);
+
+        if ($request->has('productCategories')) {
+            foreach ($request->productCategories as $key => $productCategoryId) {
+                ProductAttributePivot::create([
+                                                  'pattr_id'            => $productAttribute->id,
+                                                  'product_category_id' => $productCategoryId
+                                              ]);
+            }
+        }
+
+        ProductAttribute::cacheUpdate();
+
+        $productAttribute->storeAndAddNew($request);
+
+        return redirect()->route('admin.product-attributes.index')->with('success-message', trans('admin.common.successful_create'));
+    }
+    public function create()
+    {
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN))) {
+            ProductAttribute::cacheUpdate();
+        }
         if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN))) {
             Category::cacheUpdate();
         }
 
-        return view('shop::admin.product_categories.index', ['categories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN)]);
-    }
-    public function store(ProductCategoryStoreRequest $request, CommonControllerAction $action): RedirectResponse
-    {
-        $productCategory = $action->doSimpleCreate(Category::class, $request);
-        $action->updateUrlCache($productCategory, CategoryTranslation::class);
-        $action->storeSeo($request, $productCategory, 'Category');
-        Category::cacheUpdate();
-
-        $productCategory->storeAndAddNew($request);
-
-        if (!is_null($productCategory->main_category)) {
-            return redirect()->route('admin.product-categories.sub-categories.index', ['id' => $productCategory->main_category])->with('success-message', trans('admin.common.successful_create'));
-        }
-
-        return redirect()->route('admin.product-categories.index')->with('success-message', trans('admin.common.successful_create'));
-    }
-    public function create()
-    {
-        return view('shop::admin.product_categories.create', [
-            'languages'     => LanguageHelper::getActiveLanguages(),
-            'fileRulesInfo' => Category::getUserInfoMessage(),
-            'categories'    => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN)
+        return view('shop::admin.product_attributes.create', [
+            'languages'         => LanguageHelper::getActiveLanguages(),
+            'fileRulesInfo'     => Category::getUserInfoMessage(),
+            'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
+            'characteristics'   => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN)
         ]);
     }
     public function edit($id)
     {
-        $productCategory = Category::whereId($id)->with('translations')->first();
+        $productCategory = ProductAttribute::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($productCategory);
 
         return view('shop::admin.product_categories.edit', [
@@ -62,45 +77,30 @@ class ProductAttributesController extends Controller implements ShopProductCateg
             'fileRulesInfo' => Category::getUserInfoMessage()
         ]);
     }
+    public function positionUp($id, CommonControllerAction $action): RedirectResponse
+    {
+        $productCharacteristic = ProductAttribute::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($productCharacteristic);
+
+        $action->positionUp(ProductAttribute::class, $productCharacteristic);
+        ProductAttribute::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function positionDown($id, CommonControllerAction $action): RedirectResponse
+    {
+        $productCharacteristic = ProductAttribute::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($productCharacteristic);
+
+        $action->positionDown(ProductAttribute::class, $productCharacteristic);
+        ProductAttribute::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
     {
         if (!is_null($request->ids[0])) {
-            $ids = array_map('intval', explode(',', $request->ids[0]));
-            foreach ($ids as $id) {
-                $model = Category::find($id);
-                if (is_null($model)) {
-                    continue;
-                }
-
-                if ($model->subCategories->isNotEmpty()) {
-                    return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_sub_categories']);
-                }
-                if ($model->products->isNotEmpty()) {
-                    return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_products']);
-                }
-
-                if ($model->existsFile($model->filename)) {
-                    $model->deleteFile($model->filename);
-                }
-
-                if (is_null($model->main_category)) {
-                    $action->deleteFromUrlCache($model);
-                    $action->delete(Category::class, $model);
-                } else {
-                    $modelsToUpdate = Category::where('main_category', $model->main_category)->where('position', '>', $model->position)->get();
-                    if (method_exists(get_class($model), 'seoFields')) {
-                        $model->seoFields()->delete();
-                    }
-
-                    $action->deleteFromUrlCache($model);
-                    $model->delete();
-                    foreach ($modelsToUpdate as $currentModel) {
-                        $currentModel->update(['position' => $currentModel->position - 1]);
-                    }
-                }
-            }
-
-            Category::cacheUpdate();
+            $action->deleteMultiple($request, ProductAttribute::class);
 
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
@@ -109,37 +109,31 @@ class ProductAttributesController extends Controller implements ShopProductCateg
     }
     public function delete($id, CommonControllerAction $action): RedirectResponse
     {
-        $productCategory = Category::find($id);
-        MainHelper::goBackIfNull($productCategory);
+        $productCharacteristic = ProductAttribute::where('id', $id)->first();
+        MainHelper::goBackIfNull($productCharacteristic);
 
-        if ($productCategory->subCategories->isNotEmpty()) {
-            return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_sub_categories']);
-        }
-        if ($productCategory->products->isNotEmpty()) {
-            return back()->withErrors(['shop::admin.product_categories.error_cant_delete_has_products']);
-        }
-
-        if (is_null($productCategory->main_category)) {
-            $action->deleteFromUrlCache($productCategory);
-            $action->delete(Category::class, $productCategory);
-        } else {
-            $modelsToUpdate = Category::where('main_category', $productCategory->main_category)->where('position', '>', $productCategory->position)->get();
-            if (method_exists(get_class($productCategory), 'seoFields')) {
-                $productCategory->seoFields()->delete();
-            }
-
-            $action->deleteFromUrlCache($productCategory);
-            $productCategory->delete();
-            foreach ($modelsToUpdate as $currentModel) {
-                $currentModel->update(['position' => $currentModel->position - 1]);
-            }
-
-            Category::cacheUpdate();
-        }
+        $action->delete(ProductAttribute::class, $productCharacteristic);
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
-    public function update($id, ProductCategoryUpdateRequest $request, CommonControllerAction $action): RedirectResponse
+    public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
+    {
+        $action->activeMultiple(ProductAttribute::class, $request, $active);
+        ProductAttribute::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function active($id, $active): RedirectResponse
+    {
+        $productCharacteristic = ProductAttribute::find($id);
+        MainHelper::goBackIfNull($productCharacteristic);
+
+        $productCharacteristic->update(['active' => $active]);
+        ProductAttribute::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function update($id, ProductAttributeUpdateRequest $request, CommonControllerAction $action): RedirectResponse
     {
         $productCategory = Category::whereId($id)->with('translations')->first();
         MainHelper::goBackIfNull($productCategory);
@@ -162,74 +156,6 @@ class ProductAttributesController extends Controller implements ShopProductCateg
 
         return redirect()->route('admin.product-categories.index')->with('success-message', 'admin.common.successful_edit');
     }
-    public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
-    {
-        $action->activeMultiple(Category::class, $request, $active);
-        Category::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function active($id, $active): RedirectResponse
-    {
-        $productCategory = Category::find($id);
-        MainHelper::goBackIfNull($productCategory);
-
-        $productCategory->update(['active' => $active]);
-        Category::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function positionUp($id, CommonControllerAction $action): RedirectResponse
-    {
-        $productCategory = Category::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($productCategory);
-
-        if (is_null($productCategory->main_category)) {
-            $action->positionUp(Category::class, $productCategory);
-        } else {
-            $previousModel = Category::where('main_category', $productCategory->main_category)->where('position', $productCategory->position - 1)->first();
-            if (!is_null($previousModel)) {
-                $previousModel->update(['position' => $previousModel->position + 1]);
-                $productCategory->update(['position' => $productCategory->position - 1]);
-            }
-        }
-
-        Category::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-
-    public function positionDown($id, CommonControllerAction $action): RedirectResponse
-    {
-        $productCategory = Category::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($productCategory);
-
-        if (is_null($productCategory->main_category)) {
-            $action->positionDown(Category::class, $productCategory);
-        } else {
-            $nextModel = Category::where('main_category', $productCategory->main_category)->where('position', $productCategory->position + 1)->first();
-            if (!is_null($nextModel)) {
-                $nextModel->update(['position' => $nextModel->position - 1]);
-                $productCategory->update(['position' => $productCategory->position + 1]);
-            }
-        }
-
-        Category::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function deleteImage($id, CommonControllerAction $action): RedirectResponse
-    {
-        $productCategory = Category::find($id);
-        MainHelper::goBackIfNull($productCategory);
-
-        if ($action->imageDelete($productCategory, Category::class)) {
-            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
-        }
-
-        return redirect()->back()->withErrors(['admin.image_not_found']);
-    }
-
     public function subCategoriesIndex($id)
     {
         $productCategory = Category::find($id);

@@ -60,6 +60,20 @@
                         <span>Мерни единици</span>
                     </a>
                 </div>
+
+                <div>
+                    <a href="{{ route('vats.countries.index') }}">
+                        <i class="fas fa-balance-scale-right fa-5x"></i>
+                        <span>Поръчки - статуси на изпълнение</span>
+                    </a>
+                </div>
+
+                <div>
+                    <a href="{{ route('vats.countries.index') }}">
+                        <i class="fas fa-balance-scale-right fa-5x"></i>
+                        <span>Поръчки - статуси на плащане</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

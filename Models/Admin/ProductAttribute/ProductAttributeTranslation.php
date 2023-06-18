@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductAttributeTranslation extends Model
 {
     protected $table    = "product_attribute_translation";
-    protected $fillable = ['language_id', 'product_attribute_id', 'title'];
-    public static function getCreateData($language, $request): array
-    {
-        $data = [
-            'language_id' => $language->id,
-            'title'       => $request['title_' . $language->code]
-        ];
+    protected $fillable = ['language_id', 'pattr_id', 'title'];
 
-        return $data;
+    public static function getLanguageArray($language, $request, $modelId, $isUpdate): array
+    {
+        return [
+            'locale' => $language->code,
+            'title'  => $request['title_' . $language->code],
+        ];
     }
     public function productAttribute(): BelongsTo
     {

@@ -2,32 +2,26 @@
 
 namespace Modules\Shop\Models\Admin\ProductAttribute;
 
-use App\Classes\LanguageHelper;
-use Cache;
+use App\Helpers\CacheKeysHelper;
+use App\Helpers\LanguageHelper;
+use App\Traits\CommonActions;
+use App\Traits\Scopes;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Shop\Models\Admin\ProductCategory\Category;
 
-class ProductAttribute extends Model
+class ProductAttribute extends Model implements TranslatableContract
 {
-    protected $table    = 'product_attributes';
-    protected $fillable = ['position', 'active', 'type'];
-    public static function getCreateData($request): array
-    {
-        return self::getRequestData($request);
-    }
-    private static function getRequestData($request): array
-    {
-        $data['position'] = $request->position;
-        $data['type']     = $request->type;
-        $data['active']   = false;
-        if ($request->has('active')) {
-            $data['active'] = $request->boolean('active');
-        }
+    use Translatable, Scopes, CommonActions;
 
-        return $data;
-    }
+    public array $translatedAttributes  = ['title'];
+    protected    $table                 = 'product_attributes';
+    protected    $fillable              = ['position', 'active', 'type'];
+    protected    $translationForeignKey = 'pattr_id';
     public static function generatePosition($request): int
     {
         $cities = self::orderBy('position', 'desc')->get();
@@ -48,33 +42,29 @@ class ProductAttribute extends Model
 
         return $request['position'];
     }
-    protected static function boot(): void
+    public static function cacheUpdate()
     {
-        parent::boot();
-
-        static::created(static function () {
-            self::updateCache();
+        cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN);
+        cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_FRONT);
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_ADMIN, function () {
+            return self::with('translations')->orderBy('position')->get();
         });
 
-        static::updated(static function () {
-            self::updateCache();
-        });
-
-        static::deleted(static function () {
-            self::updateCache();
+        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTES_FRONT, function () {
+            return self::active(true)->with('translations')->orderBy('position')->get();
         });
     }
-    public static function updateCache()
+    public static function getLangArraysOnStore($data, $request, $languages, $modelId, $isUpdate)
     {
-        Cache::forget('adminProductAttributes');
+        foreach ($languages as $language) {
+            $data[$language->code] = ProductAttributeTranslation::getLanguageArray($language, $request, $modelId, $isUpdate);
+        }
 
-        return Cache::remember('adminProductAttributes', config('app.cache_ttl_seconds'), static function () {
-            return self::orderBy('position', 'asc')->with('translations', 'defaultTranslation')->get();
-        });
+        return $data;
     }
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(ProductCategory::class);
+        return $this->belongsToMany(Category::class);
     }
     public function translations(): HasMany
     {
@@ -83,6 +73,19 @@ class ProductAttribute extends Model
     public function getUpdateData($request): array
     {
         return self::getRequestData($request);
+    }
+    public static function getRequestData($request): array
+    {
+        $data = [
+            'type' => $request->type
+        ];
+
+        $data['active'] = false;
+        if ($request->has('active')) {
+            $data['active'] = filter_var($request->active, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $data;
     }
     public function updatedPosition($request)
     {
@@ -119,16 +122,11 @@ class ProductAttribute extends Model
 
         return $request['position'];
     }
-    public function defaultTranslation(): HasOne
-    {
-        $defaultLanguage = LanguageHelper::getDefaultLanguage();
 
-        return $this->hasOne(ProductAttributeTranslation::class, 'pattr_id', 'id')->where('language_id', $defaultLanguage->id);
-    }
     public function currentTranslation(): HasOne
     {
         $currentLanguage = LanguageHelper::getCurrentLanguage();
 
-        return $this->hasOne(ProductAttributeTranslation::class, 'pattr_id', 'id')->where('language_id', $currentLanguage->id);
+        return $this->hasOne(ProductAttributeTranslation::class, 'pattr_id', 'id')->where('locale', $currentLanguage->code);
     }
 }

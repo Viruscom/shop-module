@@ -9,6 +9,7 @@ use Modules\Shop\Http\Controllers\admin\Orders\Documents\OrderDocumentController
 use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
 use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributesController;
+use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributeValuesController;
 use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
@@ -395,7 +396,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
     });
 
     /* Product attributes */
-    Route::group(['prefix' => 'product_attributes'], static function () {
+    Route::group(['prefix' => 'product-attributes'], static function () {
         Route::get('/', [ProductAttributesController::class, 'index'])->name('admin.product-attributes.index');
         Route::get('/create', [ProductAttributesController::class, 'create'])->name('admin.product-attributes.create');
         Route::post('/store', [ProductAttributesController::class, 'store'])->name('admin.product-attributes.store');
@@ -424,7 +425,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                     Route::get('delete', [ProductAttributeValuesController::class, 'deleteMultiple'])->name('admin.product-attribute.values.delete-multiple');
                 });
 
-                Route::group(['prefix' => '{id}'], static function () {
+                Route::group(['prefix' => '{value_id}'], static function () {
                     Route::get('edit', [ProductAttributeValuesController::class, 'edit'])->name('admin.product-attribute.values.edit');
                     Route::post('update', [ProductAttributeValuesController::class, 'update'])->name('admin.product-attribute.values.update');
                     Route::get('delete', [ProductAttributeValuesController::class, 'delete'])->name('admin.product-attribute.values.delete');
