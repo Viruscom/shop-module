@@ -7,6 +7,7 @@
         <li>
             <a href="{{ route('admin.products.index') }}" class="text-black">{{ __('shop::admin.products.index') }}</a>
         </li>
+        
         @if(Request::segment(5) !== null && url()->current() === route('admin.products.create', ['category_id' => Request::segment(5)]))
             <li>
                 <i class="fa fa-angle-right"></i>
