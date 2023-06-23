@@ -55,7 +55,7 @@
                 </div>
 
                 <div>
-                    <a href="{{ route('measuring-units.index') }}">
+                    <a href="{{ route('admin.measuring-units.index') }}">
                         <i class="fas fa-balance-scale-right fa-5x"></i>
                         <span>{{ __('shop::admin.measure_units.index') }}</span>
                     </a>

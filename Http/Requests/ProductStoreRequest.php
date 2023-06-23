@@ -4,6 +4,7 @@ namespace Modules\Shop\Http\Requests;
 
 use App\Helpers\LanguageHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductStoreRequest extends FormRequest
 {
@@ -32,6 +33,7 @@ class ProductStoreRequest extends FormRequest
         $this->trimInput();
         $array = [
             'category_id'             => 'required',
+            'measure_unit_id'         => ['required', 'integer', Rule::exists('measure_units', 'id')],
             'brand_id'                => 'required',
             'supplier_delivery_price' => 'required',
             'price'                   => ['required', 'gt:supplier_delivery_price'],
@@ -57,19 +59,22 @@ class ProductStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'weight.regex' => trans('shop::admin.products.weight_regex'),
-            'weight.min'   => trans('shop::admin.products.weight_min'),
-            'weight.max'   => trans('shop::admin.products.weight_max'),
-            'width.regex'  => trans('shop::admin.products.width_regex'),
-            'width.min'    => trans('shop::admin.products.width_min'),
-            'width.max'    => trans('shop::admin.products.width_max'),
-            'height.regex' => trans('shop::admin.products.height_regex'),
-            'height.min'   => trans('shop::admin.products.height_min'),
-            'height.max'   => trans('shop::admin.products.height_max'),
-            'length.regex' => trans('shop::admin.products.length_regex'),
-            'length.min'   => trans('shop::admin.products.length_min'),
-            'length.max'   => trans('shop::admin.products.length_max'),
-            'price.gt'     => trans('shop::admin.products.price_greater_than_supplier_delivery_price'),
+            'weight.regex'             => trans('shop::admin.products.weight_regex'),
+            'weight.min'               => trans('shop::admin.products.weight_min'),
+            'weight.max'               => trans('shop::admin.products.weight_max'),
+            'width.regex'              => trans('shop::admin.products.width_regex'),
+            'width.min'                => trans('shop::admin.products.width_min'),
+            'width.max'                => trans('shop::admin.products.width_max'),
+            'height.regex'             => trans('shop::admin.products.height_regex'),
+            'height.min'               => trans('shop::admin.products.height_min'),
+            'height.max'               => trans('shop::admin.products.height_max'),
+            'length.regex'             => trans('shop::admin.products.length_regex'),
+            'length.min'               => trans('shop::admin.products.length_min'),
+            'length.max'               => trans('shop::admin.products.length_max'),
+            'price.gt'                 => trans('shop::admin.products.price_greater_than_supplier_delivery_price'),
+            'measure_unit_id.required' => trans('shop::admin.products.measure_unit_id_required'),
+            'measure_unit_id.integer'  => trans('shop::admin.products.measure_unit_id_integer'),
+            'measure_unit_id.exists'   => trans('shop::admin.products.measure_unit_id_exists'),
         ];
     }
 }

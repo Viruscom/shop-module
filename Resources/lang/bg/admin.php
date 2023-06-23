@@ -56,6 +56,10 @@ return array(
             'length_min'                                 => 'Полето за дължина трябва да е минимум 0.01',
             'length_max'                                 => 'Полето за дължина трябва да е максимум 99999.99',
             'price_greater_than_supplier_delivery_price' => 'Цената трябва да е по-голяма от цената за доставка на доставчика.',
+            'measure_unit_id_required'                   => 'Полето мерна единица е задължително.',
+            'measure_unit_id_integer'                    => 'Полето мерна единица трябва да бъде цяло число.',
+            'measure_unit_id_exists'                     => 'Невалидна мерна единица. Не е открита такава в базата данни.',
+            'measure_unit'                               => 'Мерна единица',
         ),
     'product_adboxes'          =>
         array(
@@ -315,7 +319,10 @@ return array(
         ),
     'currencies'               =>
         array(
-            'index' => 'Валути',
+            'index'      => 'Валути',
+            'code'       => 'Валута (код)',
+            'name'       => 'Име на валута',
+            'no_records' => 'Няма добавени валути.',
         ),
     'measure_units'            =>
         array(

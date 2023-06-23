@@ -56,6 +56,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->checkForFilesCache();
         $action->checkForBrandsCache();
         $action->checkForProductCategoriesAdminCache();
+        $action->checkForMeasureUnitsCache();
 
         $data = [
             'languages'         => LanguageHelper::getActiveLanguages(),
@@ -65,7 +66,8 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'productCategoryId' => $productCategory->id,
             'products'          => $productCategory->products,
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
-            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
+            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
+            'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
         ];
 
         $activeModules = ModuleHelper::getActiveModules();
@@ -83,6 +85,7 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->checkForFilesCache();
         $action->checkForBrandsCache();
         $action->checkForProductCategoriesAdminCache();
+        $action->checkForMeasureUnitsCache();
 
         $product = Product::whereId($id)->with('translations', 'category', 'category.products')->first();
         MainHelper::goBackIfNull($product);
@@ -96,7 +99,8 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
             'fileRulesInfo'     => Product::getUserInfoMessage(),
             'productCategoryId' => $product->category->id,
             'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
-            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN)
+            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
+            'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
         ];
 
         $activeModules = ModuleHelper::getActiveModules();

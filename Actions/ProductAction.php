@@ -10,9 +10,9 @@ use Cache;
 use Illuminate\Http\Request;
 use Modules\AdBoxes\Models\AdBox;
 use Modules\Shop\Entities\AdBoxProduct\AdBoxProduct;
+use Modules\Shop\Entities\Settings\MeasureUnit;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
-use Modules\Shop\Models\Admin\Products\Product;
 use Modules\Shop\Models\Admin\Products\ProductAdditionalField;
 
 class ProductAction
@@ -33,6 +33,12 @@ class ProductAction
     {
         if (is_null(Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN))) {
             Brand::cacheUpdate();
+        }
+    }
+    public function checkForMeasureUnitsCache(): void
+    {
+        if (is_null(Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN))) {
+            MeasureUnit::cacheUpdate();
         }
     }
 
@@ -83,12 +89,12 @@ class ProductAction
         $languages = LanguageHelper::getActiveLanguages();
         $data      = new Request();
         foreach ($languages as $language) {
-            $productTitle = is_null($product->translate($language->code)) ? $product->title : $product->translate($language->code)->title;
-            $productUrl = is_null($product->translate($language->code)) ? $product->url : $product->translate($language->code)->url;
+            $productTitle          = is_null($product->translate($language->code)) ? $product->title : $product->translate($language->code)->title;
+            $productUrl            = is_null($product->translate($language->code)) ? $product->url : $product->translate($language->code)->url;
             $data[$language->code] = [
                 'locale'  => $language->code,
                 'title'   => $productTitle,
-                'url'   => $productUrl,
+                'url'     => $productUrl,
                 'visible' => true
             ];
         }

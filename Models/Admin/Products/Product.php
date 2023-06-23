@@ -19,7 +19,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
+use Modules\Shop\Entities\Settings\MeasureUnit;
 use Modules\Shop\Entities\Settings\VatCategory;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
@@ -43,7 +45,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
                                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
-                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku'];
+                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku'];
     protected    $table                = 'products';
 
     public static function getFileRules(): string
@@ -59,17 +61,18 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ADMIN);
         cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_FRONT);
         cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ADMIN, function () {
-            return self::with('category')->with('brand')->withTranslation()->with('translations')->orderBy('position')->get();
+            return self::with('category')->with('brand', 'measureUnit')->withTranslation()->with('translations')->orderBy('position')->get();
         });
 
         cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_FRONT, function () {
-            return self::with('category')->with('brand')->active(true)->orderBy('position')->with('translations')->get();
+            return self::with('category')->with('brand', 'measureUnit')->active(true)->orderBy('position')->with('translations')->get();
         });
     }
     public static function getRequestData($request): array
     {
         $data = [
             'category_id'     => $request->category_id,
+            'measure_unit_id' => $request->measure_unit_id,
             'brand_id'        => $request->brand_id,
             'position'        => $request->position,
             'creator_user_id' => Auth::user()->id
@@ -396,5 +399,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         }
 
         return $nextProduct->getUrl($languageSlug);
+    }
+
+    public function measureUnit(): HasOne
+    {
+        return $this->hasOne(MeasureUnit::class, 'id', 'measure_unit_id')->with('translations');
     }
 }

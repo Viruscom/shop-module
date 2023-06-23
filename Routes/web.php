@@ -272,16 +272,16 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
 
         /* Currencies */
-        //TODO: Ne e praveno
+        //TODO: Ne e praveno - zapochnato, da se saobrazi sprqmo izbranoto country za prodajba
+        //TODO: Samo na tezi valuti da se vzimat currency_rates
         Route::prefix('currencies')->group(function () {
-            Route::get('/', [CurrenciesController::class, 'index'])->name('currencies.index');
-            Route::get('create', [CurrenciesController::class, 'create'])->name('currencies.create');
-            Route::get('edit/{id}', [CurrenciesController::class, 'edit'])->name('currencies.edit');
-            Route::post('update/{id}', [CurrenciesController::class, 'update'])->name('currencies.update');
+            Route::get('/', [CurrenciesController::class, 'index'])->name('admin.currencies.index');
+            Route::get('create', [CurrenciesController::class, 'create'])->name('admin.currencies.create');
+            Route::get('edit/{id}', [CurrenciesController::class, 'edit'])->name('admin.currencies.edit');
+            Route::post('update/{id}', [CurrenciesController::class, 'update'])->name('admin.currencies.update');
         });
 
         /* Measuring Units */
-        //TODO: Ne e praveno
         Route::group(['prefix' => 'measuring-units'], static function () {
             Route::get('/', [MeasuringUnitsController::class, 'index'])->name('admin.measuring-units.index');
             Route::get('create', [MeasuringUnitsController::class, 'create'])->name('admin.measuring-units.create');
