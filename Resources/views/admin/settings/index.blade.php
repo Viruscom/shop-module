@@ -48,16 +48,16 @@
                 </div>
 
                 <div>
-                    <a href="{{ route('vats.countries.index') }}" class="text-center">
+                    <a href="{{ route('currencies.index') }}" class="text-center">
                         <i class="fas fa-pound-sign fa-5x"></i>
-                        <span>Валути</span>
+                        <span>{{ __('shop::admin.currencies.index') }}</span>
                     </a>
                 </div>
 
                 <div>
-                    <a href="{{ route('vats.countries.index') }}">
+                    <a href="{{ route('measuring-units.index') }}">
                         <i class="fas fa-balance-scale-right fa-5x"></i>
-                        <span>Мерни единици</span>
+                        <span>{{ __('shop::admin.measure_units.index') }}</span>
                     </a>
                 </div>
 

@@ -313,4 +313,15 @@ return array(
         array(
             'index' => 'ДДС ставки',
         ),
+    'currencies'               =>
+        array(
+            'index' => 'Валути',
+        ),
+    'measure_units'            =>
+        array(
+            'index'      => 'Мерни единици',
+            'create'     => 'Добавяне на мерни единица',
+            'edit'       => 'Резактиране на мерни единица',
+            'no_records' => 'Няма добавени мерни единици',
+        ),
 );

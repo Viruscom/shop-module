@@ -283,22 +283,18 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         /* Measuring Units */
         //TODO: Ne e praveno
         Route::group(['prefix' => 'measuring-units'], static function () {
-            Route::get('/', [MeasuringUnitsController::class, 'index'])->name('measuring-units.index');
-            Route::get('create', [MeasuringUnitsController::class, 'create'])->name('measuring-units.create');
-            Route::post('store', [MeasuringUnitsController::class, 'store'])->name('measuring-units.store');
+            Route::get('/', [MeasuringUnitsController::class, 'index'])->name('admin.measuring-units.index');
+            Route::get('create', [MeasuringUnitsController::class, 'create'])->name('admin.measuring-units.create');
+            Route::post('store', [MeasuringUnitsController::class, 'store'])->name('admin.measuring-units.store');
 
             Route::group(['prefix' => 'multiple'], static function () {
-                Route::get('active/{active}', [MeasuringUnitsController::class, 'activeMultiple'])->name('measuring-units.active-multiple');
-                Route::get('delete', [MeasuringUnitsController::class, 'deleteMultiple'])->name('measuring-units.delete-multiple');
+                Route::get('delete', [MeasuringUnitsController::class, 'deleteMultiple'])->name('admin.measuring-units.delete-multiple');
             });
 
             Route::group(['prefix' => '{id}'], static function () {
-                Route::get('edit', [MeasuringUnitsController::class, 'edit'])->name('measuring-units.edit');
-                Route::post('update', [MeasuringUnitsController::class, 'update'])->name('measuring-units.update');
-                Route::get('delete', [MeasuringUnitsController::class, 'delete'])->name('measuring-units.delete');
-                Route::get('active/{active}', [MeasuringUnitsController::class, 'active'])->name('measuring-units.changeStatus');
-                Route::get('position/up', [MeasuringUnitsController::class, 'positionUp'])->name('measuring-units.position-up');
-                Route::get('position/down', [MeasuringUnitsController::class, 'positionDown'])->name('measuring-units.position-down');
+                Route::get('edit', [MeasuringUnitsController::class, 'edit'])->name('admin.measuring-units.edit');
+                Route::post('update', [MeasuringUnitsController::class, 'update'])->name('admin.measuring-units.update');
+                Route::get('delete', [MeasuringUnitsController::class, 'delete'])->name('admin.measuring-units.delete');
             });
         });
     });
