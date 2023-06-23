@@ -2,7 +2,10 @@
 
 namespace Modules\Shop\Entities\Settings;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Currency extends Model
 {
@@ -16,4 +19,30 @@ class Currency extends Model
         'code',
         'name',
     ];
+
+    public function getAllExchangeRates(): HasMany
+    {
+        $rates = $this->hasMany(CurrencyRate::class)->where('base_currency', $this->code);
+
+        if (!$rates->exists()) {
+            //TODO: Call Exchange Rate API to get and update currency rates for base_currency
+        }
+        if ($rates->first()->next_update > Carbon::now()->timestamp) {
+            //TODO: Call Exchange Rate API to get and update currency rate
+        }
+
+        return $rates;
+    }
+    public function exchangeRate($targetCurrency): HasOne
+    {
+        $rate = $this->hasOne(CurrencyRate::class)->where('base_currency', $this->code)->where('target_currency', $targetCurrency);
+        if (!$rate->exists()) {
+            //TODO: Call Exchange Rate API to get and update currency rate
+        }
+        if ($rate->next_update > Carbon::now()->timestamp) {
+            //TODO: Call Exchange Rate API to get and update currency rate
+        }
+
+        return $rate;
+    }
 }

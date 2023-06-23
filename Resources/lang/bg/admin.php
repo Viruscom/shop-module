@@ -319,10 +319,11 @@ return array(
         ),
     'currencies'               =>
         array(
-            'index'      => 'Валути',
-            'code'       => 'Валута (код)',
-            'name'       => 'Име на валута',
-            'no_records' => 'Няма добавени валути.',
+            'index'                       => 'Валути',
+            'code'                        => 'Валута (код)',
+            'name'                        => 'Име на валута',
+            'no_records'                  => 'Няма добавени валути.',
+            'manual_exchange_rate_update' => 'Ръчно обновяване на валутния курс.',
         ),
     'measure_units'            =>
         array(

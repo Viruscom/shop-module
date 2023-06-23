@@ -277,8 +277,12 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::prefix('currencies')->group(function () {
             Route::get('/', [CurrenciesController::class, 'index'])->name('admin.currencies.index');
             Route::get('create', [CurrenciesController::class, 'create'])->name('admin.currencies.create');
-            Route::get('edit/{id}', [CurrenciesController::class, 'edit'])->name('admin.currencies.edit');
-            Route::post('update/{id}', [CurrenciesController::class, 'update'])->name('admin.currencies.update');
+
+            Route::group(['prefix' => '{id}'], static function () {
+                Route::get('edit', [CurrenciesController::class, 'edit'])->name('admin.currencies.edit');
+                Route::post('update', [CurrenciesController::class, 'update'])->name('admin.currencies.update');
+                Route::get('manual-exchange-rate-update', [CurrenciesController::class, 'manualExchangeRateUpdate'])->name('admin.currencies.manual-exchange-rate-update');
+            });
         });
 
         /* Measuring Units */

@@ -89,9 +89,7 @@
                                             <td>{{ $currency->code}}</td>
                                             <td>{{ $currency->name}}</td>
                                             <td class="text-right">
-                                                @if($sale)
-                                                    <span class="sale-check-wrapper"><i class="far fa-check-circle fa-2x"></i> @lang('shop::admin.main_settings.you_sale_here')</span>
-                                                @endif
+                                                <a class="btn yellow" href="{{ route('admin.currencies.manual-exchange-rate-update', ['id' => $currency->id]) }}" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.currencies.manual_exchange_rate_update')"><i class="fas fa-exchange-alt"></i></a>
                                             </td>
                                         </tr>
                                             <?php $i++; ?>
