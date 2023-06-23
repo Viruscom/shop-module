@@ -7,6 +7,8 @@ use App\Traits\CommonActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Shop\Models\Admin\Products\Product;
 
 class MeasureUnit extends Model implements TranslatableContract
 {
@@ -39,5 +41,10 @@ class MeasureUnit extends Model implements TranslatableContract
     public static function generatePosition($request): int
     {
         return 1;
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'measure_unit_id', 'id');
     }
 }

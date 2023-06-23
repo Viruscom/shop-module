@@ -55,7 +55,21 @@ class MeasuringUnitsController extends Controller
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
     {
         if (!is_null($request->ids[0])) {
-            $action->deleteMultiple($request, MeasureUnit::class);
+            $ids = array_map('intval', explode(',', $request->ids[0]));
+            foreach ($ids as $id) {
+                $model = MeasureUnit::find($id);
+                if (is_null($model)) {
+                    continue;
+                }
+
+                if ($model->products->isNotEmpty()) {
+                    return back()->withErrors(['shop::admin.measure_units.cant_delete_has_products_associated']);
+                }
+
+                $model->delete();
+            }
+
+            MeasureUnit::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
@@ -63,6 +77,21 @@ class MeasuringUnitsController extends Controller
         return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
     }
 
+    public function delete($id, CommonControllerAction $action): RedirectResponse
+    {
+        $measureUnit = MeasureUnit::where('id', $id)->with('products')->first();
+        MainHelper::goBackIfNull($measureUnit);
+
+        if ($measureUnit->products->isNotEmpty()) {
+            return back()->withErrors(['shop::admin.measure_units.cant_delete_has_products_associated']);
+        }
+
+        $measureUnit->delete();
+
+        MeasureUnit::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_delete');
+    }
     public function update($id, ProductAttributeUpdateRequest $request, CommonControllerAction $action): RedirectResponse
     {
         $measureUnit = MeasureUnit::find($id);
@@ -75,15 +104,6 @@ class MeasuringUnitsController extends Controller
         MeasureUnit::cacheUpdate();
 
         return redirect()->route('admin.measuring-units.index')->with('success-message', 'admin.common.successful_edit');
-    }
-    public function delete($id, CommonControllerAction $action): RedirectResponse
-    {
-        $measureUnit = MeasureUnit::where('id', $id)->first();
-        MainHelper::goBackIfNull($measureUnit);
-
-        $action->delete(MeasureUnit::class, $measureUnit);
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
     public function create()
     {
