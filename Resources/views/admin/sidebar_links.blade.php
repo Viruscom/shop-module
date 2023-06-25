@@ -14,7 +14,7 @@
                 <li><a href="{{ route('admin.products.index') }}"><i class="far fa-list-alt"></i> <span>{!! trans('shop::admin.products.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-attributes.index') }}"><img src="{{ asset('admin/assets/images/product_attribute.svg') }}" alt="@lang('shop::admin.product_attributes.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_attributes.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.products.characteristics.index') }}"><img src="{{ asset('admin/assets/images/product_characteristics.svg') }}" alt="@lang('shop::admin.product_characteristics.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_characteristics.index') !!}</span></a></li>
-                <li><a href="1223423"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="@lang('shop::admin.product_combinations.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_combinations.index') !!}</span></a></li>
+                <li><a href="{{ route('admin.product-combinations.index') }}"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="@lang('shop::admin.product_combinations.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_combinations.index') !!}</span></a></li>
                 <li><a href="https://main.reklamnipodaraci.com/admin/product_stocks"><i class="fas fa-inventory"></i><span>{!! trans('shop::admin.product_stocks.index') !!}</span></a></li>
             </ul>
         </div>

@@ -119,7 +119,10 @@ return array(
         ),
     'product_combinations'     =>
         array(
-            'index' => 'Комбинации',
+            'index'      => 'Комбинации',
+            'no_records' => 'Няма намерени продуктови комбинации',
+            'step_1'     => 'Изберете продукт',
+            'step_2'     => 'Изберете продуктови атрибути',
         ),
     'product_collections'      =>
         array(

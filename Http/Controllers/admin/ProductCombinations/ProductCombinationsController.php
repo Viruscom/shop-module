@@ -4,24 +4,26 @@ namespace Modules\Shop\Http\Controllers\admin\ProductCombinations;
 
 use App\Helpers\LanguageHelper;
 use App\Http\Controllers\Controller;
-use App\Models\ProductCombination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
 use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
+use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
 use Modules\Shop\Models\Admin\Products\Product;
 
 class ProductCombinationsController extends Controller
 {
     public function index()
     {
-        $languages           = LanguageHelper::getActiveLanguages();
-        $productAttributes   = ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get();
-        $products            = Product::with('defaultTranslation')->with('category')->get();
-        $productCombinations = is_null(Cache::get('adminProductCombinations')) ? ProductCombination::updateCache() : Cache::get('adminProductCombinations');
 
-        return view('admin.product_combinations.index', compact('products', 'productCombinations', 'productAttributes', 'productAttributeValues', 'defaultLanguage', 'languages'));
+        return view('shop::admin.product_combinations.index', [
+            'products'               => Product::with('translations', 'category')->get(),
+            'productCombinations'    => ProductCombination::all(),
+            'productAttributes'      => ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get(),
+            'productAttributeValues' => ProductAttributeValue::with('translations')->get(),
+            'languages'              => LanguageHelper::getActiveLanguages()
+        ]);
     }
     public function updateMultiple(Request $request)
     {
