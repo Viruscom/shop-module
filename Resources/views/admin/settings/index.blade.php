@@ -48,7 +48,7 @@
                 </div>
 
                 <div>
-                    <a href="{{ route('currencies.index') }}" class="text-center">
+                    <a href="{{ route('admin.currencies.index') }}" class="text-center">
                         <i class="fas fa-pound-sign fa-5x"></i>
                         <span>{{ __('shop::admin.currencies.index') }}</span>
                     </a>

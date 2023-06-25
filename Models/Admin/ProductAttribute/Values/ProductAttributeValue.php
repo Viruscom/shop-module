@@ -2,7 +2,7 @@
 
 namespace Modules\Shop\Models\Admin\ProductAttribute\Values;
 
-use App\Helpers\CacheKeysHelper;
+use App\Helpers\AdminHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Traits\CommonActions;
 use App\Traits\Scopes;
@@ -37,19 +37,6 @@ class ProductAttributeValue extends Model implements TranslatableContract
     {
         return FileDimensionHelper::getUserInfoMessage('Shop', 3);
     }
-    public static function cacheUpdate(): void
-    {
-        cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_ADMIN);
-        cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_FRONT);
-        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_ADMIN, function () {
-            return self::with('translations')->orderBy('position')->get();
-        });
-
-        cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ATTRIBUTE_VALUES_FRONT, function () {
-            return self::orderBy('position')->with('translations')->get();
-        });
-    }
-
 
     public static function generatePosition($request): int
     {
@@ -80,13 +67,35 @@ class ProductAttributeValue extends Model implements TranslatableContract
 
         return $data;
     }
-    public function parent(): BelongsTo
+    public static function getCreateInputErrors($languages, $request, $attr_id): array
     {
-        return $this->belongsTo(ProductAttribute::class, 'product_attr_id');
+        $errors = [];
+        foreach ($languages as $language) {
+            $langTitle = 'title_' . $language->code;
+            if (!$request->has($langTitle) || $request[$langTitle] == "") {
+                $errors[$langTitle] = 'admin.common.title_exists';
+            } else {
+                $productAttributeValue = self::where('product_attr_id', $attr_id)->with('translations')->get();
+                if (!is_null($productAttributeValue)) {
+                    foreach ($productAttributeValue as $value) {
+                        $langTitleRow = $value->translations()->where('locale', $language->code)->where('title', $request->{$langTitle})->first();
+                        if (!is_null($langTitleRow)) {
+                            $errors[$langTitle] = 'admin.common.title_exists';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $errors;
     }
     public function translations(): HasMany
     {
         return $this->hasMany(ProductAttributeValueTranslation::class, 'pattrv_id', 'id');
+    }
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(ProductAttribute::class, 'product_attr_id');
     }
     public function getUpdateData($request): array
     {
@@ -104,6 +113,14 @@ class ProductAttributeValue extends Model implements TranslatableContract
             $data['active'] = filter_var($request->active, FILTER_VALIDATE_BOOLEAN);
         }
 
+        if ($request->has('color_picker_color')) {
+            $data['color_picker_color'] = $request->color_picker_color;
+        }
+
+        if ($request->hasFile('image')) {
+            $data['filename'] = pathinfo(CommonActions::getValidFilenameStatic($request->image->getClientOriginalName()), PATHINFO_FILENAME) . '.' . $request->image->getClientOriginalExtension();
+        }
+
         return $data;
     }
     public function updatedPosition($request)
@@ -112,7 +129,7 @@ class ProductAttributeValue extends Model implements TranslatableContract
             return $this->position;
         }
 
-        $cities = self::orderBy('position', 'desc')->get();
+        $cities = self::where('product_attr_id', $request->product_attr_id)->orderBy('position', 'desc')->get();
         if (count($cities) == 1) {
             $request['position'] = 1;
 
@@ -126,7 +143,7 @@ class ProductAttributeValue extends Model implements TranslatableContract
         }
 
         if ($request['position'] >= $this->position) {
-            $citiesToUpdate = self::where('id', '<>', $this->id)->where('position', '>', $this->position)->where('position', '<=', $request['position'])->get();
+            $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)->where('position', '>', $this->position)->where('position', '<=', $request['position'])->get();
             foreach ($citiesToUpdate as $cityToUpdate) {
                 $cityToUpdate->update(['position' => $cityToUpdate->position - 1]);
             }
@@ -134,11 +151,46 @@ class ProductAttributeValue extends Model implements TranslatableContract
             return $request['position'];
         }
 
-        $citiesToUpdate = self::where('id', '<>', $this->id)->where('position', '<', $this->position)->where('position', '>=', $request['position'])->get();
+        $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)->where('position', '<', $this->position)->where('position', '>=', $request['position'])->get();
         foreach ($citiesToUpdate as $cityToUpdate) {
             $cityToUpdate->update(['position' => $cityToUpdate->position + 1]);
         }
 
         return $request['position'];
+    }
+    public function getUpdateInputErrors($languages, $request): array
+    {
+        $errors = [];
+        foreach ($languages as $language) {
+            $langTitle = 'title_' . $language->code;
+            if (!$request->has($langTitle) || $request[$langTitle] == "") {
+                $errors[$langTitle] = 'administration_messages.title_required';
+            } else {
+                $productAttributeValues = $this->parent->values;
+                foreach ($productAttributeValues as $value) {
+                    if ($value->id != $this->id) {
+                        $langTitleRow = $value->translations()->where('locale', $language->code)->where('title', $request->{$langTitle})->first();
+                        if (!is_null($langTitleRow)) {
+                            $errors[$langTitle] = 'administration_messages.title_exists';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    public function getFilepath($filename): string
+    {
+        return $this->getFilesPath() . $filename;
+    }
+    public function getFilesPath(): string
+    {
+        return self::FILES_PATH . '/' . $this->id . '/';
+    }
+    public function getSystemImage(): string
+    {
+        return AdminHelper::getSystemImage(self::$PRODUCT_ATTRIBUTE_VALUE_SYSTEM_IMAGE);
     }
 }

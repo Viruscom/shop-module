@@ -431,6 +431,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                     Route::get('delete', [ProductAttributeValuesController::class, 'delete'])->name('admin.product-attribute.values.delete');
                     Route::get('position/up', [ProductAttributeValuesController::class, 'positionUp'])->name('admin.product-attribute.values.position-up');
                     Route::get('position/down', [ProductAttributeValuesController::class, 'positionDown'])->name('admin.product-attribute.values.position-down');
+                    Route::get('image/delete', [ProductAttributeValuesController::class, 'deleteImage'])->name('admin.product-attribute.values.delete-image');
                 });
             });
         });

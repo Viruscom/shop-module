@@ -8,12 +8,11 @@ use App\Helpers\MainHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Modules\Shop\Http\Requests\ProductCategoryStoreRequest;
-use Modules\Shop\Http\Requests\ProductCategoryUpdateRequest;
+use Modules\Shop\Http\Requests\ProductAttributeValueStoreRequest;
 use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
 use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
+use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValueTranslation;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
-use Modules\Shop\Models\Admin\ProductCategory\CategoryTranslation;
 
 class ProductAttributeValuesController extends Controller
 {
@@ -24,10 +23,16 @@ class ProductAttributeValuesController extends Controller
 
         return view('shop::admin.product_attributes.values.index', ['productAttribute' => $productAttribute]);
     }
-    public function store($id, ProductCategoryStoreRequest $request, CommonControllerAction $action): RedirectResponse
+    public function store($id, ProductAttributeValueStoreRequest $request, CommonControllerAction $action): RedirectResponse
     {
         $productAttribute = ProductAttribute::where('id', $id)->first();
         MainHelper::goBackIfNull($productAttribute);
+
+        $languages = LanguageHelper::getActiveLanguages();
+        $errors    = ProductAttributeValue::getCreateInputErrors($languages, $request, $productAttribute->id);
+        if (count($errors) > 0) {
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
 
         $request['product_attr_id'] = $productAttribute->id;
         $value                      = $action->doSimpleCreate(ProductAttributeValue::class, $request);
@@ -35,27 +40,19 @@ class ProductAttributeValuesController extends Controller
 
         return redirect()->route('admin.product-attribute.values.index', ['id' => $productAttribute->id])->with('success-message', trans('admin.common.successful_create'));
     }
-    public function create($id)
-    {
-        $productAttribute = ProductAttribute::where('id', $id)->with('values')->first();
-        MainHelper::goBackIfNull($productAttribute);
-
-        return view('shop::admin.product_attributes.values.create', [
-            'productAttribute' => $productAttribute,
-            'languages'        => LanguageHelper::getActiveLanguages()
-        ]);
-    }
     public function edit($id, $value_id)
     {
-        $productAttribute = ProductAttribute::where('id', $id)->first();
+        $productAttribute = ProductAttribute::where('id', $id)->with('values')->first();
         MainHelper::goBackIfNull($productAttribute);
 
         $ProductAttributeValue = ProductAttributeValue::find($value_id);
         MainHelper::goBackIfNull($ProductAttributeValue);
 
         return view('shop::admin.product_attributes.values.edit', [
-            'productAttribute' => $productAttribute,
-            'languages'        => LanguageHelper::getActiveLanguages()
+            'productAttribute'      => $productAttribute,
+            'productAttributeValue' => $ProductAttributeValue,
+            'languages'             => LanguageHelper::getActiveLanguages(),
+            'fileRulesInfo'         => ''
         ]);
     }
     public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
@@ -104,30 +101,41 @@ class ProductAttributeValuesController extends Controller
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
-    public function update($id, ProductCategoryUpdateRequest $request, CommonControllerAction $action): RedirectResponse
+    public function update($id, $value_id, ProductAttributeValueStoreRequest $request, CommonControllerAction $action): RedirectResponse
     {
-        $productCategory = Category::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($productCategory);
+        $productAttribute = ProductAttribute::where('id', $id)->with('values', 'values.translations')->first();
+        MainHelper::goBackIfNull($productAttribute);
 
-        $request['main_category'] = $productCategory->main_category;
-        $action->doSimpleUpdate(Category::class, CategoryTranslation::class, $productCategory, $request);
-        $action->updateUrlCache($productCategory, CategoryTranslation::class);
-        $action->updateSeo($request, $productCategory, 'Category');
+        $productAttributeValue = ProductAttributeValue::where('id', $value_id)->with('parent')->first();
+        MainHelper::goBackIfNull($productAttributeValue);
+
+        $languages = LanguageHelper::getActiveLanguages();
+        $errors    = $productAttributeValue->getUpdateInputErrors($languages, $request);
+        if (count($errors) > 0) {
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+
+        $request['product_attr_id'] = $productAttribute->id;
+        $request['position']        = $productAttributeValue->updatedPosition($request);
 
         if ($request->has('image')) {
-            $request->validate(['image' => Category::getFileRules()], [Category::getUserInfoMessage()]);
-            $productCategory->saveFile($request->image);
+            $productAttributeValue->saveFile($request->image);
         }
+        $action->doSimpleUpdate(ProductAttributeValue::class, ProductAttributeValueTranslation::class, $productAttributeValue, $request);
 
-        Category::cacheUpdate();
-
-        if (!is_null($productCategory->main_category)) {
-            return redirect()->route('admin.product-categories.sub-categories.index', ['id' => $productCategory->main_category])->with('success-message', trans('admin.common.successful_create'));
-        }
-
-        return redirect()->route('admin.product-categories.index')->with('success-message', 'admin.common.successful_edit');
+        return redirect()->route('admin.product-attribute.values.index', ['id' => $productAttribute->id])->with('success-message', 'admin.common.successful_edit');
     }
+    public function create($id)
+    {
+        $productAttribute = ProductAttribute::where('id', $id)->with('values')->first();
+        MainHelper::goBackIfNull($productAttribute);
 
+        return view('shop::admin.product_attributes.values.create', [
+            'productAttribute' => $productAttribute,
+            'languages'        => LanguageHelper::getActiveLanguages(),
+            'fileRulesInfo'    => ''
+        ]);
+    }
     public function positionUp($id, $value_id): RedirectResponse
     {
         $productAttribute = ProductAttribute::find($id);

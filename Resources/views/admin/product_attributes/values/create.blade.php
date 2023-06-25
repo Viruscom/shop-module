@@ -1,23 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('admin/plugins/colorpicker/jquery.minicolors.css') }}" rel="stylesheet"/>
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('admin/plugins/colorpicker/jquery.minicolors.min.js') }}"></script>
-    <script>
-        try {
-            CKEDITOR.timestamp = new Date();
-            CKEDITOR.replace('editor');
-        } catch {
-        }
-        $(".select2").select2({language: "bg"});
-    </script>
-
     <script>
         $(document).ready(function () {
 
@@ -60,7 +48,7 @@
 @section('content')
     @include('shop::admin.product_attributes.values.breadcrumbs')
     @include('admin.notify')
-    
+
     <form class="my-form" action="{{ route('admin.product-attribute.values.store', ['id' => $productAttribute->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -112,11 +100,11 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-xs-12">
-                        <div class="form-group @if($errors->has('filename')) has-error @endif">
+                        <div class="form-group @if($errors->has('image')) has-error @endif">
                             <label class="control-label p-b-10">{{ __('shop::admin.product_attribute_values.file') }}:</label>
-                            <input type="file" name="filename" class="filestyle" data-buttonText="{{trans('admin.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
-                            @if($errors->has('filename'))
-                                <span class="help-block">{{ trans($errors->first('filename')) }}</span>
+                            <input type="file" name="image" class="filestyle" data-buttonText="{{trans('admin.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
+                            @if($errors->has('image'))
+                                <span class="help-block">{{ trans($errors->first('image')) }}</span>
                             @endif
                         </div>
                     </div>
