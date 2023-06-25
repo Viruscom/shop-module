@@ -93,6 +93,10 @@ class ProductAttributeValue extends Model implements TranslatableContract
     {
         return $this->hasMany(ProductAttributeValueTranslation::class, 'pattrv_id', 'id');
     }
+    public static function cacheUpdate()
+    {
+        //Prevent error
+    }
     public function parent(): BelongsTo
     {
         return $this->belongsTo(ProductAttribute::class, 'product_attr_id');
@@ -129,35 +133,40 @@ class ProductAttributeValue extends Model implements TranslatableContract
             return $this->position;
         }
 
-        $cities = self::where('product_attr_id', $request->product_attr_id)->orderBy('position', 'desc')->get();
+        $cities = self::where('product_attr_id', $request->product_attr_id)->orderBy('position', 'asc')->get();
+
         if (count($cities) == 1) {
             $request['position'] = 1;
-
-            return $request['position'];
-        }
-
-        if ($request['position'] > $cities->first()->position) {
-            $request['position'] = $cities->first()->position;
-        } elseif ($request['position'] < $cities->last()->position) {
+        } elseif ($request['position'] > $cities->last()->position) {
             $request['position'] = $cities->last()->position;
+        } elseif ($request['position'] < $cities->first()->position) {
+            $request['position'] = $cities->first()->position;
         }
 
-        if ($request['position'] >= $this->position) {
-            $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)->where('position', '>', $this->position)->where('position', '<=', $request['position'])->get();
-            foreach ($citiesToUpdate as $cityToUpdate) {
-                $cityToUpdate->update(['position' => $cityToUpdate->position - 1]);
-            }
-
-            return $request['position'];
+        if ($request['position'] > $this->position) {
+            $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)
+                ->where('position', '<=', $request['position'])->where('position', '>', $this->position)->get();
+            self::updateModelsPosition($citiesToUpdate, false);
+        } else {
+            $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)
+                ->where('position', '>=', $request['position'])->where('position', '<', $this->position)->get();
+            self::updateModelsPosition($citiesToUpdate, true);
         }
 
-        $citiesToUpdate = self::where('product_attr_id', $request->product_attr_id)->where('id', '<>', $this->id)->where('position', '<', $this->position)->where('position', '>=', $request['position'])->get();
-        foreach ($citiesToUpdate as $cityToUpdate) {
-            $cityToUpdate->update(['position' => $cityToUpdate->position + 1]);
-        }
+        $this->update(['position' => $request['position']]);
 
         return $request['position'];
     }
+
+    private static function updateModelsPosition($models, $increment)
+    {
+        $operator = $increment ? 1 : -1;
+        foreach ($models as $model) {
+            $model->increment('position', $operator);
+        }
+    }
+
+
     public function getUpdateInputErrors($languages, $request): array
     {
         $errors = [];
@@ -180,7 +189,6 @@ class ProductAttributeValue extends Model implements TranslatableContract
 
         return $errors;
     }
-
     public function getFilepath($filename): string
     {
         return $this->getFilesPath() . $filename;

@@ -33,7 +33,6 @@
                         if (!value) return;
                         if (opacity) value += ', ' + opacity;
                         if (typeof console === 'object') {
-                            console.log(value);
                         }
                     },
                     theme: 'bootstrap'

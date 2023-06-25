@@ -1,13 +1,4 @@
 @extends('layouts.admin.app')
-@section('scripts')
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-    </script>
-@endsection
 @section('content')
     @include('shop::admin.product_attributes.values.breadcrumbs')
     @include('admin.notify')

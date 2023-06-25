@@ -1,23 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('admin/plugins/colorpicker/jquery.minicolors.css') }}" rel="stylesheet"/>
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('admin/plugins/colorpicker/jquery.minicolors.min.js') }}"></script>
-    <script>
-        try {
-            CKEDITOR.timestamp = new Date();
-            CKEDITOR.replace('editor');
-        } catch {
-        }
-        $(".select2").select2({language: "bg"});
-    </script>
-
     <script>
         $(document).ready(function () {
 
@@ -45,7 +33,6 @@
                         if (!value) return;
                         if (opacity) value += ', ' + opacity;
                         if (typeof console === 'object') {
-                            console.log(value);
                         }
                     },
                     theme: 'bootstrap'

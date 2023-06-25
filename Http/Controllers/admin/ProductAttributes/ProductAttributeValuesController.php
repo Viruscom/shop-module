@@ -21,6 +21,8 @@ class ProductAttributeValuesController extends Controller
         $productAttribute = ProductAttribute::where('id', $id)->with('values')->first();
         MainHelper::goBackIfNull($productAttribute);
 
+        //        dd($productAttribute->values);
+
         return view('shop::admin.product_attributes.values.index', ['productAttribute' => $productAttribute]);
     }
     public function store($id, ProductAttributeValueStoreRequest $request, CommonControllerAction $action): RedirectResponse
@@ -169,12 +171,15 @@ class ProductAttributeValuesController extends Controller
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
-    public function deleteImage($id, CommonControllerAction $action): RedirectResponse
+    public function deleteImage($id, $value_id, CommonControllerAction $action): RedirectResponse
     {
-        $productCategory = Category::find($id);
-        MainHelper::goBackIfNull($productCategory);
+        $productAttribute = ProductAttribute::find($id);
+        MainHelper::goBackIfNull($productAttribute);
 
-        if ($action->imageDelete($productCategory, Category::class)) {
+        $ProductAttributeValue = ProductAttributeValue::find($value_id);
+        MainHelper::goBackIfNull($ProductAttributeValue);
+
+        if ($action->imageDelete($ProductAttributeValue, ProductAttributeValue::class)) {
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
 
