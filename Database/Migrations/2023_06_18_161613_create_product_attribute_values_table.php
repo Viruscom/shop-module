@@ -22,7 +22,6 @@ class CreateProductAttributeValuesTable extends Migration
             $table->integer('position');
             $table->timestamps();
 
-            $table->unique(['product_attr_id']);
             $table->foreign('product_attr_id')->references('id')->on('product_attributes')->onDelete('cascade')->onUpdate('cascade');
         });
     }

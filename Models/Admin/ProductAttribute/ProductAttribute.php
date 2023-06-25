@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 
 class ProductAttribute extends Model implements TranslatableContract
@@ -128,5 +129,10 @@ class ProductAttribute extends Model implements TranslatableContract
         $currentLanguage = LanguageHelper::getCurrentLanguage();
 
         return $this->hasOne(ProductAttributeTranslation::class, 'pattr_id', 'id')->where('locale', $currentLanguage->code);
+    }
+
+    public function values(): HasMany
+    {
+        return $this->hasMany(ProductAttributeValue::class, 'product_attr_id', 'id')->orderBy('position', 'asc');
     }
 }

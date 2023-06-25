@@ -6,16 +6,17 @@ use App\Helpers\CacheKeysHelper;
 use App\Helpers\FileDimensionHelper;
 use App\Traits\CommonActions;
 use App\Traits\Scopes;
+use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\Shop\Models\Admin\ProductCategory\Category;
+use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
 
 class ProductAttributeValue extends Model implements TranslatableContract
 {
-    use Translatable, Scopes, CommonActions;
+    use Translatable, Scopes, CommonActions, StorageActions;
 
     public const FILES_PATH = "images/shop/products/attribute_values";
     public static string $PRODUCT_ATTRIBUTE_VALUE_SYSTEM_IMAGE  = 'product_attribute_value_img.png';
@@ -79,9 +80,9 @@ class ProductAttributeValue extends Model implements TranslatableContract
 
         return $data;
     }
-    public function categories(): BelongsToMany
+    public function parent(): BelongsTo
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsTo(ProductAttribute::class, 'product_attr_id');
     }
     public function translations(): HasMany
     {
@@ -94,7 +95,8 @@ class ProductAttributeValue extends Model implements TranslatableContract
     public static function getRequestData($request): array
     {
         $data = [
-            'type' => $request->type
+            'type'            => $request->type,
+            'product_attr_id' => $request->product_attr_id,
         ];
 
         $data['active'] = false;

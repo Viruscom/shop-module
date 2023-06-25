@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('styles')
     <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
@@ -58,7 +58,10 @@
 @endsection
 
 @section('content')
-    <form class="my-form" action="{{ route('products.attributes.values.store', ['attr_id' => $productAttribute->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+    @include('shop::admin.product_attributes.values.breadcrumbs')
+    @include('admin.notify')
+    
+    <form class="my-form" action="{{ route('admin.product-attribute.values.store', ['id' => $productAttribute->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="position" value="{{old('position')}}">
@@ -73,12 +76,12 @@
         </div>
         <div class="row">
             <div class="col-sm-12 col-xs-12">
-                <h4>Добавяне на стойност за атрибут: {{ $productAttribute->defaultTranslation->title }}</h4>
+                <h4>{{ __('shop::admin.product_attribute_values.create') }}: {{ $productAttribute->title }}</h4>
             </div>
             <div class="col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs">
                     @foreach($languages as $language)
-                        <li @if($language->code == env('DEF_LANG_CODE')) class="active" @endif}}><a data-toggle="tab" href="#{{$language->code}}">{{$language->code}} <span class="err-span-{{$language->code}} hidden text-purple"><i class="fas fa-exclamation"></i></span></a></li>
+                        <li @if($language->code === config('default.app.language.code')) class="active" @endif><a data-toggle="tab" href="#{{$language->code}}">{{$language->code}} <span class="err-span-{{$language->code}} hidden text-purple"><i class="fas fa-exclamation"></i></span></a></li>
                     @endforeach
                 </ul>
                 <div class="tab-content">
@@ -86,9 +89,9 @@
                         @php
                             $langTitle = 'title_'.$language->code
                         @endphp
-                        <div id="{{$language->code}}" class="tab-pane fade in @if($language->code == env('DEF_LANG_CODE')) active @endif}}">
+                        <div id="{{$language->code}}" class="tab-pane fade in @if($language->code === config('default.app.language.code')) active @endif">
                             <div class="form-group @if($errors->has($langTitle)) has-error @endif">
-                                <label class="control-label p-b-10">Заглавие (<span class="text-uppercase">{{$language->code}}</span>):</label>
+                                <label class="control-label p-b-10">{{ __('admin.title') }} (<span class="text-uppercase">{{$language->code}}</span>):</label>
                                 <input class="form-control" type="text" name="{{$langTitle}}" value="{{ old($langTitle) }}">
                                 @if($errors->has($langTitle))
                                     <span class="help-block">{{ trans($errors->first($langTitle)) }}</span>
@@ -101,7 +104,7 @@
                 @if($productAttribute->type == 3)
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group @if($errors->has('color_picker_color')) has-error @endif">
-                            <label for="text-field" class="control-label p-b-10">Цвят:</label>
+                            <label for="text-field" class="control-label p-b-10">{{ __('shop::admin.product_attribute_values.color') }}:</label>
                             <input type="text" id="text-field" class="form-control demo" value="#70c24a" name="color_picker_color" required>
                             @if($errors->has('color_picker_color'))
                                 <span class="help-block">{{ trans($errors->first('color_picker_color')) }}</span>
@@ -110,8 +113,8 @@
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <div class="form-group @if($errors->has('filename')) has-error @endif">
-                            <label class="control-label p-b-10">Файл:</label>
-                            <input type="file" name="filename" class="filestyle" data-buttonText="{{trans('administration_messages.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
+                            <label class="control-label p-b-10">{{ __('shop::admin.product_attribute_values.file') }}:</label>
+                            <input type="file" name="filename" class="filestyle" data-buttonText="{{trans('admin.browse_file')}}" data-iconName="fas fa-upload" data-buttonName="btn green" data-badge="true">
                             @if($errors->has('filename'))
                                 <span class="help-block">{{ trans($errors->first('filename')) }}</span>
                             @endif
@@ -121,70 +124,12 @@
                 <div class="form form-horizontal">
                     <div class="form-body">
                         <hr>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Позиция в сайта:</label>
-                            <div class="col-md-6">
-                                <p class="position-label"></p>
-                                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">Моля, изберете позиция</a>
-                                <p class="help-block">(ако не изберете позиция, записът се добавя като последен)</p>
-                            </div>
-                        </div>
+                        @include('admin.partials.on_create.position_in_site_button')
                     </div>
-                    <div class="form-actions">
-                        <div class="row">
-                            <div class="col-md-offset-3 col-md-9">
-                                <button type="submit" name="submitaddnew" value="submitaddnew" class="btn green saveplusbtn margin-bottom-10"> запиши и добави нов</button>
-                                <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10"><i class="fas fa-save"></i> запиши</button>
-                                <a href="{{ url()->previous() }}" role="button" class="btn back-btn margin-bottom-10"><i class="fa fa-reply"></i> назад</a>
-                            </div>
-                        </div>
-                    </div>
+                    @include('admin.partials.on_create.form_actions_bottom')
                 </div>
             </div>
-            <!-- Modal -->
-            <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close text-purple" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Изберете позиция</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-striped table-hover table-positions">
-                                <tbody>
-                                @if(count($attributes))
-                                    @foreach($attributes as $productAttribute)
-                                        <tr class="pickPositionTr" data-position="{{$productAttribute->position}}">
-                                            <td>{{$productAttribute->position}}</td>
-                                            <td>{{$productAttribute->defaultTranslation->title}}</td>
-                                        </tr>
-                                    @endforeach
-                                    <tr class="pickPositionTr" data-position="{{$attributes->last()->position+1}}">
-                                        <td>{{$attributes->last()->position+1}}</td>
-                                        <td>--{{trans('administration_messages.last_position')}}--</td>
-                                    </tr>
-                                @else
-                                    <tr class="pickPositionTr" data-position="1">
-                                        <td>1</td>
-                                        <td>--{{trans('administration_messages.last_position')}}--</td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
-                            <div class="form-actions">
-                                <div class="row">
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <a href="#" class="btn save-btn margin-bottom-10 accept-position-change" data-dismiss="modal"><i class="fas fa-save"></i> потвърди</a>
-                                        <a role="button" class="btn back-btn margin-bottom-10 cancel-position-change" current-position="{{ old('position') }}" data-dismiss="modal"><i class="fa fa-reply"></i> назад</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('admin.partials.modals.positions_on_create', ['parent' => $productAttribute->values])
+        </div>
     </form>
-    </div>
 @endsection
