@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminControllers\ProductCombinationsController;
 use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
 use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -457,6 +458,41 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/up', [ProductCharacteristicsController::class, 'positionUp'])->name('admin.products.characteristics.position-up');
             Route::get('position/down', [ProductCharacteristicsController::class, 'positionDown'])->name('admin.products.characteristics.position-down');
         });
+    });
+
+    /* Product combinations */
+    Route::group(['prefix' => 'product_combinations'], static function () {
+        Route::get('/', [ProductCombinationsController::class, 'index'])->name('admin.product-combinations.index');
+        Route::get('/create', [ProductCombinationsController::class, 'create'])->name('admin.product-combinations.create');
+        Route::post('/store', [ProductCombinationsController::class, 'store'])->name('admin.product-combinations.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [ProductCombinationsController::class, 'activeMultiple'])->name('admin.product-combinations.active-multiple');
+            Route::get('delete', [ProductCombinationsController::class, 'deleteMultiple'])->name('admin.product-combinations.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [ProductCombinationsController::class, 'edit'])->name('admin.product-combinations.edit');
+            Route::post('update', [ProductCombinationsController::class, 'update'])->name('admin.product-combinations.update');
+            Route::get('delete', [ProductCombinationsController::class, 'delete'])->name('admin.product-combinations.delete');
+            Route::get('show', [ProductCombinationsController::class, 'show'])->name('admin.product-combinations.show');
+            Route::get('/active/{active}', [ProductCombinationsController::class, 'active'])->name('admin.product-combinations.changeStatus');
+            Route::get('position/up', [ProductCombinationsController::class, 'positionUp'])->name('admin.product-combinations.position-up');
+            Route::get('position/down', [ProductCombinationsController::class, 'positionDown'])->name('admin.product-combinations.position-down');
+            Route::get('image/delete', [ProductCombinationsController::class, 'deleteImage'])->name('admin.product-combinations.delete-image');
+        });
+    });
+    Route::group(['prefix' => 'product_combinations', 'middleware' => 'auth'], static function () {
+        Route::get('/', [ProductCombinationsController::class, 'index'])->name('products.combinations.index');
+        Route::get('/{id}/update', [ProductCombinationsController::class, 'update'])->name('products.combinations.update');
+        Route::get('/{id}/delete', [ProductCombinationsController::class, 'delete'])->name('products.combinations.delete');
+        Route::post('/getAttributesByProductCategory', [ProductCombinationsController::class, 'getAttributesByProductCategory'])->name('products.combinations.getAttributesByProductCategory');
+        Route::post('/getProductSkuNumber', [ProductCombinationsController::class, 'getProductSkuNumber'])->name('products.combinations.getProductSkuNumber');
+        Route::post('generate', [ProductCombinationsController::class, 'generate'])->name('products.combinations.generate');
+        Route::get('/delete/multiple/', [ProductCombinationsController::class, 'deleteMultiple'])->name('products.combinations.delete-multiple');
+        Route::post('/update/multiple/', [ProductCombinationsController::class, 'updateMultiple'])->name('products.combinations.update-multiple');
+        Route::post('/generateSkuNumbersByProducts', [ProductCombinationsController::class, 'generateSkuNumbersByProducts']);
+        Route::post('/generateSkuNumbersByProduct', [ProductCombinationsController::class, 'generateSkuNumbersByProduct'])->name('products.combinations.generate-sku-numbers-by-product');
     });
 
     /* Product Adboxes */
