@@ -25,6 +25,7 @@ use Modules\Shop\Entities\Settings\MeasureUnit;
 use Modules\Shop\Entities\Settings\VatCategory;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
+use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
 use Modules\ShopDiscounts\Entities\Discount;
 
 class Product extends Model implements TranslatableContract, ImageModelInterface
@@ -404,5 +405,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     public function measureUnit(): HasOne
     {
         return $this->hasOne(MeasureUnit::class, 'id', 'measure_unit_id')->with('translations');
+    }
+
+    public function combinations(): HasMany
+    {
+        return $this->hasMany(ProductCombination::class, 'product_id', 'id');
     }
 }

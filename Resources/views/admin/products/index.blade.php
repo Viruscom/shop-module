@@ -28,20 +28,20 @@
             </div>
 
             <div class="action-mass-buttons pull-right">
-                    <a href="{{ route('admin.products.create', ['category_id' => Request::segment(5)]) }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.create_new') }}">
-                        <i class="fas fa-plus"></i>
-                    </a>
+                <a href="{{ route('admin.products.create', ['category_id' => Request::segment(5)]) }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.create_new') }}">
+                    <i class="fas fa-plus"></i>
+                </a>
 
-                    <a href="{{ route('admin.products.active-multiple', ['active' => 0]) }}" class="btn btn-lg tooltips light-grey-eye mass-unvisible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.deactivate_all_marked_elements') }}">
-                        <i class="far fa-eye-slash"></i>
-                    </a>
-                    <a href="{{ route('admin.products.active-multiple', ['active' => 1]) }}" class="btn btn-lg tooltips grey-eye mass-visible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.activate_all_marked_elements') }}">
-                        <i class="far fa-eye"></i>
-                    </a>
+                <a href="{{ route('admin.products.active-multiple', ['active' => 0]) }}" class="btn btn-lg tooltips light-grey-eye mass-unvisible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.deactivate_all_marked_elements') }}">
+                    <i class="far fa-eye-slash"></i>
+                </a>
+                <a href="{{ route('admin.products.active-multiple', ['active' => 1]) }}" class="btn btn-lg tooltips grey-eye mass-visible" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.activate_all_marked_elements') }}">
+                    <i class="far fa-eye"></i>
+                </a>
 
-                    <a href="{{ route('admin.products.delete-multiple') }}" class="btn btn-lg red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.delete_all_marked_elements') }}">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
+                <a href="{{ route('admin.products.delete-multiple') }}" class="btn btn-lg red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.common.delete_all_marked_elements') }}">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
                                     <a href="{{ route('admin.products.send-to-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_adbox')"><i class="fas fa-ad"></i></a>
                                     <a href="{{ route('admin.products.send-to-product-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_product_adbox')"><i class="fas fa-ad"></i></a>
                                     <a class="btn purple-a tooltips" href="{{ route('admin.products.characteristics-by-product', ['id' => $product->id]) }}" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Продуктови характеристики"><img src="{{ asset('admin/assets/images/product_characteristics.svg') }}" alt="Характеристики" width="16"></a>
-{{--                                    <a class="btn purple-a tooltips" href="{{ route('products.combinations-by-product', ['id' => $product->id]) }}" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Продуктови комбинации"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="Комбинации" width="16"></a>--}}
+                                    <a class="btn purple-a tooltips" href="{{ route('admin.products.combinations-by-product', ['id' => $product->id]) }}" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Продуктови комбинации"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="Комбинации" width="16"></a>
 
                                     @include('admin.partials.index.action_buttons', ['mainRoute' => Request::segment(3), 'models' => $products, 'model' => $product, 'showInPublicModal' => false])
                                 </td>

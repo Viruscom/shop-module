@@ -6,8 +6,8 @@ use App\Helpers\LanguageHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
+use Modules\Shop\Models\Admin\ProductAttribute\ProductAttributePivot;
 use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
 use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
 use Modules\Shop\Models\Admin\Products\Product;
@@ -16,10 +16,9 @@ class ProductCombinationsController extends Controller
 {
     public function index()
     {
-
         return view('shop::admin.product_combinations.index', [
             'products'               => Product::with('translations', 'category')->get(),
-            'productCombinations'    => ProductCombination::all(),
+            'productCombinations'    => ProductCombination::get(),
             'productAttributes'      => ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get(),
             'productAttributeValues' => ProductAttributeValue::with('translations')->get(),
             'languages'              => LanguageHelper::getActiveLanguages()
@@ -31,16 +30,13 @@ class ProductCombinationsController extends Controller
             foreach ($request->combos as $key => $combo) {
                 $productCombination = ProductCombination::find($combo['comboId']);
                 if (!is_null($productCombination)) {
-                    $quantity = str_replace(',', '.', $combo['quantity']);
-                    $price    = str_replace(',', '.', $combo['price']);
+                    $price = str_replace(',', '.', $combo['price']);
                     $productCombination->update([
-                                                    'quantity' => number_format((float)$quantity, 2, '.', ''),
-                                                    'price'    => number_format((float)$price, 2, '.', ''),
-                                                    'sku'      => $combo['sku'],
+                                                    'price' => number_format((float)$price, 2, '.', ''),
+                                                    'sku'   => $combo['sku'],
                                                 ]);
                 }
             }
-            ProductCombination::updateCache();
 
             return 'Успешно обновяване!';
         }
@@ -53,16 +49,13 @@ class ProductCombinationsController extends Controller
         if (is_null($productCombination)) {
             return redirect()->back()->withErrors(['administration_messages.no_product_combination_found']);
         }
-        $quantity = str_replace(',', '.', $request->quantity);
-        $price    = str_replace(',', '.', $request->price);
+        $price = str_replace(',', '.', $request->price);
         $productCombination->update([
-                                        'quantity' => number_format((float)$quantity, 2, '.', ''),
-                                        'price'    => number_format((float)$price, 2, '.', ''),
-                                        'sku'      => $request->sku,
+                                        'price' => number_format((float)$price, 2, '.', ''),
+                                        'sku'   => $request->sku,
                                     ]);
-        ProductCombination::updateCache();
 
-        return redirect()->back()->with('success-message', 'administration_messages.successful_update');
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
     public function deleteMultiple(Request $request): RedirectResponse
     {
@@ -75,9 +68,7 @@ class ProductCombinationsController extends Controller
                 }
             }
 
-            ProductCombination::updateCache();
-
-            return redirect()->back()->with('success-message', 'administration_messages.successful_delete');
+            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
 
         return redirect()->back()->withErrors(['administration_messages.no_checked_checkboxes']);
@@ -90,18 +81,19 @@ class ProductCombinationsController extends Controller
         }
 
         $productCombination->delete();
-        ProductCombination::updateCache();
 
-        return redirect()->back()->with('success-message', 'administration_messages.successful_delete');
+        return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
     public function getAttributesByProductCategory(Request $request)
     {
-        $product = Product::where('id', $request->product_id)->with('product_category')->first();
+        $product = Product::where('id', $request->product_id)->with('category')->first();
+
         if (is_null($product)) {
             return 'error404';
         }
 
-        $attributesInCategory = ProductAttributePivot::select('pattr_id')->where('product_category_id', $product->product_category->id)->get();
+        $attributesInCategory = ProductAttributePivot::select('pattr_id')->where('product_category_id', $product->category->id)->get();
+
         if (is_null($attributesInCategory)) {
             return 'error404category';
         }
@@ -111,7 +103,7 @@ class ProductCombinationsController extends Controller
 
     public function getProductSkuNumber(Request $request)
     {
-        $productSkuNumber = Product::select('product_id_code')->where('id', $request->product_id)->first();
+        $productSkuNumber = Product::select('sku')->where('id', $request->product_id)->first();
         if (!is_null($productSkuNumber)) {
             return $productSkuNumber;
         }
@@ -129,7 +121,7 @@ class ProductCombinationsController extends Controller
 
             $collection          = collect($mainProduct->id);
             $combinations        = $collection->crossJoin(...$request->attribute);
-            $productCombinations = is_null(Cache::get('adminProductCombinations')) ? ProductCombination::updateCache() : Cache::get('adminProductCombinations');
+            $productCombinations = ProductCombination::all();
 
             if ($productCombinations->isEmpty()) {
                 foreach ($combinations as $combination) {
@@ -145,10 +137,9 @@ class ProductCombinationsController extends Controller
                         ProductCombination::create(ProductCombination::getRequestData($request, $combination));
                     }
                 }
-                ProductCombination::updateCache();
             }
 
-            return redirect()->back()->with('success-message', 'administration_messages.successful_create');
+            return redirect()->back()->with('success-message', 'admin.common.successful_create');
         }
 
         return redirect()->back()->withErrors(['administration_messages.no_product_attribute_values_checked']);
@@ -161,21 +152,22 @@ class ProductCombinationsController extends Controller
             return redirect()->back()->withErrors(['administration_messages.no_product_found']);
         }
 
-        $defaultLanguage        = LanguageHelper::getDefaultLanguage();
-        $languages              = LanguageHelper::getActiveLanguages();
-        $productAttributes      = is_null(Cache::get('adminProductAttributes')) ? ProductAttribute::updateCache() : Cache::get('adminProductAttributes');
-        $productAttributeValues = is_null(Cache::get('adminProductAttributeValues')) ? ProductAttributeValue::updateCache() : Cache::get('adminProductAttributeValues');
-        $products               = Product::groupBy('product_category_id')->with('defaultTranslation')->with(['product_category' => function ($q) {
-            $q->orderBy('position', 'asc');
-        }])->get()->sortBy(['product_category', 'id']);
-        $productCombinations    = is_null(Cache::get('adminProductCombinations')) ? ProductCombination::updateCache() : Cache::get('adminProductCombinations');
-        $productCombinations    = $productCombinations->filter(function ($item) use ($mainProduct) {
+        $productCombinations = ProductCombination::all();
+        $productCombinations = $productCombinations->filter(function ($item) use ($mainProduct) {
             if ($item->product_id == $mainProduct->id) {
                 return $item;
             }
         });
 
-        return view('admin.product_combinations.index', compact('products', 'productCombinations', 'productAttributes', 'productAttributeValues', 'defaultLanguage', 'languages'));
+        return view('shop::admin.product_combinations.index', [
+            'products'               => Product::with('translations')->with(['category' => function ($q) {
+                $q->orderBy('position', 'asc');
+            }])->get()->sortBy(['category', 'id']),
+            'productCombinations'    => $productCombinations,
+            'productAttributes'      => ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get(),
+            'productAttributeValues' => ProductAttributeValue::with('translations')->get(),
+            'languages'              => LanguageHelper::getActiveLanguages()
+        ]);
     }
 
     public function generateSkuNumbersByProduct(Request $request): RedirectResponse
@@ -199,6 +191,6 @@ class ProductCombinationsController extends Controller
             $int++;
         }
 
-        return redirect()->back()->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
 }

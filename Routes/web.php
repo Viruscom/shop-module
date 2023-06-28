@@ -387,7 +387,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('image/delete', [ProductsController::class, 'deleteImage'])->name('admin.products.delete-image');
             Route::get('send-to-product-adboxes', [ProductsController::class, 'makeProductAdBox'])->name('admin.products.send-to-product-adboxes');
             Route::get('send-to-adboxes', [ProductsController::class, 'makeAdBox'])->name('admin.products.send-to-adboxes');
-
+            Route::get('combinations', [ProductCombinationsController::class, 'combinationsByProductId'])->name('admin.products.combinations-by-product');
             /* Product characteristics for one product */
             Route::group(['prefix' => 'characteristics'], static function () {
                 Route::get('/', [ProductCharacteristicsController::class, 'characteristicsByProductId'])->name('admin.products.characteristics-by-product');
@@ -480,6 +480,29 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::get('position/up', [ProductCombinationsController::class, 'positionUp'])->name('admin.product-combinations.position-up');
             Route::get('position/down', [ProductCombinationsController::class, 'positionDown'])->name('admin.product-combinations.position-down');
             Route::get('image/delete', [ProductCombinationsController::class, 'deleteImage'])->name('admin.product-combinations.delete-image');
+        });
+    });
+
+    /* Product stocks */
+    Route::group(['prefix' => 'product_stocks'], static function () {
+        Route::get('/', [ProductStocksController::class, 'index'])->name('admin.product-stocks.index');
+        Route::get('/create', [ProductStocksController::class, 'create'])->name('admin.product-stocks.create');
+        Route::post('/store', [ProductStocksController::class, 'store'])->name('admin.product-stocks.store');
+
+        Route::group(['prefix' => 'multiple'], static function () {
+            Route::get('active/{active}', [ProductStocksController::class, 'activeMultiple'])->name('admin.product-stocks.active-multiple');
+            Route::get('delete', [ProductStocksController::class, 'deleteMultiple'])->name('admin.product-stocks.delete-multiple');
+        });
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [ProductStocksController::class, 'edit'])->name('admin.product-stocks.edit');
+            Route::post('update', [ProductStocksController::class, 'update'])->name('admin.product-stocks.update');
+            Route::get('delete', [ProductStocksController::class, 'delete'])->name('admin.product-stocks.delete');
+            Route::get('show', [ProductStocksController::class, 'show'])->name('admin.product-stocks.show');
+            Route::get('/active/{active}', [ProductStocksController::class, 'active'])->name('admin.product-stocks.changeStatus');
+            Route::get('position/up', [ProductStocksController::class, 'positionUp'])->name('admin.product-stocks.position-up');
+            Route::get('position/down', [ProductStocksController::class, 'positionDown'])->name('admin.product-stocks.position-down');
+            Route::get('image/delete', [ProductStocksController::class, 'deleteImage'])->name('admin.product-stocks.delete-image');
         });
     });
 

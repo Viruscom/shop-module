@@ -1,20 +1,15 @@
 @extends('layouts.admin.app')
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/assets/css/select2.min.css') }}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/assets/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
         $(document).ready(function () {
             function hideOffcanvas() {
                 $('.offcanvas-wrapper').addClass('hidden');
@@ -49,7 +44,7 @@
                     $('.actions').addClass('hidden');
                 } else {
                     $.ajax({
-                        url: $('.base-url').text() + '/admin/product_combinations/getAttributesByProductCategory',
+                        url: $('.base-url').text() + '/admin/shop/product_combinations/getAttributesByProductCategory',
                         type: 'POST',
                         data: {
                             _token: $('input[name="_token"]').val(), product_id: $(this).val()
@@ -68,7 +63,7 @@
                     });
 
                     $.ajax({
-                        url: $('.base-url').text() + '/admin/product_combinations/getProductSkuNumber',
+                        url: $('.base-url').text() + '/admin/shop/product_combinations/getProductSkuNumber',
                         type: 'POST',
                         data: {
                             _token: $('input[name="_token"]').val(), product_id: $(this).val()
@@ -104,8 +99,10 @@
 
             $('.decimal').keyup(function (evt) {
                 var self = $(this);
+
                 if (evt.keyCode != '13') {
-                    self.val(self.val().replace(/[^0-9\.,]/g, '')).toFixed(2);
+                    var val = parseFloat(self.val().replace(/[^0-9\.,]/g, ''));
+                    self.val(val.toFixed(2));
                 }
 
                 if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
@@ -168,6 +165,46 @@
             InputSku.on('blur', function () {
                 cssInputChanged($(this), inputSkuValue);
             });
+
+            $('.update-product-combo-mass-btn').on('click', function (e) {
+                e.preventDefault();
+
+                var combosArray = [];
+                $('.checkbox-row:checked').each(function () {
+                    var comboId      = this.value;
+                    var element      = {};
+                    element.comboId  = comboId;
+                    element.quantity = $('.quantity-' + comboId).val();
+                    element.price    = $('.price-' + comboId).val();
+                    element.sku      = $('.sku-' + comboId).val();
+                    combosArray.push(element);
+                });
+
+                $.ajax({
+                    url: $('.base-url').text() + '/admin/shop/product_combinations/multiple/update',
+                    type: 'POST',
+                    data: {_token: $('input[name="_token"]').val(), combos: combosArray},
+                    async: false,
+                    success: function (response) {
+                        alert(response);
+                        window.location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    }
+                });
+            });
+
+            $('#selectAllCombos').on("click", function (event) {
+                if (this.checked) {
+                    $('.checkbox-row-combo').each(function () {
+                        this.checked = true;
+                    });
+                } else {
+                    $('.checkbox-row-combo').each(function () {
+                        this.checked = false;
+                    });
+                }
+            });
         });
     </script>
 @endsection
@@ -178,7 +215,7 @@
         <div class="bg-grey top-search-bar">
             <div class="checkbox-all pull-left p-10 p-l-0">
                 <div class="pretty p-default p-square">
-                    <input type="checkbox" id="selectAll" class="tooltips" data-toggle="tooltip" data-placement="right" data-original-title="Маркира/Демаркира всички елементи" data-trigger="hover"/>
+                    <input type="checkbox" id="selectAllCombos" class="tooltips" data-toggle="tooltip" data-placement="right" data-original-title="Маркира/Демаркира всички елементи" data-trigger="hover"/>
                     <div class="state p-primary">
                         <label></label>
                     </div>
@@ -223,13 +260,13 @@
                     <thead>
                     <tr>
                         <th class="width-2-percent"></th>
-                        <th class="width-2-percent">Ред</th>
-                        <th>Заглавие</th>
+                        <th class="width-2-percent">{{ __('admin.number') }}</th>
+                        <th>{{ __('admin.title') }}</th>
                         <th>Категория</th>
                         {{--                        <th class="width-220">Количество</th>--}}
                         <th class="width-220">Ед.цена</th>
                         <th class="width-220">SKU</th>
-                        <th class="width-220 text-right">Действия</th>
+                        <th class="width-220 text-right">{{ __('admin.actions') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -240,13 +277,13 @@
                         @foreach($productCombinations as $combination)
                                 <?php
                                 $combinationProduct = $combination->product;
-                                $productCategory    = $combination->product->product_category;
+                                $productCategory    = $combination->product->category;
                                 ?>
 
                             <tr class="t-row row-{{$i}}">
                                 <td class="width-2-percent">
                                     <div class="pretty p-default p-square">
-                                        <input type="checkbox" class="checkbox-row" name="ids[]" value="{{ $combination->id }}"/>
+                                        <input type="checkbox" class="checkbox-row checkbox-row-combo" name="ids[]" value="{{ $combination->id }}"/>
                                         <div class="state p-primary">
                                             <label></label>
                                         </div>
@@ -258,25 +295,22 @@
                                         <div>{{ $combinationProduct->title }}
                                         </div>
                                         <div class="combination-details">
-                                            @foreach ($combination->filter_combo as $comboProductAttributeId=>$attributeValueId)
-                                                @foreach($productAttributeValues as $productAttributeId=>$attributeValueArray)
-                                                    @if($comboProductAttributeId == $productAttributeId)
-                                                        @foreach($attributeValueArray as $attributeValue)
-                                                            @if($attributeValue->id == $attributeValueId)
-                                                                <div>
-                                                                    <span>{{ $attributeValue->productAttribute->title }}:</span>
-                                                                    <span>{{ $attributeValue->title }}</span>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                @endforeach
+                                            @foreach ($combination->filter_combo as $comboProductAttributeId => $attributeValueId)
+                                                @php
+                                                    $attributeValue = $productAttributeValues->firstWhere('id', $attributeValueId);
+                                                @endphp
+                                                @if($attributeValue)
+                                                    <div>
+                                                        <span>{{ $attributeValue->parent->title }}:</span>
+                                                        <span>{{ $attributeValue->title }}</span>
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
                                 </td>
                                 <td>{{ $productCategory->title }}</td>
-                                <form id="form-{{$combination->id}}" action="{{ route('admin.product-combinations.update', ['id'=> $combination->id]) }}" method="PUT">
+                                <form id="form-{{$combination->id}}" action="{{ route('admin.product-combinations.update', ['id'=> $combination->id]) }}" method="POST">
                                     @csrf
                                     {{--                                    <td class="text-center">--}}
                                     {{--                                        <p class="m-b-0">Количество: {{ $combination->quantity }}</p>--}}
