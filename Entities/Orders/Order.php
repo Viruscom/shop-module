@@ -30,6 +30,54 @@ class Order extends Model
 
     protected $fillable = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at'];
 
+    public function getReadableShipmentStatus()
+    {
+        return trans('shop::admin.order_shipment_statuses.' . $this->shipment_status);
+    }
+    public function getReadablePaymentStatus()
+    {
+        return trans('shop::admin.order_payment_statuses.' . $this->payment_status);
+    }
+    public function getReadablePaymentMethod()
+    {
+        return trans('shop::admin.payment_systems.' . $this->payment->type);
+    }
+    public function getReadableShipmentMethod()
+    {
+        return trans('shop::admin.delivery_systems.' . $this->delivery->type);
+    }
+    public function getShipmentStatusClass($status): string
+    {
+        $classArray = [
+            self::SHIPMENT_WAITING    => '#c376be',
+            self::SHIPMENT_PROCESSING => '#f53333',
+            self::SHIPMENT_SENT       => '#f7d100',
+            self::SHIPMENT_DELIVERED  => '#ff9a24',
+            self::SHIPMENT_CANCELED   => '#ff68a1',
+            self::SHIPMENT_RETURNED   => '#01bec0',
+        ];
+        if (!array_key_exists($status, $classArray)) {
+            return '#000000;';
+        }
+
+        return $classArray[$status];
+    }
+
+    public function getPaymentStatusClass($status): string
+    {
+        $classArray = [
+            self::PAYMENT_PAID                 => '#c376be',
+            self::PAYMENT_PENDING              => '#f53333',
+            self::PAYMENT_CANCELED             => '#f7d100',
+            self::PAYMENT_REFUND               => '#ff9a24',
+            self::PAYMENT_PARTIAL_COMPENSATION => '#ff68a1',
+        ];
+        if (!array_key_exists($status, $classArray)) {
+            return '#000000;';
+        }
+
+        return $classArray[$status];
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(ShopRegisteredUser::class);

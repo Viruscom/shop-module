@@ -100,7 +100,7 @@
                     <th>Статус на изпълнение</th>
                     <th>Статус на плащане</th>
                     <th>Клиент</th>
-                    <th>Населено място</th>
+                    <th>Адрес на доставка</th>
                     <th>Сума</th>
                     <th>Метод на плащане</th>
                     <th>Метод на доставка</th>
@@ -113,27 +113,33 @@
                         <tr class="t-row">
                             <td style="max-width: 50px;">{{ $order->id }}</td>
                             <td>
-                                @if($order->returned_amount != '')
-                                    <img src="{{ asset('admin/assets/images/return_order_black.svg') }}" width="24" alt="" style="margin-right: 12px;">
-                                @endif
-                                <span style="background: {{ $order->getStatusClass($order->status()) }};padding: 4px; color: #000000;">{{ $order->statusHumanReadable() }}</span></td>
-                            <td>{{ $order->name }}</td>
-                            <td>{{ $order->city .', '. $order->shipment_address }}</td>
-                            <td>
-                                <div data-toggle="popover" data-content='@include('admin.partials.shop.orders.summary', ['orderPrices'=>$orderPrices, 'order'=>$order])'>
-                                    Общо: {{ $orderPrices[$order->id]['total_without_discounts'] }} лв.
-                                    <span>Отстъпки: <strong class="text-purple">-{{ $orderPrices[$order->id]['total_discounts'] }}</strong> лв.</span><br>
-                                    <span>Общо с отстъпки и ДДС: {{ $orderPrices[$order->id]['total_with_discounts_and_shipment'] }} лв.</span>
-                                </div>
-                            </td>
-                            <td>{{ $order->paymentTypeHumanReadable() }}</td>
-                            <td>
                                 <strong>{{ Carbon::parse($order->created_at)->format('d.m.Y') }} г.</strong><br>
                                 <span>Час: {{ Carbon::parse($order->created_at)->format('H:i:s') }}</span>
                             </td>
+                            <td>
+                                @if($order->returned_amount != '')
+                                    <img src="{{ asset('admin/assets/images/return_order_black.svg') }}" width="24" alt="" style="margin-right: 12px;">
+                                @endif
+                                <span style="background: {{ $order->getShipmentStatusClass($order->shipment_status) }};padding: 4px; color: #000000;">{{ $order->getReadableShipmentStatus() }}</span>
+                            </td>
+                            <td>
+                                <span style="background: {{ $order->getPaymentStatusClass($order->payment_status) }};padding: 4px; color: #000000;">{{ $order->getReadablePaymentStatus() }}</span>
+                            </td>
+                            <td>{{ $order->first_name . ' ' . $order->last_name }}</td>
+                            <td>{{ $order->street .', '. $order->street_number }}</td>
+                            <td>
+                                <div>
+                                    Общо: {{ $order->total }} лв.
+                                    <span>Отстъпки: <strong class="text-purple">-{{ $order->discounts_to_apply }}</strong> лв.</span><br>
+                                    <span>Общо с отстъпки и ДДС: {{ $order->total_discounted }} лв.</span>
+                                </div>
+                            </td>
+                            <td>{{ $order->getReadablePaymentMethod() }}</td>
+                            <td>{{ $order->getReadableShipmentMethod() }}</td>
+
                             <td class="pull-right">
-                                <a href="{{ url('/admin/shop/orders/'.$order->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
-                                <a href="{{ url('/admin/shop/orders/'.$order->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="{{ route('admin.shop.orders.show', ['id' => $order->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
+                                <a href="{{ route('admin.shop.orders.edit', ['id' => $order->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                             </td>
                         </tr>
                     @endforeach
