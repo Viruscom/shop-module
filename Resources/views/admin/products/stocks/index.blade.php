@@ -1,14 +1,9 @@
-@extends('layouts.app')
-@section('scripts')
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-    </script>
-@endsection
+@extends('layouts.admin.app')
+
 @section('content')
+    @include('shop::admin.products.stocks.breadcrumbs')
+    @include('admin.notify')
+    
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             {{--            <div class="checkbox-all pull-left p-10 p-l-0">--}}
@@ -25,22 +20,16 @@
             {{--            </div>--}}
 
             <div class="action-mass-buttons pull-right">
-                <a href="{{ route('products.stocks.internal_suppliers.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов снабдител">
+                <a href="{{ route('admin.product-stocks.internal-suppliers.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов снабдител">
                     <i class="fas fa-plus"></i>
                 </a>
-                {{--                <a href="{{ url('/admin/contents/active/multiple/0/') }}" class="btn btn-lg tooltips light-grey-eye mass-unvisible" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Маркирай всички селектирани като НЕ активни/видими">--}}
-                {{--                    <i class="far fa-eye-slash"></i>--}}
-                {{--                </a>--}}
-                {{--                <a href="{{ url('/admin/contents/active/multiple/1/') }}" class="btn btn-lg tooltips grey-eye mass-visible" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Маркирай всички селектирани като активни/видими">--}}
-                {{--                    <i class="far fa-eye"></i>--}}
-                {{--                </a>--}}
-                <a href="{{ route('products.stocks.internal_suppliers.index') }}" class="btn btn-lg tooltips btn-light-blue m-b-0" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички снабдители">
+                <a href="{{ route('admin.product-stocks.internal-suppliers.index') }}" class="btn btn-lg tooltips btn-light-blue m-b-0" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички снабдители">
                     <i class="fas fa-trash-alt"></i>
                 </a>
-                <a href="{{ route('products.stocks.internal_suppliers.archived') }}" class="btn btn-lg tooltips btn-light-blue m-b-0" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички архивирани снабдители">
+                <a href="{{ route('admin.product-stocks.internal-suppliers.archived') }}" class="btn btn-lg tooltips btn-light-blue m-b-0" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички архивирани снабдители">
                     <i class="fas fa-trash-alt"></i>
                 </a>
-                <a href="{{ route('products.stocks.movements.index') }}" class="btn btn-lg tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения"><i class="fas fa-history"></i></a>
+                {{--                <a href="{{ route('products.stocks.movements.index') }}" class="btn btn-lg tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения"><i class="fas fa-history"></i></a>--}}
             </div>
         </div>
     </div>
@@ -55,7 +44,7 @@
                     <select type="text" name="category_id" class="form-control">
                         <option value="">---Моля, изберете категория---</option>
                         @foreach($productCategories as $category)
-                            <option value="{{ $category->id }}">{{ $category->defaultTranslation->title }}</option>
+                            <option value="{{ $category->id }}">{{ $category->title }}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-sm btn-primary submit m-l-5"><i class="fa fa-search"></i></button>
@@ -63,13 +52,13 @@
                 <div class="m-t-10" style="display: flex;">
                     @foreach($productAttributes as $attribute)
                         <div>
-                            <label for="">{{ $attribute->defaultTranslation->title }}</label>
+                            <label for="">{{ $attribute->title }}</label>
                             <select name="" id="" class="form-control">
                                 <option value="">---Моля, изберете---</option>
                                 @foreach($productAttributeValues as $attributeId=>$valuesArray)
                                     @if($attributeId == $attribute->id)
                                         @foreach($valuesArray as $key=>$value)
-                                            <option value="{{ $value->id }}">{{ $value->defaultTranslation->title }}</option>
+                                            <option value="{{ $value->id }}">{{ $value->title }}</option>
                                         @endforeach
                                     @endif
                                 @endforeach
@@ -91,15 +80,15 @@
                     <th class="width-130 text-right">Действия</th>
                     </thead>
                     <tbody>
-                    <?php $i = 1;?>
+                    <?php $i = 1; ?>
                     @foreach($products as $product)
-                        <?php
-                        $productDefaultTranslation = $product->defaultTranslation;
-                        if (is_null($productDefaultTranslation)) {
-                            continue;
-                        }
-                        $combosCount = count($product->combos);
-                        ?>
+                            <?php
+                            $productDefaultTranslation = $product->defaultTranslation;
+                            if (is_null($productDefaultTranslation)) {
+                                continue;
+                            }
+                            $combosCount = count($product->combos);
+                            ?>
                         <tr class="t-row row-{{$product->id}}">
                             <td class="width-2-percent"></td>
                             <td class="width-2-percent">{{$i}}</td>
@@ -164,7 +153,7 @@
 
                             </tr>
                         @endif
-                        <?php $i++;?>
+                            <?php $i++; ?>
                     @endforeach
                     <tr style="display: none;">
                         <td colspan="5" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>

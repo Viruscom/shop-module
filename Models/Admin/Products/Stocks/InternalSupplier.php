@@ -2,13 +2,18 @@
 
 namespace Modules\Shop\Models\Admin\Products\Stocks;
 
+use App\Traits\Scopes;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class InternalSupplier extends Model
+class InternalSupplier extends Model implements TranslatableContract
 {
-    protected $table   = "internal_suppliers";
-    protected $guarded = ['id'];
+    use Translatable, Scopes;
+
+    public array $translatedAttributes = ['title', 'registration_address'];
+    protected    $table                = "internal_suppliers";
+    protected    $guarded              = ['id'];
     public static function generatePosition($request)
     {
         $internalSuppliers = self::orderBy('position', 'desc')->get();
@@ -47,6 +52,18 @@ class InternalSupplier extends Model
 
         return $data;
     }
+    public static function getLangArraysOnStore($data, $request, $languages, $modelId, $isUpdate)
+    {
+        foreach ($languages as $language) {
+            $data[$language->code] = InternalSupplierTranslation::getLanguageArray($language, $request, $modelId, $isUpdate);
+        }
+
+        return $data;
+    }
+    public static function cacheUpdate()
+    {
+
+    }
     public function scopeArchived($query, $bool)
     {
         return $query->where('archived', $bool);
@@ -55,11 +72,6 @@ class InternalSupplier extends Model
     {
         return $query->where('active', $active);
     }
-    public function translations(): HasMany
-    {
-        return $this->hasMany(InternalSupplierTranslation::class);
-    }
-
     public function updatedPosition($request)
     {
         if (!$request->has('position') || is_null($request->position)) {

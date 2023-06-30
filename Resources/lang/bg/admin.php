@@ -140,6 +140,20 @@ return array(
         array(
             'index' => 'Наличности',
         ),
+    'internal_suppliers'       =>
+        array(
+            'index'               => 'Снабдители',
+            'create'              => 'Добавяне на снабдител',
+            'edit'                => 'Редактиране на снабдител',
+            'no_records'          => 'Няма намерени снабдители',
+            'no_records_archived' => 'Няма намерени архивиране снабдители',
+            'index_archived'      => 'Архивирани снабдители',
+            'dis_archive'         => 'Разархивирай'
+        ),
+    'product_stocks_movements' =>
+        array(
+            'index' => 'Движения',
+        ),
     'abandoned_baskets'        =>
         array(
             'index' => 'Изоставени колички',

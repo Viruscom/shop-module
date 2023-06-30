@@ -2,102 +2,81 @@
 
 namespace Modules\Shop\Http\Controllers\admin\ProductStocks;
 
+use App\Actions\CommonControllerAction;
+use App\Helpers\LanguageHelper;
+use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Products\Stocks\InternalSupplierStoreRequest;
-use App\Http\Requests\Products\Stocks\InternalSupplierUpdateRequest;
-use App\Models\Products\InternalSupplier;
-use App\Models\Products\InternalSupplierTranslation;
-use App\Models\Shop_Models\Suppliers\SupplierTranslation;
+use Modules\Shop\Http\Requests\InternalSupplierStoreRequest;
+use Modules\Shop\Http\Requests\InternalSupplierUpdateRequest;
+use Modules\Shop\Models\Admin\Products\Stocks\InternalSupplier;
+use Modules\Shop\Models\Admin\Products\Stocks\InternalSupplierTranslation;
 
 class InternalSupplierController extends Controller
 {
     public function index()
     {
-        $suppliers = InternalSupplier::archived(false)->get();
-
-        return view('admin.products.stocks.internal_suppliers.index', compact('suppliers'));
+        return view('shop::admin.products.stocks.internal_suppliers.index', [
+            'suppliers' => InternalSupplier::archived(false)->get()
+        ]);
     }
 
     public function archived()
     {
         $suppliers = InternalSupplier::archived(true)->get();
 
-        return view('admin.products.stocks.internal_suppliers.archived', compact('suppliers'));
+        return view('shop::admin.products.stocks.internal_suppliers.archived', compact('suppliers'));
     }
-    public function store(InternalSupplierStoreRequest $request)
+    public function store(InternalSupplierStoreRequest $request, CommonControllerAction $action)
     {
-        $languages           = LanguageHelper::getActiveLanguages();
-        $request['position'] = InternalSupplier::generatePosition($request);
-        $internalSupplier    = InternalSupplier::create(InternalSupplier::getRequestData($request));
-        foreach ($languages as $language) {
-            $internalSupplier->translations()->create(InternalSupplierTranslation::getCreateData($language, $request));
-        }
+        $action->doSimpleCreate(InternalSupplier::class, $request);
 
         if ($request->has('submitaddnew')) {
-            return redirect()->back()->with('success-message', 'administration_messages.successful_create');
+            return redirect()->back()->with('success-message', 'admin.common.successful_create');
         }
 
-        return redirect()->route('products.stocks.internal_suppliers.index')->with('success-message', 'administration_messages.successful_create');
-    }
-    public function create()
-    {
-        $languages       = LanguageHelper::getActiveLanguages();
-        $defaultLanguage = LanguageHelper::getDefaultLanguage();
-        $suppliers       = InternalSupplier::with('translations')->orderBy('position')->get();
-
-        return view('admin.products.stocks.internal_suppliers.create', compact('languages', 'defaultLanguage', 'suppliers'));
+        return redirect()->route('admin.product-stocks.internal-suppliers.index')->with('success-message', 'admin.common.successful_create');
     }
     public function edit($id)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
-        $languages       = LanguageHelper::getActiveLanguages();
-        $defaultLanguage = LanguageHelper::getDefaultLanguage();
-        $suppliers       = InternalSupplier::with('translations')->orderBy('position')->get();
-
-        return view('admin.products.stocks.internal_suppliers.edit', compact('supplier', 'languages', 'defaultLanguage', 'suppliers'));
+        return view('shop::admin.products.stocks.internal_suppliers.edit', [
+            'supplier'  => $supplier,
+            'languages' => LanguageHelper::getActiveLanguages(),
+            'suppliers' => InternalSupplier::with('translations')->orderBy('position')->get()
+        ]);
     }
-    public function active($id, $active): RedirectResponse
+    public function active($id, $active)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
         $supplier->update(['active' => $active]);
 
-        return redirect()->route('products.stocks.internal_suppliers.index')->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->route('admin.product-stocks.internal-suppliers.index')->with('success-message', 'admin.common.successful_edit');
     }
-    public function update($id, InternalSupplierUpdateRequest $request)
+    public function update($id, InternalSupplierUpdateRequest $request, CommonControllerAction $action)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
-        $languages           = LanguageHelper::getActiveLanguages();
         $request['position'] = $supplier->updatedPosition($request);
-        $supplier->update($supplier->getRequestData($request));
-        foreach ($languages as $language) {
-            $supplierTranslation = $supplier->translations->where('language_id', $language->id)->first();
-            if (is_null($supplierTranslation)) {
-                $supplier->translations()->create(SupplierTranslation::getCreateDataArray($language, $request));
-            } else {
-                $supplierTranslation->update($supplierTranslation->getDataArray($language, $request));
-            }
-        }
+        $action->doSimpleUpdate(InternalSupplier::class, InternalSupplierTranslation::class, $supplier, $request);
 
-        return redirect()->route('products.stocks.internal_suppliers.index')->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->route('admin.product-stocks.internal-suppliers.index')->with('success-message', 'admin.common.successful_edit');
     }
-    public function positionDown($id): RedirectResponse
+    public function create()
+    {
+        return view('shop::admin.products.stocks.internal_suppliers.create', [
+            'languages' => LanguageHelper::getActiveLanguages(),
+            'suppliers' => InternalSupplier::with('translations')->orderBy('position')->get()
+        ]);
+    }
+    public function positionDown($id)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
         $nextSupplier = InternalSupplier::where('position', $supplier->position + 1)->first();
         if (!is_null($nextSupplier)) {
@@ -105,15 +84,13 @@ class InternalSupplierController extends Controller
             $supplier->update(['position' => $supplier->position + 1]);
         }
 
-        return redirect()->route('products.stocks.internal_suppliers.index')->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->route('admin.product-stocks.internal-suppliers.index')->with('success-message', 'admin.common.successful_edit');
     }
 
-    public function positionUp($id): RedirectResponse
+    public function positionUp($id)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
         $prevSupplier = InternalSupplier::where('position', $supplier->position - 1)->first();
         if (!is_null($prevSupplier)) {
@@ -121,18 +98,16 @@ class InternalSupplierController extends Controller
             $supplier->update(['position' => $supplier->position - 1]);
         }
 
-        return redirect()->route('products.stocks.internal_suppliers.index')->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->route('admin.product-stocks.internal-suppliers.index')->with('success-message', 'admin.common.successful_edit');
     }
 
-    public function archive($id, $archived): RedirectResponse
+    public function archive($id, $archived)
     {
         $supplier = InternalSupplier::find($id);
-        if (is_null($supplier)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
-        }
+        WebsiteHelper::redirectBackIfNull($supplier);
 
         $supplier->update(['archived' => $archived]);
 
-        return redirect()->back()->with('success-message', 'administration_messages.successful_edit');
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
 }

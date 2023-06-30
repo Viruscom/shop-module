@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminControllers\Products\Stocks\InternalSupplierController;
 use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
 use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +15,7 @@ use Modules\Shop\Http\Controllers\admin\ProductCollections\CollectionsController
 use Modules\Shop\Http\Controllers\admin\ProductCombinations\ProductCombinationsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
+use Modules\Shop\Http\Controllers\admin\ProductStocks\InternalSupplierController;
 use Modules\Shop\Http\Controllers\admin\ProductStocks\ProductStocksController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserCompaniesController;
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserFavProductsController;
@@ -515,6 +515,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         /* Internal suppliers */
         Route::group(['prefix' => 'internal_suppliers'], static function () {
             Route::get('/', [InternalSupplierController::class, 'index'])->name('admin.product-stocks.internal-suppliers.index');
+            Route::get('archived', [InternalSupplierController::class, 'archived'])->name('admin.product-stocks.internal-suppliers.archived');
             Route::get('/create', [InternalSupplierController::class, 'create'])->name('admin.product-stocks.internal-suppliers.create');
             Route::post('/store', [InternalSupplierController::class, 'store'])->name('admin.product-stocks.internal-suppliers.store');
 
@@ -522,7 +523,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('edit', [InternalSupplierController::class, 'edit'])->name('admin.product-stocks.internal-suppliers.edit');
                 Route::post('update', [InternalSupplierController::class, 'update'])->name('admin.product-stocks.internal-suppliers.update');
                 Route::get('show', [InternalSupplierController::class, 'show'])->name('admin.product-stocks.internal-suppliers.show');
-                Route::get('archive', [InternalSupplierController::class, 'archive'])->name('admin.product-stocks.internal-suppliers.archive');
+                Route::get('archive/{archived}', [InternalSupplierController::class, 'archive'])->name('admin.product-stocks.internal-suppliers.change-archive-status');
             });
         });
     });
