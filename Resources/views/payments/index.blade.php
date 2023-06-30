@@ -20,7 +20,7 @@
                         @foreach($payments as $payment)
                             <tr>
                                 <td>{{$payment->position}}</td>
-                                <td>{{$payment->type}}</td>
+                                <td>{{ __('shop::admin.payment_systems.'.$payment->type) }}</td>
                                 <td>{{$payment->active}}</td>
                                 <td class="text-right">
                                     @if($payment->hasEditView())

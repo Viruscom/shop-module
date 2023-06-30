@@ -104,9 +104,10 @@
                 <div>
                     <h4>Метод на плащане</h4>
                     <select name="payment_type_id" id="payment_type_id_select" class="form-control select2">
-                        <option value="">--- Моля, изберете ---</option>
-                        <option value="">{{ trans('administration_messages.order_payment_type_1') }}</option>
-                        <option value="">{{ trans('administration_messages.order_payment_type_2') }}</option>
+                        <option value="">{{ __('admin.common.please_select') }}</option>
+                        @foreach($paymentMethods as $method)
+                            <option value="{{ $method->id }}">{{ __('shop::admin.payment_systems.'.$method->type) }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="m-t-10">
@@ -130,11 +131,12 @@
             <div class="col-md-6">
                 <h3 class="text-purple">Доставка</h3>
                 <div>
-                    <h4>Начин на доставка</h4>
+                    <h4>Метод на доставка</h4>
                     <select name="shipment_type_id" id="shipment_type_id_select" class="form-control select2">
-                        <option value="">--- Моля, изберете ---</option>
-                        <option value="1">{!! trans('administration_messages.delivery_type_1') !!}</option>
-                        <option value="2">{!! trans('administration_messages.delivery_type_2') !!}</option>
+                        <option value="">{{ __('admin.common.please_select') }}</option>
+                        @foreach($deliveryMethods as $method)
+                            <option value="{{ $method->id }}">{{ __('shop::admin.delivery_systems.'.$method->type) }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="m-t-10">

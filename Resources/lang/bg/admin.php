@@ -322,16 +322,24 @@ return array(
         ),
     'payments'                 =>
         array(
-            'index'          => 'Плащания',
+            'index'          => 'Методи на плащане',
             'position'       => 'Позиция',
             'payment_system' => 'Разплащателна система',
             'status'         => 'Статус',
             'no-payments'    => 'Няма добавени разплащателни системи',
         ),
+    'payment_systems'          => [
+        'bank_transfer'    => 'Банков превод',
+        'cash_on_delivery' => 'Плащане при доставка',
+        'mypos'            => 'Картово плащане (MyPOS)',
+    ],
     'deliveries'               =>
         array(
-            'index' => 'Доставки',
+            'index' => 'Методи на доставка',
         ),
+    'delivery_systems'         => [
+        'own_delivery' => 'Собствена доставка',
+    ],
     'post_codes'               =>
         array(
             'index' => 'Пощенски кодове',

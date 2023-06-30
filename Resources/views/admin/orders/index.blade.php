@@ -83,9 +83,9 @@
             </div>
 
             <div class="action-mass-buttons pull-right">
-                <a href="{{ route('admin.shop.orders.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">
-                    <i class="fas fa-plus"></i>
-                </a>
+                {{--                <a href="{{ route('admin.shop.orders.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">--}}
+                {{--                    <i class="fas fa-plus"></i>--}}
+                {{--                </a>--}}
             </div>
         </div>
     </div>

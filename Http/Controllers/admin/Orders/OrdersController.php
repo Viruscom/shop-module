@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Shop\Entities\Orders\Order;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
+use Modules\Shop\Entities\Settings\Delivery;
 use Modules\Shop\Entities\Settings\Main\CountrySale;
+use Modules\Shop\Entities\Settings\Payment;
 use Modules\Shop\Models\Admin\Products\Product;
 
 class OrdersController extends Controller
@@ -22,10 +24,12 @@ class OrdersController extends Controller
     public function create()
     {
         return view('shop::admin.orders.create', [
-            'orderNumber'   => Order::max('id') + 1,
-            'products'      => Product::with('translations', 'combinations')->get(),
-            'clients'       => ShopRegisteredUser::where('active', true)->with('paymentAddresses', 'shipmentAddresses', 'companies')->get(),
-            'saleCountries' => CountrySale::with('country', 'country.cities')->get()
+            'orderNumber'     => Order::max('id') + 1,
+            'products'        => Product::with('translations', 'combinations')->get(),
+            'clients'         => ShopRegisteredUser::where('active', true)->with('paymentAddresses', 'shipmentAddresses', 'companies')->get(),
+            'saleCountries'   => CountrySale::with('country', 'country.cities')->get(),
+            'paymentMethods'  => Payment::where('active', true)->orderBy('position', 'asc')->get(),
+            'deliveryMethods' => Delivery::where('active', true)->orderBy('position', 'asc')->get()
         ]);
     }
 
