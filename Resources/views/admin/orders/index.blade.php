@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@php use Carbon\Carbon; @endphp@extends('layouts.admin.app')
 
 @section('styles')
     <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
@@ -96,13 +96,15 @@
                 <thead>
                 <tr>
                     <th style="max-width: 50px">№</th>
-                    <th>Статус на поръчката</th>
-                    <th>Име и фамилия</th>
+                    <th>Дата</th>
+                    <th>Статус на изпълнение</th>
+                    <th>Статус на плащане</th>
+                    <th>Клиент</th>
                     <th>Населено място</th>
-                    <th>Сума на поръчката</th>
+                    <th>Сума</th>
                     <th>Метод на плащане</th>
-                    <th>Регистрирана на</th>
-                    <th>Действия</th>
+                    <th>Метод на доставка</th>
+                    <th>{{ __('admin.actions') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -126,8 +128,8 @@
                             </td>
                             <td>{{ $order->paymentTypeHumanReadable() }}</td>
                             <td>
-                                <strong>{{ \Carbon\Carbon::parse($order->created_at)->format('d.m.Y') }} г.</strong><br>
-                                <span>Час: {{ \Carbon\Carbon::parse($order->created_at)->format('H:i:s') }}</span>
+                                <strong>{{ Carbon::parse($order->created_at)->format('d.m.Y') }} г.</strong><br>
+                                <span>Час: {{ Carbon::parse($order->created_at)->format('H:i:s') }}</span>
                             </td>
                             <td class="pull-right">
                                 <a href="{{ url('/admin/shop/orders/'.$order->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
@@ -137,7 +139,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="8" class="no-table-rows">{{ trans('shop::admin.orders.no_orders_found') }}</td>
+                        <td colspan="10" class="no-table-rows">{{ trans('shop::admin.orders.no_orders_found') }}</td>
                     </tr>
                 @endif
                 </tbody>

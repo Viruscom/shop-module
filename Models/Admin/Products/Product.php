@@ -46,7 +46,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
                                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
-                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku'];
+                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock'];
     protected    $table                = 'products';
 
     public static function getFileRules(): string
@@ -136,6 +136,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         if ($request->has('weight')) {
             $data['weight'] = $request->weight;
+        }
+
+        if ($request->has('units_in_stock')) {
+            $data['units_in_stock'] = $request->units_in_stock;
         }
 
         if ($request->hasFile('image')) {
@@ -359,6 +363,15 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         //TODO: Make collection check
         return false;
+    }
+    public function scopeIsInStock($query)
+    {
+        return $query->where('units_in_stock', '>', 0);
+    }
+
+    public function updateUnitsInStock($newQuantity): void
+    {
+        $this->update(['units_in_stock' => $newQuantity]);
     }
     public function additionalFields(): HasMany
     {

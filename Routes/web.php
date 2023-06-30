@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\ProductStocks\ProductStocksController;
 use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
 use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,8 @@ use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountCont
  */
 Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
 
+    /* Common */
+    Route::post('/getClientGroupById', [ShopAdminRegisteredUsersController::class, 'getClientGroupById']);
     /* Dashboard */
     Route::get('/', [ShopAdminHomeController::class, 'index'])->name('admin.shop.dashboard');
 
@@ -102,6 +105,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::get('/', [ShopAdminRegisteredUsersController::class, 'index'])->name('admin.shop.registered-users.index');
         Route::get('/create', [ShopAdminRegisteredUsersController::class, 'create'])->name('admin.shop.registered-users.create');
         Route::post('/store', [ShopAdminRegisteredUsersController::class, 'store'])->name('admin.shop.registered-users.store');
+        Route::post('getAjaxClientById', [ShopAdminRegisteredUsersController::class, 'getAjaxClientById'])->name('admin.shop.registered-users.get-ajax-user-by-id');
 
         Route::group(['prefix' => '{id}'], static function () {
             Route::get('edit', [ShopAdminRegisteredUsersController::class, 'edit'])->name('admin.shop.registered-users.edit');
@@ -476,10 +480,6 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::group(['prefix' => '{id}'], static function () {
             Route::post('update', [ProductCombinationsController::class, 'update'])->name('admin.product-combinations.update');
             Route::get('delete', [ProductCombinationsController::class, 'delete'])->name('admin.product-combinations.delete');
-            Route::get('/active/{active}', [ProductCombinationsController::class, 'active'])->name('admin.product-combinations.changeStatus');
-            Route::get('position/up', [ProductCombinationsController::class, 'positionUp'])->name('admin.product-combinations.position-up');
-            Route::get('position/down', [ProductCombinationsController::class, 'positionDown'])->name('admin.product-combinations.position-down');
-            Route::get('image/delete', [ProductCombinationsController::class, 'deleteImage'])->name('admin.product-combinations.delete-image');
         });
     });
 

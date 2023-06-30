@@ -78,4 +78,21 @@ class ShopAdminRegisteredUsersController extends Controller
     {
 
     }
+
+    public function getAjaxClientById(Request $request)
+    {
+        $client = ShopRegisteredUser::where('id', $request->client_id)->with('shipmentAddresses', 'paymentAddresses', 'companies')->first();
+        if (is_null($client)) {
+            return response()->json(['error' => ['client_not_found' => 'Няма такъв клиент']]);
+        }
+
+        return $client;
+    }
+
+    public function getClientGroupById(Request $request)
+    {
+        $clientGroupId = ShopRegisteredUser::where('id', $request->client_id)->first()->group_id;
+
+        return ($clientGroupId) ?? 1;
+    }
 }
