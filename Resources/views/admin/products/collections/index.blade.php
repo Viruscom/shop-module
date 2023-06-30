@@ -86,7 +86,7 @@
             <th>Име на колекцията</th>
             <th>Основен продукт</th>
             <th>Регистрирана на</th>
-            <th>Действия</th>
+            <th class="text-right">{{ __('admin.actions') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -96,20 +96,20 @@
                     <td>{{ $collection->title }}</td>
                     <td>{{ $collection->mainProduct->title }}</td>
                     <td>{{ Carbon\Carbon::parse($collection->created_at)->format('d.m.Y H:m:s') }}</td>
-                    <td class="pull-right">
+                    <td class="text-right">
                         {{-- <a href="{{ url('/admin/shop/collections/'.$collection->id.'/show') }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>  --}}
-                        <a href="{{ url('/admin/shop/collections/'.$collection->id.'/edit') }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{{ route('admin.product-collections.edit', ['id' => $collection->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                         @if(!$collection->active)
-                            <a href="{{ url('/admin/shop/collections/active/'.$collection->id.'/1') }}" role="button" class="btn light-grey-eye visibility-activate"><i class="far fa-eye-slash"></i></a>
+                            <a href="{{ route('admin.product-collections.changeActiveStatus', ['id' => $collection->id, 'active' => 1]) }}" role="button" class="btn light-grey-eye visibility-activate"><i class="far fa-eye-slash"></i></a>
                         @else
-                            <a href="{{ url('/admin/shop/collections/active/'.$collection->id.'/0') }}" role="button" class="btn grey-eye visibility-unactive"><i class="far fa-eye"></i></a>
+                            <a href="{{ route('admin.product-collections.changeActiveStatus', ['id' => $collection->id, 'active' => 0]) }}" role="button" class="btn grey-eye visibility-unactive"><i class="far fa-eye"></i></a>
                         @endif
                     </td>
                 </tr>
             @endforeach
         @else
             <tr>
-                <td colspan="6" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                <td colspan="6" class="no-table-rows">{{ trans('shop::admin.product_collections.no_records') }}</td>
             </tr>
         @endif
         </tbody>

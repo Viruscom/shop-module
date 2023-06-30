@@ -12,6 +12,8 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.products.collections.breadcrumbs')
+    @include('admin.notify')
     <div class="col-xs-12 p-0">
         <form class="my-form" action="{{ route('admin.product-collections.update', ['id' => $collection->id]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -117,7 +119,7 @@
                         <div class="col-md-offset-3 col-md-9">
                             <button type="submit" name="submitaddnew" value="submitaddnew" class="btn green saveplusbtn margin-bottom-10"> запиши и добави нов</button>
                             <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10"><i class="fas fa-save"></i> запиши</button>
-                            <a href="{{ url('/admin/shop/collections') }}" role="button" class="btn back-btn margin-bottom-10"><i class="fa fa-reply"></i> назад</a>
+                            <a href="{{ route('admin.product-collections.index') }}" role="button" class="btn back-btn margin-bottom-10"><i class="fa fa-reply"></i> назад</a>
                         </div>
                     </div>
                 </div>
