@@ -3,7 +3,7 @@
 @section('content')
     @include('shop::admin.products.stocks.breadcrumbs')
     @include('admin.notify')
-    
+
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             {{--            <div class="checkbox-all pull-left p-10 p-l-0">--}}
@@ -83,19 +83,16 @@
                     <?php $i = 1; ?>
                     @foreach($products as $product)
                             <?php
-                            $productDefaultTranslation = $product->defaultTranslation;
-                            if (is_null($productDefaultTranslation)) {
-                                continue;
-                            }
-                            $combosCount = count($product->combos);
+                            $combosCount = $product->combinations->isNotEmpty();
                             ?>
                         <tr class="t-row row-{{$product->id}}">
                             <td class="width-2-percent"></td>
                             <td class="width-2-percent">{{$i}}</td>
                             <td>
-                                <img src="{{ $product->fullImageFilePathUrl() }}" height="30" class="m-r-5">
-                                {{ $productDefaultTranslation->title}}
-                                @if($combosCount > 0)
+                                <img src="{{ $product->getFileUrl() }}" height="30" class="m-r-5">
+                                {{ $product->title}}
+                                @if(!is_null($product->combinations) && $product->combinations->isNotEmpty())
+                                    Брой комбинации: {{$product->combinations->count()}}
                                 @endif
                             </td>
                             <td class="width-130 text-right">{{ $product->sku }}</td>
@@ -106,7 +103,7 @@
                                 <a href="#" class="btn tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения за продукта"><i class="fas fa-history"></i></a>
                             </td>
                         </tr>
-                        @if($combosCount > 0)
+                        @if(!is_null($product->combinations) && $product->combinations->isNotEmpty())
                             <tr class="t-row-details row-{{$product->id}}-details hidden">
                                 <td colspan="6" class="p-0">
                                     <div style="padding: 0px 2%;border-top: 1px solid #c8286440;">
@@ -114,25 +111,26 @@
                                     </div>
                                     <table style="min-width: 100%; max-width: 100%;">
                                         <tbody>
-                                        @foreach($product->combos as $combo)
+                                        @foreach($product->combinations as $combo)
+                                                <?php
+                                                $combinationProduct = $combo->product;
+                                                $productCategory    = $combo->product->category;
+                                                ?>
                                             <tr class="product-combos-tr">
                                                 <td class="width-2-percent"></td>
                                                 <td class="width-2-percent"></td>
                                                 <td>
-                                                    <div>{{ $productDefaultTranslation->title }}</div>
+                                                    <div>{{ $product->title }}</div>
                                                     <div class="combination-details">
-                                                        @foreach($combo->combination as $key=>$combinationValue)
-                                                            @if($combinationValue != $product->id)
-                                                                @foreach($productAttributeValues as $productAttributeId=>$attributeValueArray)
-                                                                    @foreach($attributeValueArray as $attributeValue)
-                                                                        @if($attributeValue->id == $combinationValue)
-                                                                            <div>
-                                                                                <span>{{ $attributeValue->productAttribute->defaultTranslation->title }}:</span>
-                                                                                <span>{{ $attributeValue->defaultTranslation->title }}</span>
-                                                                            </div>
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endforeach
+                                                        @foreach ($combo->combination as $comboProductAttributeId => $attributeValueId)
+                                                            @php
+                                                                $attributeValue = $productAttributeValues->firstWhere('id', $attributeValueId);
+                                                            @endphp
+                                                            @if($attributeValue)
+                                                                <div>
+                                                                    <span>{{ $attributeValue->parent->title }}:</span>
+                                                                    <span>{{ $attributeValue->title }}</span>
+                                                                </div>
                                                             @endif
                                                         @endforeach
                                                     </div>
@@ -142,7 +140,7 @@
                                                     <input type="number" value="{{ $combo->quantity }}" name="new_quantity" style="width: 90px">
                                                 </td>
                                                 <td class="width-130 text-right">
-                                                    <a href="#" class="btn tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения за продукта"><i class="fas fa-history"></i></a>
+                                                    <a href="{{ $combo->id }}" class="btn tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения за продукта"><i class="fas fa-history"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
