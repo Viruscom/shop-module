@@ -15,6 +15,7 @@
                 <li><a href="{{ route('admin.product-attributes.index') }}"><img src="{{ asset('admin/assets/images/product_attribute.svg') }}" alt="@lang('shop::admin.product_attributes.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_attributes.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.products.characteristics.index') }}"><img src="{{ asset('admin/assets/images/product_characteristics.svg') }}" alt="@lang('shop::admin.product_characteristics.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_characteristics.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-combinations.index') }}"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="@lang('shop::admin.product_combinations.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_combinations.index') !!}</span></a></li>
+                <li><a href="{{ route('admin.product-collections.index') }}"><i class="fas fa-layer-group"></i> <span>{!! trans('shop::admin.product_collections.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-stocks.index') }}"><i class="fas fa-inventory"></i><span>{!! trans('shop::admin.product_stocks.index') !!}</span></a></li>
             </ul>
         </div>
@@ -38,7 +39,6 @@
                 @if(array_key_exists('ShopDiscounts', $activeModules))
                     <li><a href="{{ route('discounts.index') }}"><i class="fas fa-percent"></i> <span>@lang('shop::admin.discounts.index')</span></a></li>
                 @endif
-                <li><a href="{{ url('/admin/shop/collections') }}"><i class="fas fa-layer-group"></i> <span>{!! trans('shop::admin.product_collections.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.shop.registered-users.index') }}"><i class="fas fa-user-friends"></i> <span>{!! trans('shop::admin.registered_users.index') !!}</span></a></li>
                 <li><a href="https://main.reklamnipodaraci.com/admin/shop/h-18-reports"><i class="fas fa-user-friends"></i>
                         <span>{{ __('shop::admin.h18_reports.index') }}</span></a></li>

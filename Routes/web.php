@@ -12,6 +12,7 @@ use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributesController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributeValuesController;
 use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
+use Modules\Shop\Http\Controllers\admin\ProductCollections\CollectionsController;
 use Modules\Shop\Http\Controllers\admin\ProductCombinations\ProductCombinationsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductCharacteristicsController;
 use Modules\Shop\Http\Controllers\admin\Products\ProductsController;
@@ -483,7 +484,22 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
     });
 
+    /* Product collections */
+    Route::group(['prefix' => 'collections'], static function () {
+        Route::get('/', [CollectionsController::class, 'index'])->name('admin.product-collections.index');
+        Route::get('create', [CollectionsController::class, 'create'])->name('admin.product-collections.create');
+        Route::post('store', [CollectionsController::class, 'store'])->name('admin.product-collections.store');
+
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [CollectionsController::class, 'edit'])->name('admin.product-collections.edit');
+            Route::post('update', [CollectionsController::class, 'update'])->name('admin.product-collections.update');
+            Route::get('delete', [CollectionsController::class, 'delete'])->name('admin.product-collections.delete');
+            Route::get('/active/{active}', [CollectionsController::class, 'changeActiveStatus'])->name('admin.product-collections.changeActiveStatus');
+            Route::get('show', [CollectionsController::class, 'show'])->name('admin.product-collections.show');
+        });
+    });
     /* Product stocks */
+    //TODO: ne e praveno
     Route::group(['prefix' => 'product_stocks'], static function () {
         Route::get('/', [ProductStocksController::class, 'index'])->name('admin.product-stocks.index');
         Route::get('/create', [ProductStocksController::class, 'create'])->name('admin.product-stocks.create');
