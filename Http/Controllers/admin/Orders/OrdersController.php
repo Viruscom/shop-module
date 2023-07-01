@@ -39,7 +39,7 @@ class OrdersController extends Controller
     }
     public function show($id)
     {
-        $order = Order::where('id', $id)->first();
+        $order = Order::where('id', $id)->with('order_products')->first();
         WebsiteHelper::redirectBackIfNull($order);
 
         return view('shop::admin.orders.show', compact('order'));
