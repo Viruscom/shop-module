@@ -197,5 +197,93 @@
     <div class="row">
         <hr>
     </div>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#orders">Продукти</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#documents">Документи</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="orders" class="tab-pane fade in active">
+                    <table class="table table-striped products-table">
+                        <thead>
+                        <tr>
+                            <th>Снимка</th>
+                            <th>Продукт</th>
+                            <th>Ед.цена</th>
+                            <th>Количество</th>
+                            <th>Общо</th>
+                            <th>Отстъпки (общо)</th>
+                            <th>ДДС (общо)</th>
+                            <th>Обща цена с отстъпки и ДДС</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($order->order_products as $orderProduct)
+                            <tr>
+                                <td><img src="{{ $orderProduct->product->getFileUrl() }}" width="45"></td>
+                                <td>{{ $orderProduct->product->title }}</td>
+                                <td>{{ $orderProduct->price }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        <tfoot style="border-top: 2px dashed #c3c3c3;">
+                        <tr>
+                            <th colspan="6" class="text-right">Общо цена без отстъпки:</th>
+                            <th class="price-without-discounts">0,00 лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Отстъпки по продукти:</th>
+                            <th class="discounts-on-products" style="border: none;">0,00 лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Други отстъпки:</th>
+                            <th class="other-discounts" style="border: none;">0,00 лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Общо отстъпки:</th>
+                            <th class="total-discounts" style="border: none;">0,00 лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Общо цена след отстъпки:</th>
+                            <th class="total-with-discounts" style="border: none;">0,00 лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Доставка:</th>
+                            <th class="shipment-amount" style="border: none;"><span>3,00</span> лв.</th>
+                        </tr>
+
+                        <tr>
+                            <th colspan="6" class="text-right" style="border: none;">Крайна цена (с ДДС) и доставка:</th>
+                            <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">0,00 лв.</th>
+                        </tr>
+
+                        {{--                            //TODO: Add inputs 'total, total_discounts,vat,total_with_vat'--}}
+
+                        </tfoot>
+                    </table>
+                    <div class="hidden">
+                        <input type="text" name="total" class="price-without-discounts-input">
+                        <input type="text" name="total_discounts" class="discounts-on-products-input">
+                        <input type="text" name="vat" class="vat-input">
+                        <input type="text" name="total_with_vat" class="total-with-vat-input">
+                        <input type="text" name="shipment_amount" class="shipment-amount-input">
+                    </div>
+                </div>
+                <div id="documents" class="tab-pane fade">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
