@@ -97,6 +97,9 @@
                 </tbody>
                 @endif</tbody>
             </table>
+            @if($order->invoice_required)
+                <div class="alert alert-warning"><strong>Внимание! </strong>Клиентът изисква фактура.</div>
+            @endif
         </div>
         <div class="col-md-6 col-xs-12">
             <label for="order_status_id" class="form-label col-md-12 text-right">@lang('shop::admin.orders.status')</label>
@@ -121,16 +124,11 @@
                     <tr>
                         <th style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
                             <h4>Адрес на плащане</h4>
-                            <div class="btn btn-sm btn-success add-payment-address-btn">Добави адрес</div>
                         </th>
                     </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-                <div class="add-payment-address hidden">
-                    <div class="alert alert-info">Въвеждане на нов адрес на плащане</div>
-                    <div class="bg-e8-payment"></div>
-                </div>
             </div>
         </div>
         <div class="col-md-6">
@@ -145,16 +143,15 @@
                     <tr>
                         <th style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
                             <h4>Адрес на доставка</h4>
-                            <div class="btn btn-sm btn-success add-shipment-address-btn">Добави адрес</div>
                         </th>
                     </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                    <tr>
+                        <td>{{ $order->street . ', № ' . $order->street_number }}</td>
+                    </tr>
+                    </tbody>
                 </table>
-                <div class="add-shipment-address hidden">
-                    <div class="alert alert-info">Въвеждане на нов адрес на доставка</div>
-                    <div class="bg-e8-shipment"></div>
-                </div>
             </div>
         </div>
     </div>
@@ -165,7 +162,6 @@
     <div class="row">
         <div class="col-md-12" style="display: flex;justify-content: space-between;align-items: center;">
             <h3 class="text-purple">Фирмени данни</h3>
-            <div class="btn btn-sm btn-success add-firm-account-btn">Добави фирма</div>
         </div>
         <div class="col-md-12 col-xs-12">
             <table class="table table-striped firm-accounts-table">
@@ -176,20 +172,26 @@
                     <th>ЕИК</th>
                     <th>ЕИК по ДДС</th>
                     <th>Адрес по регистрация</th>
-                    <th>Телефон</th>
                     <th class="text-right">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td colspan="7" class="no-table-rows">{{ trans('shop::admin.registered_users.no_companies') }}</td>
-                </tr>
+                @if($order->invoice_required)
+                    <tr>
+                        <td>{{ $order->company_name }}</td>
+                        <td>{{ $order->company_mol }}</td>
+                        <td>{{ $order->company_eik }}</td>
+                        <td>{{ ($order->company_vat_eik =='') ? 'Няма': '' }}</td>
+                        <td>{{ $order->company_address }}</td>
+                        <td></td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="7" class="no-table-rows">{{ trans('shop::admin.registered_users.no_companies') }}</td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
-            <div class="add-firm-account hidden">
-                <div class="alert alert-info">Въвеждане на нова фирма</div>
-                <div class="bg-e8-company"></div>
-            </div>
         </div>
     </div>
     <div class="row">
