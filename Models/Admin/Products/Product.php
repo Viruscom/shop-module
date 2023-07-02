@@ -15,7 +15,6 @@ use App\Traits\StorageActions;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Auth;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -262,7 +261,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return self::getDefaultVat($country, $city);
     }
-    public function getVatCategory($countryId): Collection
+    public function getVatCategory($countryId)
     {
         return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
     }

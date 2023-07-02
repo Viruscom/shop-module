@@ -4,9 +4,7 @@ namespace Modules\Shop\Models\Admin\Products;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Auth;
-use Modules\Shop\Entities\Basket\Basket;
-use Modules\Shop\Entities\ShopRegisteredUser;
+use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
 
 class ProductFavorite extends Model
 {

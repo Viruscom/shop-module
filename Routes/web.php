@@ -41,6 +41,7 @@ use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
+use Modules\Shop\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -310,7 +311,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
     });
 
-    Route::post('/user/location', [App\Http\Controllers\HomeController::class, 'setUserLocation'])->name('user.location.set');
+    Route::post('/user/location', [HomeController::class, 'setUserLocation'])->name('user.location.set');
 
     /* Brands */
     Route::group(['prefix' => 'brands'], static function () {

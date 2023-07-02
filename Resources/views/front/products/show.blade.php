@@ -25,8 +25,6 @@
         </div>
 
         {{--      Icons here --}}
-
-
         <div class="shell">
             <div class="prod-elements">
                 <div class="prod-image-wrapper" data-aos="fade-up" data-aos-delay="50">

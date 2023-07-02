@@ -62,11 +62,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-xs-12">
-            <div>
-                <h3><strong>Поръчка № {{ $order->id }}</strong></h3>
-            </div>
+        <div class="col-md-12">
+            <h3><strong>Поръчка № {{ $order->id }}</strong></h3>
             <h3 class="text-purple">Клиент</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
             <table class="table table-striped">
                 <tbody>
                 <tr>
@@ -102,10 +104,18 @@
             @endif
         </div>
         <div class="col-md-6 col-xs-12">
-            <label for="order_status_id" class="form-label col-md-12 text-right">@lang('shop::admin.orders.status')</label>
-            <p class="form-control col-md-12" disabled style="background: {{ $order->getShipmentStatusClass($order->shipment_status) }};padding: 4px; color: #000000;">{{ $order->getReadableShipmentStatus() }}</p>
-            <label for="order_status_id" class="form-label col-md-12 text-right">@lang('shop::admin.orders.payment_status')</label>
-            <p class="form-control col-md-12" disabled style="background: {{ $order->getPaymentStatusClass($order->payment_status) }};padding: 4px; color: #000000;">{{ $order->getReadablePaymentStatus() }}</p>
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td>@lang('shop::admin.orders.status')</td>
+                    <td style="background: {{ $order->getShipmentStatusClass($order->shipment_status) }};color: #000000;">{{ $order->getReadableShipmentStatus() }}</td>
+                </tr>
+                <tr>
+                    <td>@lang('shop::admin.orders.payment_status')</td>
+                    <td style="background: {{ $order->getPaymentStatusClass($order->payment_status) }}; color: #000000;">{{ $order->getReadablePaymentStatus() }}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">
@@ -172,7 +182,6 @@
                     <th>ЕИК</th>
                     <th>ЕИК по ДДС</th>
                     <th>Адрес по регистрация</th>
-                    <th class="text-right">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -183,11 +192,10 @@
                         <td>{{ $order->company_eik }}</td>
                         <td>{{ ($order->company_vat_eik =='') ? 'Няма': '' }}</td>
                         <td>{{ $order->company_address }}</td>
-                        <td></td>
                     </tr>
                 @else
                     <tr>
-                        <td colspan="7" class="no-table-rows">{{ trans('shop::admin.registered_users.no_companies') }}</td>
+                        <td colspan="5" class="no-table-rows">{{ trans('shop::admin.registered_users.no_companies') }}</td>
                     </tr>
                 @endif
                 </tbody>
@@ -250,32 +258,28 @@
                         </tbody>
                         <tfoot style="border-top: 2px dashed #c3c3c3;">
                         <tr>
-                            <th colspan="6" class="text-right">Общо цена без отстъпки:</th>
+                            <th colspan="10" class="text-right">ДДС (общо):</th>
+                            <th class="price-without-discounts">{{ $order->totalVatProducts() }} лв.</th>
+                        </tr>
+                        <tr>
+                            <th colspan="10" class="text-right">Цена без отстъпки (общо):</th>
                             <th class="price-without-discounts">0,00 лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Отстъпки по продукти:</th>
-                            <th class="discounts-on-products" style="border: none;">0,00 лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Други отстъпки:</th>
-                            <th class="other-discounts" style="border: none;">0,00 лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Общо отстъпки:</th>
+                            <th colspan="10" class="text-right" style="border: none;">Отстъпки (общо):</th>
                             <th class="total-discounts" style="border: none;">0,00 лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Общо цена след отстъпки:</th>
+                            <th colspan="10" class="text-right" style="border: none;">Цена след отстъпки (общо):</th>
                             <th class="total-with-discounts" style="border: none;">0,00 лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Доставка:</th>
+                            <th colspan="10" class="text-right" style="border: none;">Доставка:</th>
                             <th class="shipment-amount" style="border: none;"><span>3,00</span> лв.</th>
                         </tr>
 
                         <tr>
-                            <th colspan="6" class="text-right" style="border: none;">Крайна цена (с ДДС) и доставка:</th>
+                            <th colspan="10" class="text-right" style="border: none;">Крайна цена с отстъпки, ДДС и доставка:</th>
                             <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">0,00 лв.</th>
                         </tr>
 
@@ -291,7 +295,7 @@
                         <input type="text" name="shipment_amount" class="shipment-amount-input">
                     </div>
                 </div>
-                <div id="documents" class="tab-pane fade">
+                <div id="documents" class="tab-pane fade" style="overflow: auto;">
 
                 </div>
             </div>

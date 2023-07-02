@@ -10,6 +10,7 @@ use Modules\Shop\Entities\Settings\City;
 use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Entities\Settings\Delivery;
 use Modules\Shop\Entities\Settings\Payment;
+use Modules\Shop\Services\CurrencyService;
 
 class Order extends Model
 {
@@ -119,5 +120,15 @@ class Order extends Model
     public function order_products(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function totalVatProducts()
+    {
+        $totalVat = 0;
+        foreach ($this->order_products as $orderProduct) {
+            $totalVat += (float)CurrencyService::formatPrice($orderProduct->vat);
+        }
+
+        return $totalVat;
     }
 }
