@@ -201,25 +201,28 @@
         <div class="col-sm-12 col-xs-12">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a data-toggle="tab" href="#orders">Продукти</a>
+                    <a data-toggle="tab" href="#orders">@lang('shop::admin.orders.products')</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#documents">Документи</a>
+                    <a data-toggle="tab" href="#documents">@lang('shop::admin.orders.documents')</a>
                 </li>
             </ul>
             <div class="tab-content">
-                <div id="orders" class="tab-pane fade in active">
+                <div id="orders" class="tab-pane fade in active" style="overflow: auto;">
                     <table class="table table-striped products-table">
                         <thead>
                         <tr>
                             <th>Снимка</th>
                             <th>Продукт</th>
-                            <th>Ед.цена</th>
                             <th>Количество</th>
-                            <th>Общо</th>
+                            <th>Ед.цена</th>
+                            <th>ДДС</th>
+                            <th>Ед.цена с ДДС</th>
+                            <th>Общо с ДДС</th>
                             <th>Отстъпки (общо)</th>
-                            <th>ДДС (общо)</th>
+                            <th>Ед.Цена с ДДС и отстъпки</th>
                             <th>Обща цена с отстъпки и ДДС</th>
+                            <th>@lang('shop::admin.orders.free_delivery')</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -227,12 +230,21 @@
                             <tr>
                                 <td><img src="{{ $orderProduct->product->getFileUrl() }}" width="45"></td>
                                 <td>{{ $orderProduct->product->title }}</td>
+                                <td>{{ $orderProduct->product_quantity }}</td>
                                 <td>{{ $orderProduct->price }}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $orderProduct->vat }}</td>
+                                <td>{{ $orderProduct->vat_applied_price }}</td>
+                                <td>{{ $orderProduct->end_price }}</td>
+                                <td>{{ $orderProduct->discounts_amount }}</td>
+                                <td>{{ $orderProduct->vat_applied_discounted_price }}</td>
+                                <td>{{ $orderProduct->end_discounted_price }}</td>
+                                <td>
+                                    @if($orderProduct->free_delivery)
+                                        <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_yes')</label>
+                                    @else
+                                        <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_no')</label>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
