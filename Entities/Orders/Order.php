@@ -176,7 +176,7 @@ class Order extends Model
         return CurrencyService::formatPrice($totalEndDiscountedPrice);
     }
 
-    public function documents()
+    public function documents(): HasMany
     {
         return $this->hasMany(OrderDocument::class);
     }

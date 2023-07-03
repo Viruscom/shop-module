@@ -192,12 +192,16 @@ return array(
         '5' => 'Частично компенсиран'
     ],
     'order_documents'          => [
-        'index'            => 'Документи',
-        'add'              => 'Добави документ',
-        'send'             => 'изпрати документ',
-        'name_required'    => 'Полето име на документ е задължително',
-        'comment_required' => 'Полето коментар е задължително',
-        'file_required'    => 'Полето документ е задължително',
+        'index'                              => 'Документи',
+        'add'                                => 'Добави документ',
+        'send'                               => 'изпрати документ',
+        'name_required'                      => 'Полето име на документ е задължително',
+        'comment_required'                   => 'Полето коментар е задължително',
+        'file_required'                      => 'Полето документ е задължително',
+        'document_not_found'                 => 'Документът не е намерен',
+        'document_successfully_sent'         => 'Документът е изпратен успешно',
+        'order_email_order_number'           => 'Поръчка №',
+        'order_email_subject_order_document' => 'Беше добавен нов документ към вашата поръчка',
     ],
     'returned_products'        =>
         array(

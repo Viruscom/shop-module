@@ -2,24 +2,25 @@
 
 namespace Modules\Shop\Emails;
 
+use App\Models\Settings\Post;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Shop\Entities\Orders\OrderDocument;
 
 class OrderDocumentAttached extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public OrderDocument $document;
+    public               $shopOrderEmail;
+
+    public function __construct(OrderDocument $document)
     {
-        //
+        $this->document       = $document;
+        $this->shopOrderEmail = Post::getSettings()->shop_orders_email;
     }
+
 
     /**
      * Build the message.
@@ -28,6 +29,10 @@ class OrderDocumentAttached extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('shop::emails.orders.order_document_attached')
+            ->from($this->shopOrderEmail, trans('messages.mail_shop_name'))
+            ->subject('[ ' . trans('shop::admin.order_documents.order_email_order_number') . ' ' . $this->document->order->id . ' ] ' . trans('shop::admin.order_documents.order_email_subject_order_document'))
+            ->replyTo($this->shopOrderEmail, trans('messages.mail_shop_name'))
+            ->attach($this->document->fullImageFilePath());
     }
 }
