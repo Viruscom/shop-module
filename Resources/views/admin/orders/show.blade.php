@@ -263,15 +263,15 @@
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right">Цена без отстъпки (общо):</th>
-                            <th class="price-without-discounts">0,00 лв.</th>
+                            <th class="price-without-discounts">{{ $order->totalEndPriceProducts() }} лв.</th>
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">Отстъпки (общо):</th>
-                            <th class="total-discounts" style="border: none;">0,00 лв.</th>
+                            <th class="total-discounts" style="border: none;">{{ $order->totalDiscountsAmount() }} лв.</th>
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">Цена след отстъпки (общо):</th>
-                            <th class="total-with-discounts" style="border: none;">0,00 лв.</th>
+                            <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPrice() }} лв.</th>
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">Доставка:</th>
@@ -280,11 +280,8 @@
 
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">Крайна цена с отстъпки, ДДС и доставка:</th>
-                            <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">0,00 лв.</th>
+                            <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">{{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</th>
                         </tr>
-
-                        {{--                            //TODO: Add inputs 'total, total_discounts,vat,total_with_vat'--}}
-
                         </tfoot>
                     </table>
                     <div class="hidden">

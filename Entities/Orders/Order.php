@@ -126,9 +126,58 @@ class Order extends Model
     {
         $totalVat = 0;
         foreach ($this->order_products as $orderProduct) {
-            $totalVat += (float)CurrencyService::formatPrice($orderProduct->vat);
+            $totalVat += $orderProduct->vat;
         }
 
-        return $totalVat;
+        return CurrencyService::formatPrice($totalVat);
+    }
+    public function totalEndPriceProducts()
+    {
+        $totalEndPrice = 0;
+
+        foreach ($this->order_products as $orderProduct) {
+            $totalEndPrice += $orderProduct->end_price;
+        }
+
+        return CurrencyService::formatPrice($totalEndPrice);
+    }
+
+    public function totalDiscountsAmount()
+    {
+        $totalDiscountsAmount = 0;
+
+        foreach ($this->order_products as $orderProduct) {
+            $totalDiscountsAmount += $orderProduct->discounts_amount;
+        }
+
+        return CurrencyService::formatPrice($totalDiscountsAmount);
+    }
+    public function grandTotalWithDiscountsVatAndDelivery()
+    {
+        $deliveryPrice = 3;
+        $totalEndPrice = 0;
+
+        foreach ($this->order_products as $orderProduct) {
+            $totalEndPrice += $orderProduct->end_price;
+        }
+
+        $grandTotal = $totalEndPrice + (float)$deliveryPrice;
+
+        return CurrencyService::formatPrice($grandTotal);
+    }
+    public function totalEndDiscountedPrice()
+    {
+        $totalEndDiscountedPrice = 0;
+
+        foreach ($this->order_products as $orderProduct) {
+            $totalEndDiscountedPrice += $orderProduct->end_discounted_price;
+        }
+
+        return CurrencyService::formatPrice($totalEndDiscountedPrice);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(OrderDocument::class);
     }
 }
