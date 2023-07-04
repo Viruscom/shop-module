@@ -16,7 +16,7 @@ class CreateOrderReturnsProductsTable extends Migration
         Schema::create('order_returns_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_return_id');
-            $table->foreign('order_return_id')->references('id')->on('orders_returns')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('order_return_id')->references('id')->on('order_returns')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->double('quantity');
