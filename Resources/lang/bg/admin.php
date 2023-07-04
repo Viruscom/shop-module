@@ -373,6 +373,7 @@ return array(
             'countries_array'        => 'Полето за държави трябва да бъде във формат на масив.',
             'country_id_invalid'     => 'Невалидно ID на държава.',
             'country_not_exists'     => 'Избраната държава не съществува.',
+            'email_shop_name'        => 'Име на магазина показвано в имейлите'
         ),
     'payments'                 =>
         array(

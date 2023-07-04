@@ -57,7 +57,7 @@
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             <div class="action-mass-buttons pull-right">
-                <a href="{{ url()->previous() }}" role="button" class="btn btn-lg back-btn margin-bottom-10"><i class="fa fa-reply"></i></a>
+                <a href="{{ route('admin.shop.orders') }}" role="button" class="btn btn-lg back-btn margin-bottom-10"><i class="fa fa-reply"></i></a>
             </div>
         </div>
     </div>
@@ -214,6 +214,12 @@
                 <li>
                     <a data-toggle="tab" href="#documents">@lang('shop::admin.orders.documents')</a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#history">История</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#returns">Заявки за връщане <span class="m-l-5 badge badge-danger">{{ (!is_null($order->returns) && count($order->returns)>0) ? count($order->returns) : 0 }}</span></a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="orders" class="tab-pane fade in active" style="overflow: auto;">
@@ -321,6 +327,62 @@
                         @else
                             <tr>
                                 <td colspan="4" class="no-table-rows">{{ trans('shop::admin.order_documents.no_records') }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div id="history" class="tab-pane fade in overflow-auto">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Активност</th>
+                            <th class="text-right">Дата на събитие</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(count($order->history))
+                            @foreach($order->history as $activity)
+                                <tr class="t-row">
+                                    <td>{!! $activity->activity_name !!}</td>
+                                    <td class="text-right">{{ $activity->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="3" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div id="returns" class="tab-pane fade in overflow-auto">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="max-width: 50px">№</th>
+                            <th>Статус на връщането</th>
+                            <th>Поръчка №</th>
+                            <th>Дата и час</th>
+                            <th>Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(!is_null($order->returns) && count($order->returns))
+                            @foreach($order->returns as $return)
+                                <tr class="t-row">
+                                    <td style="max-width: 50px;">RE-{{ $return->id }}</td>
+                                    <td>{{ $return->statusHumanReadable() }}</td>
+                                    <td>{{ $return->order->id }}</td>
+                                    <td>{{ Carbon::parse($return->created_at)->format('d.m.Y H:i:s') }}</td>
+                                    <td class="pull-right">
+                                        <a href="{{ route('orders.returns.show', ['id' => $return->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="5" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
                             </tr>
                         @endif
                         </tbody>

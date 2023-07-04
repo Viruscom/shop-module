@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Http\Controllers\admin\Orders\Documents;
 
+use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use Modules\Shop\Entities\Orders\Order;
 use Modules\Shop\Entities\Orders\OrderDocument;
@@ -31,7 +32,7 @@ class OrderDocumentController extends Controller
             return redirect()->back()->with('success-message', 'admin.common.successful_create');
         }
 
-        return redirect()->route('admin.shop.orders.documents.show', ['order_id' => $document->order_id])->with('success-message', 'admin.common.successful_create');
+        return redirect()->route('admin.shop.orders.show', ['id' => $document->order_id])->with('success-message', 'admin.common.successful_create');
     }
     public function create($order_id)
     {
@@ -73,6 +74,6 @@ class OrderDocumentController extends Controller
             $order->history()->create(['activity_name' => trans('shop::admin.order_documents.sent_document_with_name') . ': ' . $document->name . ', ' . trans('shop::admin.order_documents.comment') . ': ' . $document->comment . ', ' . trans('shop::admin.order_documents.name_of_file') . ': ' . $document->filename]);
         }
 
-        return redirect()->route('admin.shop.orders.documents.show', ['order_id' => $document->order_id])->with('success-message', 'shop::admin.order_documents.document_successfully_sent');
+        return redirect()->route('admin.shop.orders.show', ['id' => $document->order_id])->with('success-message', 'shop::admin.order_documents.document_successfully_sent');
     }
 }

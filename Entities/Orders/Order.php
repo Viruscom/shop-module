@@ -2,7 +2,6 @@
 
 namespace Modules\Shop\Entities\Orders;
 
-use App\Models\Shop_Models\Orders\OrderReturn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -183,7 +182,7 @@ class Order extends Model
     }
     public function history(): HasMany
     {
-        return $this->hasMany(OrderHistory::class);
+        return $this->hasMany(OrderHistory::class)->orderByDesc('created_at');
     }
     public function returns(): ?HasMany
     {

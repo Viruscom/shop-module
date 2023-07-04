@@ -13,7 +13,7 @@ class OrderReturn extends Model
     public const SHIPMENT_HAS_BEEN_RECEIVED_STATUS = 3;
     public const RETURN_REFUSED_STATUS             = 4;
     public const RETURN_COMPLETED_STATUS           = 5;
-    protected $table   = 'orders_returns';
+    protected $table   = 'order_returns';
     protected $guarded = ['id'];
 
     public function order(): BelongsTo

@@ -30,9 +30,9 @@ class OrderDocumentAttached extends Mailable
     public function build()
     {
         return $this->view('shop::emails.orders.order_document_attached')
-            ->from($this->shopOrderEmail, trans('messages.mail_shop_name'))
+            ->from($this->shopOrderEmail, trans('shop::admin.main_settings.email_shop_name'))
             ->subject('[ ' . trans('shop::admin.order_documents.order_email_order_number') . ' ' . $this->document->order->id . ' ] ' . trans('shop::admin.order_documents.order_email_subject_order_document'))
-            ->replyTo($this->shopOrderEmail, trans('messages.mail_shop_name'))
+            ->replyTo($this->shopOrderEmail, trans('shop::admin.main_settings.email_shop_name'))
             ->attach($this->document->fullImageFilePath());
     }
 }
