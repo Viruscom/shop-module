@@ -33,6 +33,6 @@ class CurrencyService
         }
 
         //Set default currency
-        return CountrySale::class->with('country')::first()->currency;
+        return CountrySale::with('country')::first()->currency;
     }
 }

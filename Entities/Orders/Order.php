@@ -2,6 +2,7 @@
 
 namespace Modules\Shop\Entities\Orders;
 
+use App\Models\Shop_Models\Orders\OrderReturn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,22 +15,22 @@ use Modules\Shop\Services\CurrencyService;
 
 class Order extends Model
 {
+    const PAYMENT_PAID = 1;
     //    Payment statuses
-    const PAYMENT_PAID                 = 1;
     const PAYMENT_PENDING              = 2;
     const PAYMENT_CANCELED             = 3;
     const PAYMENT_REFUND               = 4;
     const PAYMENT_PARTIAL_COMPENSATION = 5;
+    const SHIPMENT_WAITING             = 1;
 
     //    Shipment statuses
-    const SHIPMENT_WAITING    = 1;
     const SHIPMENT_PROCESSING = 2;
     const SHIPMENT_SENT       = 3;
     const SHIPMENT_DELIVERED  = 4;
     const SHIPMENT_CANCELED   = 5;
     const SHIPMENT_RETURNED   = 6;
-
-    protected $fillable = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at'];
+    public static string $FILES_PATH = 'shop/orders';
+    protected            $fillable   = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at'];
 
     public function getReadableShipmentStatus()
     {
@@ -179,5 +180,22 @@ class Order extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(OrderDocument::class);
+    }
+    public function history(): HasMany
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
+    public function returns(): ?HasMany
+    {
+        //        if ($this->status_id != self::$STATUS_COMPLETED) {
+        //            return null;
+        //        }
+
+        return $this->hasMany(OrderReturn::class);
+    }
+
+    public function strPadOrderId(): string
+    {
+        return str_pad($this->id, 10, '0', STR_PAD_LEFT);
     }
 }

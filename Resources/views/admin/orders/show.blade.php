@@ -293,7 +293,38 @@
                     </div>
                 </div>
                 <div id="documents" class="tab-pane fade" style="overflow: auto;">
-
+                    <div class="text-right"><a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/create') }}" class="btn btn-success">Добави документ</a></div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Файл</th>
+                            <th>Документ</th>
+                            <th>Коментар</th>
+                            <th class="text-right">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(count($order->documents))
+                            @foreach($order->documents as $document)
+                                <tr class="t-row">
+                                    <td>
+                                        <a href="{{ $document->fullImageFilePathUrl() }}" target="_blank"><i class="far fa-file-alt"></i></a>
+                                    </td>
+                                    <td>{{ $document->name }}</td>
+                                    <td>{{ $document->comment }}</td>
+                                    <td class="text-right">
+                                        <a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/'.$document->id.'/send') }}" role="button" class="btn btn-xs btn-info tooltips" data-toggle="tooltip" data-placement="left" title="" data-original-title="Изпрати към клиента"><i class="fas fa-paper-plane"></i></a>
+                                        <a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/'.$document->id.'/delete') }}" role="button" class="btn btn-xs btn-danger" data-toggle="confirmation"><i class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="4" class="no-table-rows">{{ trans('shop::admin.order_documents.no_records') }}</td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -94,12 +94,14 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         });
         /* Documents */
         Route::group(['prefix' => '{order_id}/documents'], static function () {
-            Route::get('/', [OrderDocumentController::class, 'index']);
-            Route::get('/create', [OrderDocumentController::class, 'create']);
-            Route::post('/store', [OrderDocumentController::class, 'store']);
-            Route::get('/{document_id}/delete', [OrderDocumentController::class, 'delete']);
-            Route::get('/{document_id}/show', [OrderDocumentController::class, 'show']);
-            Route::get('/{document_id}/send', [OrderDocumentController::class, 'send']);
+            Route::get('/', [OrderDocumentController::class, 'index'])->name('admin.shop.orders.documents.index');
+            Route::get('/create', [OrderDocumentController::class, 'create'])->name('admin.shop.orders.documents.create');
+            Route::post('/store', [OrderDocumentController::class, 'store'])->name('admin.shop.orders.documents.store');
+            Route::group(['prefix' => '{document_id}'], static function () {
+                Route::get('delete', [OrderDocumentController::class, 'delete'])->name('admin.shop.orders.documents.delete');
+                Route::get('show', [OrderDocumentController::class, 'show'])->name('admin.shop.orders.documents.show');
+                Route::get('send', [OrderDocumentController::class, 'send'])->name('admin.shop.orders.documents.send');
+            });
         });
     });
 

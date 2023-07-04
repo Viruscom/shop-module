@@ -161,6 +161,7 @@ return array(
     'orders'                   =>
         array(
             'index'                   => 'Поръчки',
+            'record_not_found'        => 'Поръчката не е намерена',
             'no_orders_found'         => 'Няма намерени поръчки',
             'status'                  => 'Статус на поръчката',
             'payment_status'          => 'Статус на плащане',
@@ -171,8 +172,6 @@ return array(
             'free_delivery'           => 'Безплатна доставка',
             'products'                => 'Продукти',
             'documents'               => 'Документи',
-            ''                        => '',
-            ''                        => '',
             'free_delivery_label_yes' => 'ДА',
             'free_delivery_label_no'  => 'НЕ',
         ),
@@ -202,10 +201,24 @@ return array(
         'document_successfully_sent'         => 'Документът е изпратен успешно',
         'order_email_order_number'           => 'Поръчка №',
         'order_email_subject_order_document' => 'Беше добавен нов документ към вашата поръчка',
+        'no_records'                         => 'Няма добавени документи',
+        'added_document_with_name'           => 'Добавен документ с име',
+        'comment'                            => 'Коментар',
+        'name_of_file'                       => 'име на файл',
+        'deleted_document_with_name'         => 'Изтрит документ с име',
+        'sent_document_with_name'            => 'Изпратен документ с име',
+        'name_of_document'                   => 'Име на документ',
+        'document'                           => 'Документ',
     ],
     'returned_products'        =>
         array(
-            'index' => 'Върнати продукти',
+            'index'                                    => 'Върнати продукти',
+            'order_return_status_1'                    => 'Изчакване за потвърждение',
+            'order_return_status_2'                    => 'В очакване на пратка',
+            'order_return_status_3'                    => 'Пратката е получена',
+            'order_return_status_4'                    => 'Отказано връщане',
+            'order_return_status_5'                    => 'Връщането изпълнено',
+            'order_return_status_successfully_changed' => 'Статусът на заявката за връщане е успешно променен',
         ),
     'product_gifts'            =>
         array(
