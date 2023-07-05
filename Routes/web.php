@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Shop\Http\Controllers\admin\AdBoxesProducts\AdBoxesProductsController;
 use Modules\Shop\Http\Controllers\admin\Brands\BrandController;
 use Modules\Shop\Http\Controllers\admin\Orders\Documents\OrderDocumentController;
+use Modules\Shop\Http\Controllers\admin\Orders\OrderReturnsController;
 use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
 use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributesController;
@@ -102,6 +103,13 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('show', [OrderDocumentController::class, 'show'])->name('admin.shop.orders.documents.show');
                 Route::get('send', [OrderDocumentController::class, 'send'])->name('admin.shop.orders.documents.send');
             });
+        });
+
+        /* Returns */
+        Route::group(['prefix' => 'returns'], static function () {
+            Route::get('/', [OrderReturnsController::class, 'index'])->name('orders.returns.index');
+            Route::get('/{id}/show', [OrderReturnsController::class, 'show'])->name('orders.returns.show');
+            Route::post('/changeOrderReturnStatus', [OrderReturnsController::class, 'changeOrderReturnStatus']);
         });
     });
 

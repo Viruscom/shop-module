@@ -215,10 +215,10 @@
                     <a data-toggle="tab" href="#documents">@lang('shop::admin.orders.documents')</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#history">История</a>
+                    <a data-toggle="tab" href="#history">{{ __('shop::admin.orders.history') }}</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#returns">Заявки за връщане <span class="m-l-5 badge badge-danger">{{ (!is_null($order->returns) && count($order->returns)>0) ? count($order->returns) : 0 }}</span></a>
+                    <a data-toggle="tab" href="#returns">{{ __('shop::admin.orders.return_requests') }} <span class="m-l-5 badge badge-danger">{{ (!is_null($order->returns) && count($order->returns)>0) ? count($order->returns) : 0 }}</span></a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -226,16 +226,16 @@
                     <table class="table table-striped products-table">
                         <thead>
                         <tr>
-                            <th>Снимка</th>
-                            <th>Продукт</th>
-                            <th>Количество</th>
-                            <th>Ед.цена</th>
-                            <th>ДДС</th>
-                            <th>Ед.цена с ДДС</th>
-                            <th>Общо с ДДС</th>
-                            <th>Отстъпки (общо)</th>
-                            <th>Ед.Цена с ДДС и отстъпки</th>
-                            <th>Обща цена с отстъпки и ДДС</th>
+                            <th>{{ __('shop::admin.orders.image') }}</th>
+                            <th>{{ __('shop::admin.orders.product') }}</th>
+                            <th>{{ __('shop::admin.orders.quantity') }}</th>
+                            <th>{{ __('shop::admin.orders.unit_price') }}</th>
+                            <th>{{ __('shop::admin.orders.vat') }}</th>
+                            <th>{{ __('shop::admin.orders.unit_price_-with_vat') }}</th>
+                            <th>{{ __('shop::admin.orders.total_with_vat') }}</th>
+                            <th>{{ __('shop::admin.orders.discounts_total') }}</th>
+                            <th>{{ __('shop::admin.orders.unit_price_with_vat_and_discounts') }}</th>
+                            <th>{{ __('shop::admin.orders.grand_total_with_vat_and_discounts') }}</th>
                             <th>@lang('shop::admin.orders.free_delivery')</th>
                         </tr>
                         </thead>
@@ -264,28 +264,28 @@
                         </tbody>
                         <tfoot style="border-top: 2px dashed #c3c3c3;">
                         <tr>
-                            <th colspan="10" class="text-right">ДДС (общо):</th>
+                            <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_vat') }}:</th>
                             <th class="price-without-discounts">{{ $order->totalVatProducts() }} лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="10" class="text-right">Цена без отстъпки (общо):</th>
+                            <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_price_without_discounts') }}:</th>
                             <th class="price-without-discounts">{{ $order->totalEndPriceProducts() }} лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="10" class="text-right" style="border: none;">Отстъпки (общо):</th>
+                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.discounts_total') }}:</th>
                             <th class="total-discounts" style="border: none;">{{ $order->totalDiscountsAmount() }} лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="10" class="text-right" style="border: none;">Цена след отстъпки (общо):</th>
+                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.total_price_after_discounts') }}:</th>
                             <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPrice() }} лв.</th>
                         </tr>
                         <tr>
-                            <th colspan="10" class="text-right" style="border: none;">Доставка:</th>
+                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.delivery') }}:</th>
                             <th class="shipment-amount" style="border: none;"><span>3,00</span> лв.</th>
                         </tr>
 
                         <tr>
-                            <th colspan="10" class="text-right" style="border: none;">Крайна цена с отстъпки, ДДС и доставка:</th>
+                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.grand_total_with_discounts_with_vat_and_delivery') }}:</th>
                             <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">{{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</th>
                         </tr>
                         </tfoot>
@@ -299,14 +299,14 @@
                     </div>
                 </div>
                 <div id="documents" class="tab-pane fade" style="overflow: auto;">
-                    <div class="text-right"><a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/create') }}" class="btn btn-success">Добави документ</a></div>
+                    <div class="text-right"><a href="{{ route('admin.shop.orders.documents.create', ['order_id' =>$order->id]) }}" class="btn btn-success">{{ __('shop::admin.order_documents.add') }}</a></div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Файл</th>
-                            <th>Документ</th>
-                            <th>Коментар</th>
-                            <th class="text-right">Действия</th>
+                            <th>{{ __('shop::admin.order_documents.file') }}</th>
+                            <th>{{ __('shop::admin.order_documents.document') }}</th>
+                            <th>{{ __('shop::admin.order_documents.comment') }}</th>
+                            <th class="text-right">{{ __('shop::admin.common.actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -319,8 +319,8 @@
                                     <td>{{ $document->name }}</td>
                                     <td>{{ $document->comment }}</td>
                                     <td class="text-right">
-                                        <a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/'.$document->id.'/send') }}" role="button" class="btn btn-xs btn-info tooltips" data-toggle="tooltip" data-placement="left" title="" data-original-title="Изпрати към клиента"><i class="fas fa-paper-plane"></i></a>
-                                        <a href="{{ url('/admin/shop/orders/'.$order->id.'/documents/'.$document->id.'/delete') }}" role="button" class="btn btn-xs btn-danger" data-toggle="confirmation"><i class="fas fa-trash-alt"></i></a>
+                                        <a href="{{ route('admin.shop.orders.documents.send', ['order_id' => $order->id, 'document_id' => $document->id]) }}" role="button" class="btn btn-xs btn-info tooltips" data-toggle="tooltip" data-placement="left" title="" data-original-title="Изпрати към клиента"><i class="fas fa-paper-plane"></i></a>
+                                        <a href="{{ route('admin.shop.orders.documents.delete', ['order_id' => $order->id, 'document_id' => $document->id]) }}" role="button" class="btn btn-xs btn-danger" data-toggle="confirmation"><i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -332,12 +332,12 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="history" class="tab-pane fade in overflow-auto">
+                <div id="history" class="tab-pane fade in" style="overflow: auto;">
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Активност</th>
-                            <th class="text-right">Дата на събитие</th>
+                            <th>{{ __('shop::admin.order_history.activity') }}</th>
+                            <th class="text-right">{{ __('shop::admin.order_history.date_of_event') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -356,15 +356,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="returns" class="tab-pane fade in overflow-auto">
+                <div id="returns" class="tab-pane fade in" style="overflow: auto;">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th style="max-width: 50px">№</th>
-                            <th>Статус на връщането</th>
-                            <th>Поръчка №</th>
-                            <th>Дата и час</th>
-                            <th>Действия</th>
+                            <th>{{ __('shop::admin.returned_products.status_of_return') }}</th>
+                            <th>{{ __('shop::admin.returned_products.order_number') }}</th>
+                            <th>{{ __('shop::admin.returned_products.date_and_hour') }}</th>
+                            <th>{{ __('shop::admin.common.actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -382,7 +382,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="5" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                                <td colspan="5" class="no-table-rows">{{ __('shop::admin.returned_products.no_return_requests') }}</td>
                             </tr>
                         @endif
                         </tbody>
