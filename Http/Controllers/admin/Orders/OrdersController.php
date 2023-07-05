@@ -40,19 +40,19 @@ class OrdersController extends Controller
 
     public function edit($id)
     {
-        $order = Order::where('id', $id)->with('products', 'products.translations', 'client', 'collectionProducts')->with('documents', function ($q) {
-            return $q->orderBy('created_at', 'desc');
-        })->with('history', function ($q) {
-            return $q->orderBy('created_at', 'desc');
-        })->first();
-        WebsiteHelper::redirectBackIfNull($order);
-
-        $cities   = City::with('translations')->orderBy('position', 'asc')->get();
-        $products = Product::active(true)->with('translations')->get();
-        $clients  = Client::where('active', true)->get();
-        $vrNumber = ShopSetting::where('key', 'virtual_receipt_number')->first();
-
-        return view('admin.shop.orders.edit', compact('order', 'cities', 'products', 'clients', 'vrNumber'));
+        //        $order = Order::where('id', $id)->with('products', 'products.translations', 'client', 'collectionProducts')->with('documents', function ($q) {
+        //            return $q->orderBy('created_at', 'desc');
+        //        })->with('history', function ($q) {
+        //            return $q->orderBy('created_at', 'desc');
+        //        })->first();
+        //        WebsiteHelper::redirectBackIfNull($order);
+        //
+        //        $cities   = City::with('translations')->orderBy('position', 'asc')->get();
+        //        $products = Product::active(true)->with('translations')->get();
+        //        $clients  = Client::where('active', true)->get();
+        //        $vrNumber = ShopSetting::where('key', 'virtual_receipt_number')->first();
+        //
+        //        return view('shop::admin.orders.edit', compact('order', 'cities', 'products', 'clients', 'vrNumber'));
     }
 
     public function update($id, $request)
