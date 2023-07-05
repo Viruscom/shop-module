@@ -19,8 +19,5 @@
             "Modules\\Shop\\": ""
         }
     },
-    "require": {
-        "simplesoftwareio/simple-qrcode": "^4.2"
-    },
     "type": "laravel-module"
 }
