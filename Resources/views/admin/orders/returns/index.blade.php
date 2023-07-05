@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@php use Carbon\Carbon; @endphp@extends('layouts.admin.app')
 
 @section('styles')
     <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
@@ -7,15 +7,11 @@
     <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
+    @include('shop::admin.orders.returns.breadcrumbs')
     <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
     <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
         $(".select2").select2({language: "bg"});
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover({
@@ -68,11 +64,13 @@
 @endsection
 
 @section('content')
+    @include('shop::admin.orders.returns.breadcrumbs')
+    @include('admin.notify')
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
             <div class="search pull-left hidden-xs">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control input-sm search-text" placeholder="Търси" autocomplete="off">
+                    <input type="text" name="search" class="form-control input-sm search-text" placeholder="{{ __('admin.common.search') }}" autocomplete="off">
                     <span class="input-group-btn">
 					<button class="btn btn-sm submit"><i class="fa fa-search"></i></button>
 				</span>
@@ -84,10 +82,10 @@
         <thead>
         <tr>
             <th style="max-width: 50px">№</th>
-            <th>Статус на връщането</th>
-            <th>Поръчка №</th>
-            <th>Дата и час</th>
-            <th>Действия</th>
+            <th>{{ __('shop::admin.returned_products.status_of_return') }}</th>
+            <th>{{ __('shop::admin.returned_products.order_number') }}</th>
+            <th>{{ __('shop::admin.returned_products.date_and_hour') }}</th>
+            <th>{{ __('shop::admin.common.actions') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -97,7 +95,7 @@
                     <td style="max-width: 50px;">RE-{{ $return->id }}</td>
                     <td>{{ $return->statusHumanReadable() }}</td>
                     <td>{{ $return->order->id }}</td>
-                    <td>{{ \Carbon\Carbon::parse($return->created_at)->format('d.m.Y H:i:s') }}</td>
+                    <td>{{ Carbon::parse($return->created_at)->format('d.m.Y H:i:s') }}</td>
                     <td class="pull-right">
                         <a href="{{ route('orders.returns.show', ['id' => $return->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
                     </td>
@@ -105,7 +103,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="4" class="no-table-rows">{{ trans('administration_messages.no_recourds_found') }}</td>
+                <td colspan="5" class="no-table-rows">{{ trans('shop::admin.returned_products.no_return_requests') }}</td>
             </tr>
         @endif
         </tbody>

@@ -37,6 +37,39 @@ class OrdersController extends Controller
     {
         $orderNumber = Order::max('id') + 1;
     }
+
+    public function edit($id)
+    {
+        $order = Order::where('id', $id)->with('products', 'products.translations', 'client', 'collectionProducts')->with('documents', function ($q) {
+            return $q->orderBy('created_at', 'desc');
+        })->with('history', function ($q) {
+            return $q->orderBy('created_at', 'desc');
+        })->first();
+        WebsiteHelper::redirectBackIfNull($order);
+
+        $cities   = City::with('translations')->orderBy('position', 'asc')->get();
+        $products = Product::active(true)->with('translations')->get();
+        $clients  = Client::where('active', true)->get();
+        $vrNumber = ShopSetting::where('key', 'virtual_receipt_number')->first();
+
+        return view('admin.shop.orders.edit', compact('order', 'cities', 'products', 'clients', 'vrNumber'));
+    }
+
+    public function update($id, $request)
+    {
+
+        $order = Order::find($id);
+        WebsiteHelper::redirectBackIfNull($order);
+
+        $order->update($order->getUpdateData($request));
+        $order->updateProducts($request->only('products'));
+        //TODO:        $order->updateCollections($request->only('collections'));
+
+        //TODO: uncomment this $order->sendMailOrderUpdated();
+
+        return redirect()->route('admin.shop.orders')->with('success-message', 'admin.common.successful_edit');
+    }
+
     public function show($id)
     {
         $order = Order::where('id', $id)->with('order_products')->first();

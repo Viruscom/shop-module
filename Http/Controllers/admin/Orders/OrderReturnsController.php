@@ -15,7 +15,7 @@ class OrderReturnsController extends Controller
 
     public function index()
     {
-        return view('shop::admin.shop.orders.returns.index', [
+        return view('shop::admin.orders.returns.index', [
             'returns' => OrderReturn::with('order')->orderBy('created_at', 'desc')->get()
         ]);
     }
@@ -27,7 +27,7 @@ class OrderReturnsController extends Controller
             return back()->withErrors(['Не е намерен записа']);
         }
 
-        return view('shop::admin.shop.orders.returns.show', compact('return'));
+        return view('shop::admin.orders.returns.show', compact('return'));
     }
 
     public function changeOrderReturnStatus(Request $request)
