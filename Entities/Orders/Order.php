@@ -178,7 +178,7 @@ class Order extends Model
 
     public function documents(): HasMany
     {
-        return $this->hasMany(OrderDocument::class);
+        return $this->hasMany(OrderDocument::class)->orderByDesc('created_at');
     }
     public function history(): HasMany
     {

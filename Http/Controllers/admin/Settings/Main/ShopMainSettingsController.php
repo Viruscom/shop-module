@@ -4,6 +4,7 @@ namespace Modules\Shop\Http\Controllers\admin\Settings\Main;
 
 use App\Http\Controllers\Controller;
 use App\Models\Settings\Post;
+use App\Models\Settings\ShopSetting;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Entities\Settings\Main\CountrySale;
@@ -23,14 +24,19 @@ class ShopMainSettingsController extends Controller
             $postSetting = Post::storeEmptyRow();
         }
 
-        $countries      = Country::orderBy('name', 'asc')->get();
-        $salesCountries = CountrySale::pluck('country_id')->toArray();
-
-        return view('shop::admin.settings.main.index', compact('postSetting', 'countries', 'salesCountries'));
+        return view('shop::admin.settings.main.index', [
+            'postSetting'    => $postSetting,
+            'countries'      => Country::orderBy('name', 'asc')->get(),
+            'salesCountries' => CountrySale::pluck('country_id')->toArray(),
+            'shopSettings'   => ShopSetting::get()
+        ]);
     }
 
     public function update(MainSettingsUpdateRequest $request)
     {
+        foreach ($request->shopSettings as $key => $value) {
+            ShopSetting::where('key', $key)->update(['value' => is_null($value) ? '' : $value]);
+        }
         $postSetting = Post::first();
 
         $postSetting->update(['shop_orders_email' => $request->shop_orders_email]);

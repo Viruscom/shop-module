@@ -45,24 +45,29 @@
             <div class="col-sm-12">
                 <div class="form form-horizontal">
                     <div class="form-body">
-                        @if(array_key_exists('Shop', $activeModules))
-                            <div class="portlet light bordered">
-                                <div class="portlet-title">
-                                    <div class="caption">
-                                        <span>Email (За получаване на поръчки)</span>
-                                    </div>
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span>@lang('shop::admin.main_settings.index')</span>
                                 </div>
-                                <div class="portlet-body">
+                            </div>
+                            <div class="portlet-body">
+                                @foreach($shopSettings as $shopSetting)
                                     <div class="form-group">
-                                        <label class="control-label col-md-3">{{ __('admin.email') }}:</label>
+                                        <label class="control-label col-md-3">{{ __('shop::admin.main_settings.'.$shopSetting->key) }}:</label>
                                         <div class="col-md-6">
-                                            <input type="text" name="shop_orders_email" value="{{ old('shop_orders_email') ?: $postSetting->shop_orders_email }}" class="form-control">
+                                            <input type="text" name="shopSettings[{{$shopSetting->key}}]" value="{{ old($shopSetting->key) ?: $shopSetting->value }}" class="form-control">
                                         </div>
+                                    </div>
+                                @endforeach
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">{{ __('shop::admin.main_settings.email_for_orders') }}:</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="shop_orders_email" value="{{ old('shop_orders_email') ?: $postSetting->shop_orders_email }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
-                        @endif
-
+                        </div>
                     </div>
                 </div>
 
