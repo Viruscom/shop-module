@@ -63,7 +63,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3><strong>Поръчка № {{ $order->id }}</strong></h3>
+            <h3>
+                <strong>Поръчка № {{ $order->id }}</strong>
+            </h3>
+            <h5>Регистрирана на дата: <strong>{{ $order->created_at }}</strong></h5>
+            <hr>
             <h3 class="text-purple">Клиент</h3>
         </div>
     </div>
@@ -119,7 +123,9 @@
         </div>
     </div>
     <div class="row">
-        <hr>
+        <div class="col-md-12">
+            <hr>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -166,7 +172,9 @@
         </div>
     </div>
     <div class="row">
-        <hr>
+        <div class="col-md-12">
+            <hr>
+        </div>
     </div>
 
     <div class="row">
@@ -203,7 +211,9 @@
         </div>
     </div>
     <div class="row">
-        <hr>
+        <div class="col-md-12">
+            <hr>
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-12 col-xs-12">

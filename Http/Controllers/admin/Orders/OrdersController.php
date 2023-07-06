@@ -22,27 +22,23 @@ class OrdersController extends Controller
             'orders' => Order::orderBy('created_at', 'desc')->get()
         ]);
     }
-
-    public function create()
-    {
-        return view('shop::admin.orders.create', [
-            'orderNumber'     => Order::max('id') + 1,
-            'products'        => Product::with('translations', 'combinations')->get(),
-            'clients'         => ShopRegisteredUser::where('active', true)->with('paymentAddresses', 'shipmentAddresses', 'companies')->get(),
-            'saleCountries'   => CountrySale::with('country', 'country.cities')->get(),
-            'paymentMethods'  => Payment::where('active', true)->orderBy('position', 'asc')->get(),
-            'deliveryMethods' => Delivery::where('active', true)->orderBy('position', 'asc')->get()
-        ]);
-    }
-
     public function store($request)
     {
         $orderNumber = Order::max('id') + 1;
     }
-
     public function edit($id)
     {
-        $order = Order::where('id', $id)->with('products', 'products.translations', 'client', 'documents', 'history')->first();
+        $order = Order::where('id', $id)->with(
+            'order_products',
+            'order_products.product',
+            'order_products.product.translations',
+            'user',
+            'payment',
+            'delivery',
+            'documents',
+            'history',
+            'returns'
+        )->first();
         WebsiteHelper::redirectBackIfNull($order);
 
         $salesCountries = CountrySale::pluck('country_id')->toArray();
@@ -55,10 +51,33 @@ class OrdersController extends Controller
             'vrNumber' => ShopSetting::where('key', 'virtual_receipt_number')->first()
         ]);
     }
+    public function show($id)
+    {
+        $order = Order::where('id', $id)->with(
+            'order_products',
+            'order_products.product',
+            'order_products.product.translations',
+            'payment',
+            'delivery',
+            'documents',
+            'history',
+            'returns'
+        )->first();
+        WebsiteHelper::redirectBackIfNull($order);
 
+        return view('shop::admin.orders.show', compact('order'));
+    }
+    public function changePaymentStatus($id, $request)
+    {
+        $order = Order::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($order);
+
+        $order->update(['payment_status' => $request->payment_status_id]);
+        $order->history()->create(['activity_name' => 'Статусът беше променен на: ' . $order->getReadablePaymentStatus()]);
+        $order->sendMailOrderStatusChanged();
+    }
     public function update($id, $request)
     {
-
         $order = Order::find($id);
         WebsiteHelper::redirectBackIfNull($order);
 
@@ -70,13 +89,20 @@ class OrdersController extends Controller
 
         return redirect()->route('admin.shop.orders')->with('success-message', 'admin.common.successful_edit');
     }
-
-    public function show($id)
+    public function create()
     {
-        $order = Order::where('id', $id)->with('order_products')->first();
-        WebsiteHelper::redirectBackIfNull($order);
+        return view('shop::admin.orders.create', [
+            'orderNumber'     => Order::max('id') + 1,
+            'products'        => Product::with('translations', 'combinations')->get(),
+            'clients'         => ShopRegisteredUser::where('active', true)->with('paymentAddresses', 'shipmentAddresses', 'companies')->get(),
+            'saleCountries'   => CountrySale::with('country', 'country.cities')->get(),
+            'paymentMethods'  => Payment::where('active', true)->orderBy('position', 'asc')->get(),
+            'deliveryMethods' => Delivery::where('active', true)->orderBy('position', 'asc')->get()
+        ]);
+    }
+    public function changeShipmentStatus($id, $request)
+    {
 
-        return view('shop::admin.orders.show', compact('order'));
     }
 
     public function getProductByIdForOrder(Request $request)

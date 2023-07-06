@@ -70,10 +70,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::get('/', [OrdersController::class, 'index'])->name('admin.shop.orders');
         Route::get('/create', [OrdersController::class, 'create'])->name('admin.shop.orders.create');
         Route::post('/store', [OrdersController::class, 'store'])->name('admin.shop.orders.store');
-        Route::get('/{id}/edit', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
-        Route::post('/{id}/update', [OrdersController::class, 'update'])->name('admin.shop.orders.update');
-        Route::get('/{id}/delete', [OrdersController::class, 'revoke'])->name('admin.shop.orders.revoke');
-        Route::get('/{id}/show', [OrdersController::class, 'show'])->name('admin.shop.orders.show');
+
         Route::post('/changeOrderStatus', [OrdersController::class, 'changeOrderStatus'])->name('admin.shop.orders.change-status');
         Route::post('/getProductByIdForOrder', [OrdersController::class, 'getProductByIdForOrder']);
         Route::post('/changePaymentType', [OrdersController::class, 'changePaymentType']);
@@ -81,6 +78,17 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
         Route::post('/changeFirmInfo', [OrdersController::class, 'changeFirmInfo']);
         Route::post('/changeProductQuantity', [OrdersController::class, 'changeProductQuantity']);
         Route::post('/deleteProduct', [OrdersController::class, 'deleteProduct']);
+
+        /* ID */
+        Route::group(['prefix' => '{id}'], static function () {
+            Route::get('edit', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
+            Route::post('update', [OrdersController::class, 'update'])->name('admin.shop.orders.update');
+            Route::get('delete', [OrdersController::class, 'revoke'])->name('admin.shop.orders.revoke');
+            Route::get('show', [OrdersController::class, 'show'])->name('admin.shop.orders.show');
+            Route::post('return/update', [OrdersController::class, 'returnUpdate'])->name('admin.shop.orders.return-update');
+            Route::post('payment/update', [OrdersController::class, 'paymentUpdate'])->name('admin.shop.orders.payment-update');
+            Route::post('virtual-receipt/generate', [OrdersController::class, 'virtualReceiptGenerate'])->name('admin.shop.orders.virtual-receipt-generate');
+        });
 
         /* Statuses */
         Route::group(['prefix' => 'statuses'], static function () {
