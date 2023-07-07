@@ -12,6 +12,7 @@ use Modules\Shop\Entities\Settings\City;
 use Modules\Shop\Entities\Settings\Delivery;
 use Modules\Shop\Entities\Settings\Main\CountrySale;
 use Modules\Shop\Entities\Settings\Payment;
+use Modules\Shop\Http\Requests\OrderReturnAmountRequest;
 use Modules\Shop\Models\Admin\Products\Product;
 
 class OrdersController extends Controller
@@ -113,9 +114,25 @@ class OrdersController extends Controller
         $order->sendMailShipmentStatusChanged();
     }
 
-    public function returnUpdate()
+    public function returnUpdate($id, OrderReturnAmountRequest $request)
     {
+        $order = Order::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($order);
 
+        if ($request->returned_amount > $order->grandTotalWithDiscountsVatAndDelivery()) {
+            return redirect()->back()->withInput()->withErrors([trans('shop::admin.returned_products.amount_error')]);
+        }
+
+        $order->update([
+                           'returned_amount' => $request->returned_amount,
+                           'date_of_return'  => $request->date_of_return,
+                           'type_of_return'  => $request->type_of_return,
+                           'return_comment'  => $request->return_comment
+                       ]);
+
+        $order->history()->create(['activity_name' => 'Връщане на поръчка / пари беше променено на: Върната сума ' . $order->returned_amount . ' лв., дата на връщане на сумата ' . $order->date_of_return . ', начин на връщане на сумата ' . $order->type_of_return]);
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
 
     public function paymentUpdate()

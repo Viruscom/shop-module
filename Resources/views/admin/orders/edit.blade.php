@@ -2,16 +2,16 @@
 
 @section('styles')
     <link href="{{ asset('admin/assets/css/select2.min.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('admin/assets/plugins/foundation-datepicker/datepicker.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/plugins/foundation-datepicker/datepicker.css') }}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
     <link href="{{ asset('admin/assets/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
     <script src="{{ asset('admin/assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/shop/js/order.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/shop/order.js') }}"></script>
     <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/plugins/foundation-datepicker/datepicker.js') }}"></script>
+    <script src="{{ asset('admin/plugins/foundation-datepicker/datepicker.js') }}"></script>
     <script>
         $(".select2").select2({language: "bg"});
 
@@ -190,7 +190,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th colspan="2" style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
+                        <th colspan="2" style="justify-content: space-between;align-items: center; padding-right: 0;">
                             <h4>{{ __('shop::admin.orders.register_pos_payment') }}</h4>
                         </th>
                     </tr>
@@ -260,7 +260,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th colspan="2" style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
+                        <th colspan="2" style="justify-content: space-between;align-items: center; padding-right: 0;">
                             <h4>Регистрация на връщането</h4>
                         </th>
                     </tr>

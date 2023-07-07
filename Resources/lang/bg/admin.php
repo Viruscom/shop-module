@@ -208,6 +208,10 @@ return array(
             'pos_virtual_note'                                 => 'Виртуална бележка / електронен бон',
             'pos_virtual_note_save_in_documents'               => 'Генерираните виртуални бележки се записват в Документи',
             'generate_virtual_note'                            => 'Генерирай виртуална бележка',
+            'virtual_note'                                     => 'ЕЛЕКТРОННА БЕЛЕЖКА',
+            'virtual_note_from'                                => 'от',
+            'virtual_note_date'                                => 'дата',
+            'virtual_note_supplier'                            => 'ДОСТАВЧИК',
         ),
     'order_shipment_statuses'  => [
         '1' => 'Очакване на обработка',
@@ -262,6 +266,14 @@ return array(
             'order_number'                             => 'Поръчка №',
             'date_and_hour'                            => 'Дата и час',
             'no_return_requests'                       => 'Няма намерени заявки за връщане',
+            'returned_amount_required'                 => 'Полето Върната сума е задължително',
+            'returned_amount_numeric'                  => 'Полето Върната сума трябва да е от типа 0.00',
+            'returned_amount_between'                  => 'Полето Върната сума трябва да е между 0 и 999999999.99',
+            'date_of_return_required'                  => 'Полето Дата на връщане на сумата е задължително',
+            'date_of_return_date'                      => 'Полето Дата на връщане на сумата трябва да е валидна дата',
+            'type_of_return_required'                  => 'Полето Начин на връщане на сумата е задължително',
+            'type_of_return_string'                    => 'Полето Начин на връщане на сумата трябва да е текст',
+            'amount_error'                             => 'Сумата е по-голяма от сумата на поръчката. Въведете сума по-малка или равна на сумата на поръчката.'
         ),
     'product_gifts'            =>
         array(

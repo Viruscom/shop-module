@@ -21,13 +21,14 @@
 <table width="100%">
     <tr>
         <td width="80%">
-            <h2 style="margin-bottom: 5px;">ЕЛЕКТРОННА БЕЛЕЖКА</h2>
+            <h2 style="margin-bottom: 5px;">{{ __('shop::admin.orders.virtual_note') }}</h2>
             @php
-                use App\Models\Shop_Models\Settings\ShopSetting;use Carbon\Carbon;$vrDate = Carbon::parse($order->vr_date);
+                use App\Models\Settings\ShopSetting;use Carbon\Carbon;
+                $vrDate = Carbon::parse($order->vr_date);
                 $orderDate = Carbon::parse($order->created_at);
             @endphp
-            <strong>№ {{ str_pad($virtualReceiptNumber, 10, '0', STR_PAD_LEFT) }} от
-                    дата: {{ $vrDate->format('d.m.Y') }} г.</strong>
+            <strong>№ {{ str_pad($virtualReceiptNumber, 10, '0', STR_PAD_LEFT) }} {{ __('shop::admin.orders.virtual_note_from') }}
+                {{ __('shop::admin.orders.virtual_note_date') }}: {{ $vrDate->format('d.m.Y') }} г.</strong>
         </td>
         <td>
             <span style="float: right; padding-top: 60px;">{!! QrCode::size(100)->generate(ShopSetting::where('key', 'unique_shop_number')->first()->value. '*' .$orderDate->format('Y-m-d') .'*'. $orderDate->format('H:i') .'*'. $order->vr_transaction_number.'*'.number_format(($order->total-$order->total_discounts), 2,',',' ') . '*' . $order->id) !!}</span>
@@ -42,7 +43,7 @@
     <tbody>
     <tr>
         <td style="border-right: 2px solid darkgray;">
-            <strong>ДОСТАВЧИК:</strong>
+            <strong>{{ __('shop::admin.orders.virtual_note_supplier') }}:</strong>
             <div><strong>Психотерапевтичен и обучителен център Алма ООД</strong></div>
             <div><span>ЕИК: </span><span>206893119</span></div>
             <div><span>Адрес: </span><span>гр. София, ул. ТИНТЯВА, 126, вх. Б, ет. 2</span></div>
@@ -59,7 +60,6 @@
             <div><span>Идент. № на ЮЛ: </span><span>175325806</span></div>
             {{--            <div><span>Електроенен адрес за кореспонденция: </span><span>tax.inquiries@icard.com</span></div>--}}
         </td>
-
     </tr>
     </tbody>
 </table>
@@ -83,14 +83,14 @@
         $grandTotal = 0;
         $grandTotalWithDiscounts = 0;
     @endphp
-    @if(count($order->products))
-        @foreach($order->products as $product)
+    @if(count($order->order_products))
+        @foreach($order->order_products as $product)
             <tr>
                 <td style="text-align: center;">
                     <span>{{ $i }}</span>
                 </td>
                 <td>
-                    <span>{{ $product->product->defaultTranslation->title }}</span>
+                    <span>{{ $product->product->title }}</span>
                 </td>
                 <td style="text-align: center;">
                     <span>1</span>

@@ -2,6 +2,9 @@
 
 namespace Modules\Shop\Entities\Orders;
 
+use App\Models\Settings\ShopSetting;
+use Barryvdh\Snappy\Facades\SnappyPdf;
+use File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +14,7 @@ use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Entities\Settings\Delivery;
 use Modules\Shop\Entities\Settings\Payment;
 use Modules\Shop\Services\CurrencyService;
+use PDF;
 
 class Order extends Model
 {
@@ -29,7 +33,7 @@ class Order extends Model
     const SHIPMENT_CANCELED   = 5;
     const SHIPMENT_RETURNED   = 6;
     public static string $FILES_PATH = 'shop/orders';
-    protected            $fillable   = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at', 'shipment_status', 'payment_status', 'payment_address'];
+    protected            $fillable   = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at', 'shipment_status', 'payment_status', 'payment_address', 'returned_amount', 'date_of_return', 'type_of_return', 'return_comment', 'vr_number', 'vr_trans_number', 'vr_date'];
 
     public function getReadableShipmentStatus()
     {
@@ -211,5 +215,21 @@ class Order extends Model
     public function sendMailOrderPlaced()
     {
 
+    }
+
+    public function generateVirtualReceipt($filename, $vrNumber): void
+    {
+        if (is_null($vrNumber)) {
+            $vrNumber = ShopSetting::where('key', 'virtual_receipt_number')->first();
+        }
+
+        if (File::exists(public_path('shop/orders/documents/' . $filename))) {
+            File::delete(public_path('shop/orders/documents/' . $filename));
+        }
+        
+        $pdf = SnappyPdf::loadView('shop::emails.orders.virtual_receipt', ['order' => $this, 'virtualReceiptNumber' => $vrNumber->value]);
+        $pdf->save(public_path('shop/orders/documents/' . $filename));
+
+        $vrNumber->update(['value' => $vrNumber->value + 1]);
     }
 }
