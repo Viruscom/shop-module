@@ -25,6 +25,8 @@ class OrdersController extends Controller
     public function store($request)
     {
         $orderNumber = Order::max('id') + 1;
+        //TODO: Send email to client with order info
+        //        $order->sendMailOrderPlaced();
     }
     public function edit($id)
     {
@@ -76,7 +78,7 @@ class OrdersController extends Controller
 
         $order->update(['payment_status' => $request->payment_status_id]);
         $order->history()->create(['activity_name' => 'Статусът беше променен на: ' . $order->getReadablePaymentStatus()]);
-        $order->sendMailOrderStatusChanged();
+        $order->sendMailPaymentStatusChanged();
     }
     public function update($id, $request)
     {
@@ -85,7 +87,6 @@ class OrdersController extends Controller
 
         $order->update($order->getUpdateData($request));
         $order->updateProducts($request->only('products'));
-        //TODO:        $order->updateCollections($request->only('collections'));
 
         //TODO: uncomment this $order->sendMailOrderUpdated();
 
@@ -104,12 +105,27 @@ class OrdersController extends Controller
     }
     public function changeShipmentStatus($id, $request)
     {
+        $order = Order::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($order);
 
+        $order->update(['shipment_status' => $request->payment_status_id]);
+        $order->history()->create(['activity_name' => 'Статусът беше променен на: ' . $order->getReadableShipmentStatus()]);
+        $order->sendMailShipmentStatusChanged();
     }
 
     public function returnUpdate()
     {
 
+    }
+
+    public function paymentUpdate()
+    {
+        //TODO: Send email to client with new payment
+    }
+
+    public function companyUpdate()
+    {
+        //TODO: Send email to client with new company
     }
 
     public function getProductByIdForOrder(Request $request)
