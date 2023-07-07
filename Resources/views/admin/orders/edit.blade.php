@@ -66,7 +66,7 @@
             <h3>
                 <strong>Поръчка № {{ $order->id }}</strong>
             </h3>
-            <h5>Регистрирана на дата: <strong>{{ $order->created_at }}</strong></h5>
+            <h5>Регистрирана на дата: <strong>{{ Carbon::parse($order->created_at)->format('d.m.Y H:i:s') }}</strong></h5>
             <hr>
             <h3 class="text-purple">Клиент</h3>
         </div>
@@ -76,7 +76,7 @@
             <table class="table table-striped">
                 <tbody>
                 <tr>
-                    <td>Име и фамилия</td>
+                    <td>{{ __('shop::admin.orders.ordered_from') }}</td>
                     <td><strong>{{ $order->first_name. ' '. $order->last_name }}</strong></td>
                 </tr>
                 <tr>
@@ -97,14 +97,14 @@
                 </tr>
                 @if(!is_null($order->user_id))
                     <tr>
-                        <td>Рожден ден</td>
+                        <td>{{ __('shop::admin.registered_users.birthday') }}</td>
                         <td><strong>{{ Carbon::parse($order->user->birtday)->format('d.m.Y') }}</strong></td>
                     </tr>
                 </tbody>
                 @endif</tbody>
             </table>
             @if($order->invoice_required)
-                <div class="alert alert-warning"><strong>Внимание! </strong>Клиентът изисква фактура.</div>
+                <div class="alert alert-warning">{{ __('shop::admin.orders.warning_invoice_required') }}</div>
             @endif
         </div>
         <div class="col-md-6 col-xs-12">
@@ -129,9 +129,12 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3 class="text-purple">Плащане</h3>
+            <h3 class="text-purple">{{ __('shop::admin.orders.payment_caption') }}</h3>
+            @if(!is_null($order->paid_at))
+                <div class="alert alert-success">{{ __('shop::admin.orders.paid_at') }} {{ Carbon::parse($order->paid_at)->format('d.m.Y H:i:s') }}</div>
+            @endif
             <div>
-                <h4>Метод на плащане</h4>
+                <h4>{{ __('shop::admin.orders.payment') }}</h4>
                 <div class="form-control">{{ $order->getReadablePaymentMethod() }}</div>
             </div>
             <div class="m-t-10">
@@ -139,7 +142,7 @@
                     <thead>
                     <tr>
                         <th style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
-                            <h4>Адрес на плащане</h4>
+                            <h4>{{ __('shop::admin.orders.payment_address') }}</h4>
                         </th>
                     </tr>
                     </thead>
@@ -148,9 +151,12 @@
             </div>
         </div>
         <div class="col-md-6">
-            <h3 class="text-purple">Доставка</h3>
+            <h3 class="text-purple">@lang('shop::admin.orders.delivery')</h3>
+            @if(!is_null($order->delivered_at))
+                <div class="alert alert-success">{{ __('shop::admin.orders.delivered_at') }} {{ Carbon::parse($order->delivered_at)->format('d.m.Y H:i:s') }}</div>
+            @endif
             <div>
-                <h4>Метод на доставка</h4>
+                <h4>{{ __('shop::admin.orders.delivery_method') }}</h4>
                 <div class="form-control">{{ $order->getReadableShipmentMethod() }}</div>
             </div>
             <div class="m-t-10">
@@ -158,7 +164,7 @@
                     <thead>
                     <tr>
                         <th style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
-                            <h4>Адрес на доставка</h4>
+                            <h4>{{ __('shop::admin.orders.delivery_address') }}</h4>
                         </th>
                     </tr>
                     </thead>
@@ -178,67 +184,69 @@
     </div>
     <div class="row m-t-40">
         <div class="col-md-6">
-            <form action="{{ route('orders.payment-update', ['id' => $order->id]) }}" method="POST">
+            <h3 class="text-purple">{{ __('shop::admin.orders.payment_with_virtual_pos_terminal') }}</h3>
+            <form action="{{ route('admin.shop.orders.payment-update', ['id' => $order->id]) }}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th colspan="2">Регистрация на плащане с виртуален ПОС терминал</th>
+                        <th colspan="2" style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
+                            <h4>{{ __('shop::admin.orders.register_pos_payment') }}</h4>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
-                    @if($order->payment_type_id == \App\Models\Shop_Models\Orders\Order::$PAYMENT_TYPE_MYPOS)
+                    @if($order->payment_id == $myPosPayment->id)
                         <tr>
-                            <td>№ документ (електронен бон)</td>
+                            <td>{{ __('shop::admin.orders.pos_doc_number') }}</td>
                             <td class="text-right"><span>{{ str_pad($vrNumber->value, 10, '0', STR_PAD_LEFT) }}</span>
                             </td>
                         </tr>
                         <tr>
-                            <td>Дата на плащане</td>
+                            <td>{{ __('shop::admin.orders.pos_date_of_payment') }}</td>
                             <td class="text-right"><input type="date" name="vr_date" value="{{ old('vr_date') ?? $order->vr_date }}"></td>
                         </tr>
                         <tr>
-                            <td>ID на транзакцията</td>
+                            <td>{{ __('shop::admin.orders.pos_transaction_id') }}</td>
                             <td class="text-right"><input type="text" name="vr_transaction_number" class="text-right" value="{{ old('vr_transaction_number') ?? $order->vr_transaction_number }}">
                             </td>
                         </tr>
                         <tr>
-                            <td>Начин на плащане</td>
+                            <td>{{ __('shop::admin.orders.pos_payment_type') }}</td>
                             <td class="text-right">{{ trans('administration_messages.order_payment_type_'.$order->payment_type_id) }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="2" class="no-table-rows">Издаването на електронен бон е възможно при плащане с
-                                                                  Виртуален ПОС терминал
+                            <td colspan="2" class="no-table-rows">{{ __('shop::admin.orders.pos_no_records') }}
                             </td>
                         </tr>
                     @endif
                     </tbody>
                 </table>
-                @if($order->payment_type_id == \App\Models\Shop_Models\Orders\Order::$PAYMENT_TYPE_MYPOS)
+                @if($order->payment_id == $myPosPayment->id)
                     <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10 pull-right">
                         <i class="fas fa-save"></i> запиши
                     </button>
                 @endif
             </form>
-            @if($order->vr_date != '' && $order->vr_transaction_number != '' && $order->payment_type_id == \App\Models\Shop_Models\Orders\Order::$PAYMENT_TYPE_MYPOS)
+            @if($order->vr_date != '' && $order->vr_transaction_number != '' && $order->payment_id == $myPosPayment->id)
                 <div class="row" style="margin-top: 80px;">
                     <div class="col-md-12">
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th colspan="2">Виртуална бележка / електронен бон</th>
+                                <th colspan="2">{{ __('shop::admin.orders.pos_virtual_note') }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td colspan="2">Генерираните виртуални бележки се записват в Документи.</td>
+                                <td colspan="2">{{ __('shop::admin.orders.pos_virtual_note_save_in_documents') }}.</td>
                             </tr>
                             </tbody>
                         </table>
                         <form action="{{ route('orders.virtual-receipt-generate', ['id' => $order->id]) }}" method="POST" class="pull-right">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button type="submit" name="submit" value="submit" class="btn green margin-bottom-10 pull-right">Генерирай виртуална бележка
+                            <button type="submit" name="submit" value="submit" class="btn green margin-bottom-10 pull-right">{{ __('shop::admin.orders.generate_virtual_note') }}
                             </button>
                         </form>
                     </div>
@@ -246,12 +254,15 @@
             @endif
         </div>
         <div class="col-md-6">
-            <form action="{{ route('orders.return-update', ['id' => $order->id]) }}" method="POST">
+            <h3 class="text-purple">Връщане на поръчка / пари</h3>
+            <form action="{{ route('admin.shop.orders.return-update', ['id' => $order->id]) }}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th colspan="2">Връщане на поръчка / пари</th>
+                        <th colspan="2" style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
+                            <h4>Регистрация на връщането</h4>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -525,233 +536,6 @@
         </div>
     </div>
 
-@endsection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@extends('layouts.app')
-
-@section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('admin/plugins/foundation-datepicker/datepicker.css') }}" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
-@endsection
-@section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/shop/js/order.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/foundation-datepicker/datepicker.js') }}"></script>
-    <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-        $(".select2").select2({language: "bg"});
-
-        $(document).ready(function () {
-
-            var table = $('.example').DataTable({
-                orderCellsTop: true,
-                language: {
-                    "sProcessing": "Обработка на резултатите...",
-                    "sLengthMenu": "Показване на _MENU_ резултата",
-                    "sZeroRecords": "Няма намерени резултати",
-                    "sInfo": "Показване на резултати от _START_ до _END_ от общо _TOTAL_",
-                    "sInfoEmpty": "Показване на резултати от 0 до 0 от общо 0",
-                    "sInfoFiltered": "(филтрирани от общо _MAX_ резултата)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Търсене:",
-                    "sUrl": "",
-                    "oPaginate": {
-                        "sFirst": "Първа",
-                        "sPrevious": "Предишна",
-                        "sNext": "Следваща",
-                        "sLast": "Последна"
-                    }
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover({
-                placement: 'auto',
-                trigger: 'hover',
-                html: true
-            });
-        });
-    </script>
-@endsection
-
-@section('content')
-    <div class="col-xs-12 p-0">
-        <div class="bg-grey top-search-bar">
-            <div class="action-mass-buttons pull-right">
-                <a href="{{ url()->previous() }}" role="button" class="btn btn-lg back-btn margin-bottom-10"><i class="fa fa-reply"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="row m-b-20">
-        <h3 class="col-md-9 pull-left" style="display: flex;flex-direction: column;">
-            <b>Поръчка № {{ $order->strPadOrderId() }}</b>
-            <span style="font-size: 15px;margin-top: 5px; color: #9e9e9e;">Пристигнала на: {{ Carbon::parse($order->created_at)->format('d.m.Y H:i:s') }}</span>
-            <div style="margin-top: 15px;font-weight: 500;">
-                <span style="font-size: 16px;">Статус: </span>
-                <span style="background: {{ $order->getStatusClass($order->status()) }};padding: 4px; color: #000000; font-size: 16px;max-width: 216px;margin-top: 10px;text-align: center;">{{ $order->statusHumanReadable() }}</span>
-            </div>
-        </h3>
-        <div class="col-md-3 pull-right">
-            @if($order->status_id != \App\Models\Shop_Models\Orders\Order::$STATUS_COMPLETED)
-                <label for="order_status_id" class="form-label col-md-12 text-right">Промени статус</label>
-                <select name="status_id" id="order_status_id" class="select2 form-control col-md-12 select-order-status" style="width: 1005;">
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_WAITING }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_WAITING) ? 'selected': '' }}>{!! trans('administration_messages.order_status_1') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_CANCELED }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_CANCELED) ? 'selected': '' }}>{!! trans('administration_messages.order_status_2') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_EXPIRED }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_EXPIRED) ? 'selected': '' }}>{!! trans('administration_messages.order_status_3') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_REFUSED }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_REFUSED) ? 'selected': '' }}>{!! trans('administration_messages.order_status_4') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_UNSUCCESSFUL }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_UNSUCCESSFUL) ? 'selected': '' }}>{!! trans('administration_messages.order_status_5') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_RESTORED }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_RESTORED) ? 'selected': '' }}>{!! trans('administration_messages.order_status_6') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_DISPUTED_CARD_PAYMENT }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_DISPUTED_CARD_PAYMENT) ? 'selected': '' }}>{!! trans('administration_messages.order_status_7') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_DISPUTED_PAYMENT }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_DISPUTED_PAYMENT) ? 'selected': '' }}>{!! trans('administration_messages.order_status_8') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_PAID }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_PAID) ? 'selected': '' }}>{!! trans('administration_messages.order_status_9') !!}</option>
-                    <option value="{{ \App\Models\Shop_Models\Orders\Order::$STATUS_COMPLETED }}" {{ ($order->status_id == \App\Models\Shop_Models\Orders\Order::$STATUS_COMPLETED) ? 'selected': '' }}>{!! trans('administration_messages.order_status_10') !!}</option>
-                </select>
-            @endif
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th colspan="2">Информация за клиента</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Име и фамилия</td>
-                    <td><strong>{{ $order->name }}</strong></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><strong><a href="mailto:{{ $order->email }}">{{ $order->email }}</a></strong></td>
-                </tr>
-                <tr>
-                    <td>Парола</td>
-                    <td><strong>*******</strong></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-6">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th colspan="2">Допълнителни данни</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Клиентска група</td>
-                    <td><strong>{{ $order->client_group }}</strong></td>
-                </tr>
-                <tr>
-                    <td>Телефон</td>
-                    <td><strong><a href="tel:{{ $order->phone }}">{{ $order->phone }}</a></strong></td>
-                </tr>
-                @if(!is_null($order->client_id))
-                    <tr>
-                        <td>Рожден ден</td>
-                        <td><strong>{{ Carbon::parse($order->client->birtday)->format('d.m.Y') }}</strong></td>
-                    </tr>
-                </tbody>
-                @endif
-            </table>
-        </div>
-    </div>
-    <div class="row m-t-40">
-        <div class="col-md-6">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Данни за плащане</th>
-                    <th class="text-right"><span class="btn green btn-sm" role="button" data-toggle="modal" data-target="#change_payment_modal"><i class="fas fa-pencil-alt"></i></span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Метод на плащане</td>
-                    <td class="payment-type-td-text">{{ trans('administration_messages.order_payment_type_'.$order->payment_type_id) }}</td>
-                </tr>
-                <tr>
-                    <td>Начин на доставка</td>
-                    <td class="delivery-type-td-text">{{ trans('administration_messages.delivery_type_' . $order->delivery_type) }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-md-6">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Данни за доставка</th>
-                    <th class="text-right"><a href="" class="btn green btn-sm" role="button" data-toggle="modal" data-target="#change_shipment_modal"><i class="fas fa-pencil-alt"></i></a>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Адрес на плащане</td>
-                    <td>{{ ($order->i_want_invoice) ? $order->invoice_recipient_city . ', ' .$order->invoice_recipient_address : $order->shipment_address }}</td>
-                </tr>
-                <tr>
-                    <td>Адрес на доставка</td>
-                    <td>{{ $order->city . ', ' . $order->shipment_address }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    @if($order->shipment_different_recipient_checkbox)
-        <div class="row m-0" style="background: #fff2cd;padding: 10px;">
-            <div class="alert alert-warning"><strong>Внимание!</strong> Данните за контакт на получателя са различни
-            </div>
-            <h4>Данни за контакт на получател</h4>
-            <table class="table striped">
-                <thead>
-                <tr>
-                    <th>Име на получател</th>
-                    <th>Телефон на получател</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ $order->shipment_different_recipient_name }}</td>
-                    <td>{{ $order->shipment_different_recipient_phone }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    @endif
 
 
     <div id="firm_account_modal" class="modal">
@@ -825,9 +609,10 @@
                 <div class="row">
                     <div class="col-md-12 m-t-10 border-light">
                         <select name="payment_type_id" id="payment_type_id_select_modal" class="form-control">
-                            <option value="">--- Моля, изберете ---</option>
-                            <option value="{{ \App\Models\Shop_Models\Orders\Order::$PAYMENT_TYPE_CASH_ON_DELIVERY }}">{{ trans('administration_messages.order_payment_type_1') }}</option>
-                            <option value="{{ \App\Models\Shop_Models\Orders\Order::$PAYMENT_TYPE_BANK_TRANSFER }}">{{ trans('administration_messages.order_payment_type_2') }}</option>
+                            <option value="">{{ __('admin.common.please_select') }}</option>
+                            @foreach($payments as $payment)
+                                <option value="{{ $payment->id }}">{{ __('shop::admin.payment_systems.' . $payment->type) }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -852,7 +637,7 @@
                 <div class="row">
                     <div class="col-md-12 m-t-10 border-light">
                         <select name="shipment_type_id" id="shipment_type_id_select_modal" class="form-control">
-                            <option value="">--- Моля, изберете ---</option>
+                            <option value="">{{ __('admin.common.please_select') }}</option>
                             <option value="1">{!! trans('administration_messages.delivery_type_1') !!}</option>
                             <option value="2">{!! trans('administration_messages.delivery_type_2') !!}</option>
                         </select>
@@ -869,5 +654,4 @@
             </div>
         </div>
     </div>
-
 @endsection

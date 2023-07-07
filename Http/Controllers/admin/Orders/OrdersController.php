@@ -44,11 +44,13 @@ class OrdersController extends Controller
         $salesCountries = CountrySale::pluck('country_id')->toArray();
 
         return view('shop::admin.orders.edit', [
-            'order'    => $order,
-            'cities'   => City::whereIn('country_id', $salesCountries)->orderBy('name', 'asc')->get(),
-            'products' => Product::active(true)->with('translations')->get(),
-            'clients'  => ShopRegisteredUser::where('active', true)->get(),
-            'vrNumber' => ShopSetting::where('key', 'virtual_receipt_number')->first()
+            'order'        => $order,
+            'cities'       => City::whereIn('country_id', $salesCountries)->orderBy('name', 'asc')->get(),
+            'products'     => Product::active(true)->with('translations')->get(),
+            'clients'      => ShopRegisteredUser::where('active', true)->get(),
+            'vrNumber'     => ShopSetting::where('key', 'virtual_receipt_number')->first(),
+            'payments'     => Payment::all(),
+            'myPosPayment' => Payment::where('type', 'mypos')->first()
         ]);
     }
     public function show($id)
@@ -101,6 +103,11 @@ class OrdersController extends Controller
         ]);
     }
     public function changeShipmentStatus($id, $request)
+    {
+
+    }
+
+    public function returnUpdate()
     {
 
     }
