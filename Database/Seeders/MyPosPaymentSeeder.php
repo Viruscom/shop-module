@@ -54,8 +54,8 @@ class MyPosPaymentSeeder extends Seeder
         if (is_null($payment)) {
             $payment = Payment::create($data);
         } else {
-            // $data['position'] = $payment->position;
-            // $payment->update($data);
+            $data['position'] = $payment->position;
+            $payment->update($data);
         }
     }
 }
