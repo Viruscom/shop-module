@@ -19,5 +19,8 @@
             "Modules\\Shop\\": ""
         }
     },
+    "require": {
+        "mailchimp/marketing": "*"
+    },
     "type": "laravel-module"
 }
