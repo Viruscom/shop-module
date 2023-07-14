@@ -23,7 +23,7 @@
                 <h3 data-aos="fade-up" data-aos-delay="100">{{ $category->title }}</h3>
             </div>
         </div>
-
+   
         {{--      Icons here --}}
         <div class="shell">
             <div class="prod-elements">

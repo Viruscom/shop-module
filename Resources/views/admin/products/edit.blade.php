@@ -70,7 +70,7 @@
                                 <h3>{{ __('admin.common.additional_texts') }}</h3>
                                 <div class="panel-group" id="accordion-{{$language->id}}">
                                     @for($i=1; $i<7; $i++)
-                                        @include('admin.partials.on_edit.additional_title_and_text', ['model' => $product, 'language' => $language, 'i' => $i])
+                                        @include('admin.partials.on_edit.additional_title_and_text', ['model' => $productTranslate, 'language' => $language, 'i' => $i])
                                     @endfor
                                 </div>
                             </div>
