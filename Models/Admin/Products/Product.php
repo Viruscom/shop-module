@@ -45,7 +45,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
                                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
-                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value'];
+                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value', 'catalog_from_price', 'catalog_discounted_price', 'catalog_from_discounted_price'];
     protected    $table                = 'products';
 
     public static function getFileRules(): string
@@ -143,6 +143,20 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         if ($request->has('units_in_stock')) {
             $data['units_in_stock'] = $request->units_in_stock;
+        }
+
+        $data['catalog_from_price'] = false;
+        if ($request->has('catalog_from_price')) {
+            $data['catalog_from_price'] = filter_var($request->catalog_from_price, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($request->has('catalog_discounted_price')) {
+            $data['catalog_discounted_price'] = $request->catalog_discounted_price;
+        }
+
+        $data['catalog_from_discounted_price'] = false;
+        if ($request->has('catalog_from_discounted_price')) {
+            $data['catalog_from_discounted_price'] = filter_var($request->catalog_from_discounted_price, FILTER_VALIDATE_BOOLEAN);
         }
 
         if ($request->hasFile('image')) {

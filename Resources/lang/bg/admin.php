@@ -61,6 +61,8 @@ return array(
             'measure_unit_id_exists'                     => 'Невалидна мерна единица. Не е открита такава в базата данни.',
             'measure_unit'                               => 'Мерна единица',
             'measure_unit_value'                         => 'Стойност на мерна единица',
+            'catalog_discounted_price'                   => 'Каталожна цена с отстъпка',
+            'from_price'                                 => 'От цена',
         ),
     'product_adboxes'          =>
         array(
