@@ -60,6 +60,7 @@ return array(
             'measure_unit_id_integer'                    => 'Полето мерна единица трябва да бъде цяло число.',
             'measure_unit_id_exists'                     => 'Невалидна мерна единица. Не е открита такава в базата данни.',
             'measure_unit'                               => 'Мерна единица',
+            'measure_unit_value'                         => 'Стойност на мерна единица',
         ),
     'product_adboxes'          =>
         array(

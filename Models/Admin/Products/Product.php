@@ -45,7 +45,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
                                           'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                           'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
     protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
-                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock'];
+                                          'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value'];
     protected    $table                = 'products';
 
     public static function getFileRules(): string
@@ -109,6 +109,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         if ($request->has('measure_unit')) {
             $data['measure_unit'] = $request->measure_unit;
+        }
+
+        if ($request->has('measure_unit_value')) {
+            $data['measure_unit_value'] = $request->measure_unit_value;
         }
 
         $data['is_new'] = false;
