@@ -40,6 +40,9 @@ class BasketController extends Controller
         $request['uid']                = uniqid(uniqid(uniqid(uniqid('', true) . "-", true) . "-", true) . "-", true);
         $request['paid_at']            = null;
         $request['delivered_at']       = null;
+        $request['shipment_status'] = 1;
+        $request['payment_status'] = 1;
+
 
         $order = $action->storeOrder($request, $basket);
 
@@ -51,12 +54,12 @@ class BasketController extends Controller
         $action->sendEmailToClient($request, $basket);
         $action->sendEmailToAdmin($request, $basket);
 
-        //execute payment method
-        $payment = Payment::find($request->payment_id);
-        if (!empty($payment->class) && !empty($payment->method)) {
-            return call_user_func_array(array($payment->class, $payment->method), array($order));
+        //execute payment method?
+        $payment = Payment::where('id', $request->payment_id)->where('active', 1)->get()->first();
+        if (!empty($payment->class) && !empty($payment->execute_payment_method)) {
+            return call_user_func_array(array($payment->class, $payment->execute_payment_method), array($order));
         }
-
+        
         return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
     }
     public function previewOrder($id)

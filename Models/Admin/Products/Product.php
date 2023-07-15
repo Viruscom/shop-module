@@ -256,7 +256,7 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
             $countryId = $country->id;
         }
         if (!is_null($city)) {
-            $countryId = $city->country()->id;
+            $countryId = $city->country->id;
         }
         if (!is_null($countryId)) {
             $vatCategory = $this->getVatCategory($countryId);

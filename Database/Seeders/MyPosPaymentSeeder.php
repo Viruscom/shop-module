@@ -45,8 +45,8 @@ class MyPosPaymentSeeder extends Seeder
                                                     ]),
             'validation_messages'    => json_encode([]),
             'validation_attributes'  => json_encode([]),
-            'class'                  => '',
-            'execute_payment_method' => '',
+            'class'                  => 'Modules\MyPosPayment\Actions\PaymentAction',
+            'execute_payment_method' => 'initPayment',
             'edit_view_path'         => 'shop::payments.' . $type . '.edit'
         ];
 
