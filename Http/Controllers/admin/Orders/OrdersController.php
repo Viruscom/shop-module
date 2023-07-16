@@ -27,7 +27,7 @@ class OrdersController extends Controller
     {
         $orderNumber = Order::max('id') + 1;
         //TODO: Send email to client with order info
-        //        $order->sendMailOrderPlaced();
+        //        $order->sendMailOrderPlacedToClient();
     }
     public function edit($id)
     {

@@ -212,10 +212,16 @@ class Order extends Model
 
     }
 
-    public function sendMailOrderPlaced()
+    public function sendMailOrderPlacedToClient()
     {
 
     }
+
+    public function sendMailOrderPlacedToAdmin()
+    {
+
+    }
+
 
     public function generateVirtualReceipt($filename, $vrNumber): void
     {
@@ -226,7 +232,7 @@ class Order extends Model
         if (File::exists(public_path('shop/orders/documents/' . $filename))) {
             File::delete(public_path('shop/orders/documents/' . $filename));
         }
-        
+
         $pdf = SnappyPdf::loadView('shop::emails.orders.virtual_receipt', ['order' => $this, 'virtualReceiptNumber' => $vrNumber->value]);
         $pdf->save(public_path('shop/orders/documents/' . $filename));
 

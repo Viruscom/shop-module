@@ -91,9 +91,9 @@
                             <td>{{ $order->street .', '. $order->street_number }}</td>
                             <td>
                                 <div>
-                                    Общо: {{ $order->total }} лв.<br>
-                                    <span>Отстъпки: <strong class="text-purple">-{{ $order->discounts_to_apply }}</strong> лв.</span><br>
-                                    <span>Общо с отстъпки и ДДС: {{ $order->total_discounted }} лв.</span>
+                                    Общо: {{ $order->totalVatProducts() }} лв.<br>
+                                    <span>Отстъпки: <strong class="text-purple">-{{ $order->discounts_amount }}</strong> лв.</span><br>
+                                    <span>Общо с отстъпки и ДДС: {{ $order->totalEndDiscountedPrice() }} лв.</span>
                                 </div>
                             </td>
                             <td>{{ $order->getReadablePaymentMethod() }}</td>

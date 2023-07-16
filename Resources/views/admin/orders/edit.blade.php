@@ -104,7 +104,7 @@
                 @endif</tbody>
             </table>
             @if($order->invoice_required)
-                <div class="alert alert-warning">{{ __('shop::admin.orders.warning_invoice_required') }}</div>
+                <div class="alert alert-warning">{!! __('shop::admin.orders.warning_invoice_required') !!}</div>
             @endif
         </div>
         <div class="col-md-6 col-xs-12">

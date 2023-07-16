@@ -30,11 +30,5 @@ class BasketAction
 
         return $order;
     }
-    public function sendEmailToClient($request, $basket)
-    {
 
-    }
-    public function sendEmailToAdmin($request, $basket)
-    {
-    }
 }

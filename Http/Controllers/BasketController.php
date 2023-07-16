@@ -5,6 +5,7 @@ namespace Modules\Shop\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Modules\Shop\Actions\BasketAction;
 use Modules\Shop\Entities\Basket\Basket;
 use Modules\Shop\Entities\Orders\Order;
@@ -28,39 +29,38 @@ class BasketController extends Controller
         $country        = Country::find($request->country_id);
         $city           = City::find($request->city_id);
         $basket->calculate($basketProducts, $country, $city);
-        if ($basket->total != $request->total || $basket->total_discounted != $request->total_discounted || $basket->total_free_delivery != $request->total_free_delivery) {
-            return redirect(route('basket.index'))->withError(__('There are changes.'));
-        }
+        //TODO: Ima razlika, da sew vidi
 
-        //check quantities
+        //        if ($basket->total != $request->total || $basket->total_discounted != $request->total_discounted || $basket->total_free_delivery != $request->total_free_delivery) {
+        //            dd($basket->total . ' --- ' . $request->total . ' --- ' . $basket->total_discounted . ' --- ' . $request->total_discounted . ' --- ' . $basket->total_free_delivery . ' --- ' . $request->total_free_delivery);
+        //
+        //            return redirect(route('basket.index'))->withError(__('There are changes.'));
+        //        }
+
+        //TODO: check quantities
 
         $request['discounts_to_apply'] = json_encode($basket->discounts_to_apply);
         $request['key']                = $basket->key;
         $request['user_id']            = $basket->user_id;
-        $request['uid']                = uniqid(uniqid(uniqid(uniqid('', true) . "-", true) . "-", true) . "-", true);
+        $request['uid']                = Str::uuid();
         $request['paid_at']            = null;
         $request['delivered_at']       = null;
-        $request['shipment_status'] = 1;
-        $request['payment_status'] = 1;
-
+        $request['shipment_status']    = Order::SHIPMENT_WAITING;
+        $request['payment_status']     = Order::PAYMENT_PENDING;
 
         $order = $action->storeOrder($request, $basket);
 
-
-        //decrement quantities
-        //delete current basket
+        //TODO: decrement quantities?
         $basket->delete();
-        //send mail for order created
-        $action->sendEmailToClient($request, $basket);
-        $action->sendEmailToAdmin($request, $basket);
+        $order->sendMailOrderPlacedToClient();
+        $order->sendMailOrderPlacedToAdmin();
 
         //execute payment method?
         $payment = Payment::where('id', $request->payment_id)->where('active', 1)->get()->first();
         if (!empty($payment->class) && !empty($payment->execute_payment_method)) {
             return call_user_func_array(array($payment->class, $payment->execute_payment_method), array($order));
         }
-        
-        return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
+        //        return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
     }
     public function previewOrder($id)
     {
