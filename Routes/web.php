@@ -8,7 +8,6 @@ use Modules\Shop\Http\Controllers\admin\Brands\BrandController;
 use Modules\Shop\Http\Controllers\admin\Orders\Documents\OrderDocumentController;
 use Modules\Shop\Http\Controllers\admin\Orders\OrderReturnsController;
 use Modules\Shop\Http\Controllers\admin\Orders\OrdersController;
-use Modules\Shop\Http\Controllers\admin\Orders\Statuses\OrderStatusController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributesController;
 use Modules\Shop\Http\Controllers\admin\ProductAttributes\ProductAttributeValuesController;
 use Modules\Shop\Http\Controllers\admin\ProductCategories\ProductCategoriesController;
@@ -89,19 +88,11 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
             Route::post('return/update', [OrdersController::class, 'returnUpdate'])->name('admin.shop.orders.return-update');
             Route::post('payment/update', [OrdersController::class, 'paymentUpdate'])->name('admin.shop.orders.payment-update');
             Route::post('virtual-receipt/generate', [OrdersController::class, 'virtualReceiptGenerate'])->name('admin.shop.orders.virtual-receipt-generate');
+            /* Update Status */
+            Route::post('payment-status/update', [OrdersController::class, 'paymentStatusUpdate'])->name('admin.shop.orders.payment-status-update');
+            Route::post('shipment-status/update', [OrdersController::class, 'shipmentStatusUpdate'])->name('admin.shop.orders.shipment-status-update');
         });
 
-        /* Statuses */
-        Route::group(['prefix' => 'statuses'], static function () {
-            Route::get('/', [OrderStatusController::class, 'index'])->name('admin.shop.orders.statuses.index');
-            Route::get('/create', [OrderStatusController::class, 'create'])->name('admin.shop.orders.statuses.create');
-            Route::post('/store', [OrderStatusController::class, 'store'])->name('admin.shop.orders.statuses.store');
-            Route::get('/{id}/edit', [OrderStatusController::class, 'edit'])->name('admin.shop.orders.statuses.edit');
-            Route::post('/{id}/update', [OrderStatusController::class, 'update'])->name('admin.shop.orders.statuses.update');
-            Route::delete('/{id}/delete', [OrderStatusController::class, 'delete'])->name('admin.shop.orders.statuses.delete');
-            Route::get('/{id}/show', [OrderStatusController::class, 'show'])->name('admin.shop.orders.statuses.show');
-            Route::post('/active/{id}/{active}', [OrderStatusController::class, 'changeActiveStatus'])->name('admin.shop.orders.statuses.changeStatus');
-        });
         /* Documents */
         Route::group(['prefix' => '{order_id}/documents'], static function () {
             Route::get('/', [OrderDocumentController::class, 'index'])->name('admin.shop.orders.documents.index');

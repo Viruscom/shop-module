@@ -175,4 +175,28 @@ class OrdersController extends Controller
             'priceWithDiscounts' => 0, //TODO: $product->getPriceWithDiscounts($clientLevel)
         ];
     }
+
+    public function paymentStatusUpdate($id, Request $request)
+    {
+        $order = Order::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($order);
+
+        $order->update(['payment_status' => $request->status]);
+        $order->history()->create(['activity_name' => 'Промяна на статус на плащане: ' . $order->getReadablePaymentStatus()]);
+        $order->sendMailPaymentStatusChanged();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+
+    public function shipmentStatusUpdate($id, Request $request)
+    {
+        $order = Order::where('id', $id)->first();
+        WebsiteHelper::redirectBackIfNull($order);
+
+        $order->update(['shipment_status' => $request->status]);
+        $order->history()->create(['activity_name' => 'Промяна на статус на поръчката: ' . $order->getReadableShipmentStatus()]);
+        $order->sendMailShipmentStatusChanged();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
 }

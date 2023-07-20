@@ -120,6 +120,49 @@
                 </tr>
                 </tbody>
             </table>
+            <br>
+            <h4>Промени статусите</h4>
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td style="display: flex;">@lang('shop::admin.orders.status')</td>
+                    <td>
+                        <form action="{{ route('admin.shop.orders.shipment-status-update', ['id' => $order->id]) }}" method="post">
+                            @csrf
+                            <div>
+                                <select name="status" class="select2 order_status_select" style="width: 100%;">
+                                    <option value="{{ Order::SHIPMENT_WAITING }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_WAITING) }}</option>
+                                    <option value="{{ Order::SHIPMENT_PROCESSING }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_PROCESSING) }}</option>
+                                    <option value="{{ Order::SHIPMENT_SENT }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_SENT) }}</option>
+                                    <option value="{{ Order::SHIPMENT_DELIVERED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_DELIVERED) }}</option>
+                                    <option value="{{ Order::SHIPMENT_CANCELED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_CANCELED) }}</option>
+                                    <option value="{{ Order::SHIPMENT_RETURNED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_RETURNED) }}</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary m-t-10 pull-right">Обнови статус</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="display: flex;">@lang('shop::admin.orders.payment_status')</td>
+                    <td>
+                        <form action="{{ route('admin.shop.orders.payment-status-update', ['id' => $order->id]) }}" method="post">
+                            @csrf
+                            <div>
+                                <select name="status" class="select2 order_status_select" style="width: 100%;">
+                                    <option value="{{ Order::PAYMENT_PENDING }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PENDING) }}</option>
+                                    <option value="{{ Order::PAYMENT_CANCELED }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_CANCELED) }}</option>
+                                    <option value="{{ Order::PAYMENT_REFUND }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_REFUND) }}</option>
+                                    <option value="{{ Order::PAYMENT_PARTIAL_COMPENSATION }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PARTIAL_COMPENSATION) }}</option>
+                                    <option value="{{ Order::PAYMENT_PAID }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PAID) }}</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary m-t-10 pull-right">Обнови статус</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

@@ -29,15 +29,17 @@ class PaymentsController extends Controller
     }
     public function updateState($id, $active)
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::find($id);
+        WebsiteHelper::redirectBackIfNull($payment);
         $payment->update(['active' => $active]);
 
-        return redirect()->back()->with('success', __('Successful update'));
+        return redirect()->back()->with('success-message', trans('admin.common.successful_edit'));
     }
 
     public function update($id, Request $request)
     {
-        $payment       = Payment::findOrFail($id);
+        $payment = Payment::find($id);
+        WebsiteHelper::redirectBackIfNull($payment);
         $validatedData = Validator::make($request->all(), json_decode($payment->validation_rules, true), json_decode($payment->validation_messages, true), json_decode($payment->validation_attributes, true))->validate();
 
         $dataArray = $payment->generateData($request->all());
@@ -46,13 +48,14 @@ class PaymentsController extends Controller
             $payment->updatePosition($request->position);
         }
 
-        return redirect()->route('payments.index')->with('success', __('Successful update'));
+        return redirect()->route('payments.index')->with('success-message', trans('admin.common.successful_edit'));
     }
     public function updatePosition($id, $position)
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::find($id);
+        WebsiteHelper::redirectBackIfNull($payment);
         $payment->updatePosition($position);
 
-        return redirect()->back()->with('success', __('Successful update'));
+        return redirect()->back()->with('success-message', trans('admin.common.successful_edit'));
     }
 }

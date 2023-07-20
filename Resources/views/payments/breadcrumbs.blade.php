@@ -5,18 +5,12 @@
             <i class="fa fa-angle-right"></i>
         </li>
         <li>
-            <a href="{{ route('admin.category-page.index') }}" class="text-black">@lang('admin.category_pages.index')</a>
+            <a href="{{ route('admin.shop.settings.index') }}" class="text-black">{{ __('shop::admin.main_settings.index') }}</a>
+            <i class="fa fa-angle-right"></i>
         </li>
-        @if(url()->current() === route('admin.category-page.create'))
-            <li>
-                <i class="fa fa-angle-right"></i>
-                <a href="{{ route('admin.category-page.create') }}" class="text-purple">@lang('admin.category_pages.create')</a>
-            </li>
-        @elseif(Request::segment(3) !== null && url()->current() === route('admin.category-page.edit', ['id' => Request::segment(3)]))
-            <li>
-                <i class="fa fa-angle-right"></i>
-                <a href="{{ route('admin.category-page.edit', ['id' => Request::segment(3)]) }}" class="text-purple">@lang('admin.category_pages.edit')</a>
-            </li>
-        @endif
+        <li>
+            <a href="{{ route('payments.index') }}" class="text-purple">{{ __('shop::admin.payments.index') }}</a>
+        </li>
     </ul>
 </div>
+

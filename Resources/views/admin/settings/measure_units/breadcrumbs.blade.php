@@ -5,6 +5,10 @@
             <i class="fa fa-angle-right"></i>
         </li>
         <li>
+            <a href="{{ route('admin.shop.settings.index') }}" class="text-black">{{ __('shop::admin.main_settings.index') }}</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
             <a href="{{ route('admin.measuring-units.index') }}" class="text-black">{{ __('shop::admin.measure_units.index') }}</a>
         </li>
         @if(url()->current() === route('admin.measuring-units.create'))
@@ -20,3 +24,4 @@
         @endif
     </ul>
 </div>
+
