@@ -60,6 +60,13 @@
                         <span>{{ __('shop::admin.measure_units.index') }}</span>
                     </a>
                 </div>
+
+                <div>
+                    <a href="{{ route('admin.shop.settings.internal-integrations.index') }}">
+                        <i class="fas fa-rocket fa-5x"></i>
+                        <span>{{ __('shop::admin.main_settings.integrations') }}</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -443,6 +443,7 @@ return array(
             'virtual_receipt_number' => 'Виртиални бележки (стартов №)',
             'shop_created_date'      => 'Дата на създаване на магазина (тип: 2023-07-22)',
             'email_for_orders'       => 'Email (За получаване на поръчки)',
+            'integrations'           => 'Вградени интеграции',
         ),
     'payments'                 =>
         array(
@@ -488,4 +489,7 @@ return array(
             'no_records'                          => 'Няма добавени мерни единици',
             'cant_delete_has_products_associated' => 'Не може да изтриете мерната единица. Има продукти, които я ползват.',
         ),
+    'mail_chimp'               => [
+        'settings' => 'MailChimp настройки',
+    ],
 );

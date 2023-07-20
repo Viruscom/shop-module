@@ -111,34 +111,45 @@ class Basket extends Model
             $basketProduct->price            = $basketProduct->product->price;
             $basketProduct->discounts_amount = 0;
 
+            // vuv  $basketProduct->price poprincip pazim cenata na produkta zalojena ot admina no tuk v tova par4e kod q modificirame ako ima zalojena otstupka za broika
             $quantityDiscount = Discount::getQuantityDiscount($basketProduct);
             if (!is_null($quantityDiscount)) {
                 $this->addDiscount('quantity', $basketProduct->product->id, $quantityDiscount);
+                // eto tk naprime ako ima zalojena otstupka za koli4estvo $basketProduct->price 6te prieme stoinostta spored dobavenata broika ot produkta v koli4kata i diskaunta kojto i suotvetstva
                 $basketProduct->price = $quantityDiscount->product_price;
             }
 
-            $basketProduct->vat               = $basketProduct->product->getVat($country, $city);
+            //vata na produkta v koi4kata
+            $basketProduct->vat = $basketProduct->product->getVat($country, $city);
+            // cenata zalojena ot admina na product v koli4kata + na4islen vat
             $basketProduct->vat_applied_price = $basketProduct->price + ($basketProduct->price * ($basketProduct->vat / 100));
-            $basketProduct->end_price         = $basketProduct->product_quantity * $basketProduct->vat_applied_price;
+            //tova e cenata zalojena ot admina za producta s pribaven vat i umnojena po broikata na produkta v koli4kata
+            $basketProduct->end_price = $basketProduct->product_quantity * $basketProduct->vat_applied_price;
 
             $fixedFreeDeliveryDiscount = Discount::getFreeDeliveryDiscount($basketProduct, $this->promo_code);
             if (!is_null($fixedFreeDeliveryDiscount)) {
                 $this->addDiscount('delivery', $basketProduct->product->id, $fixedFreeDeliveryDiscount);
+                // tova e dali konkretniq produkt ot koli4kata ima bezplatna dostavka
                 $basketProduct->free_delivery = true;
             }
 
+            //tuka proverqvame dali ima na4islena otstupka za koli4estvo . Samo ako nqma na4islena togava shte na4islimi fiksirana otstupka za produka
             if (!isset($this->discounts_to_apply['quantity'][$basketProduct->product->id])) {
                 $fixedDiscounts = Discount::getFixedDiscounts($basketProduct, $this->promo_code);
                 if (!is_null($fixedDiscounts)) {
                     $this->addDiscounts('fixed', $basketProduct->product->id, $fixedDiscounts);
+                    // v tova pole pazim 4islovoto izrevenie na diskauntite koito imaa
                     $basketProduct->discounts_amount = Discount::getDiscountsAmount($fixedDiscounts, $basketProduct->vat_applied_price);
                 }
             }
 
+            // tova pazi cenata koqto e s nalojeno dds ot po-gore kato ot neq e izvadena stojnostta na fiksiranite diskaunti bilo te levovi ili procentovi
             $basketProduct->vat_applied_discounted_price = $basketProduct->vat_applied_price - $basketProduct->discounts_amount;
-            $basketProduct->end_discounted_price         = $basketProduct->product_quantity * $basketProduct->vat_applied_discounted_price;
+            //tova pazi gorniq red umnoven po brojkata na produkti v koli4kata
+            $basketProduct->end_discounted_price = $basketProduct->product_quantity * $basketProduct->vat_applied_discounted_price;
 
             array_push($this->calculated_basket_products, $basketProduct);
+            //tova pazi totala ot vsi4ki produkti
             $this->total += $basketProduct->end_discounted_price;
         }
         if (count($toDelete) > 0) {
@@ -147,7 +158,9 @@ class Basket extends Model
 
         $this->addGlobalDiscount('fixed', Discount::getGlobalFixed($this));
         $this->addGlobalDiscount('delivery', Discount::getGlobalDelivery($this));
+        //tova setva property $basket->total_discounted koeto predstavlqva $basket->total s na4isleni ako ima fisirano diskaunti za cqlata kolichka bez znaènie ot produktite v neq
         $this->setTotalDiscounted();
+        //tova setva dali cqlata koli4ka ima free delivery
         $this->setTotalFreeDelivery();
     }
     public static function getDefaultDiscountsArray()

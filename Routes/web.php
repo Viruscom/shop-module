@@ -26,6 +26,7 @@ use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUsers
 use Modules\Shop\Http\Controllers\admin\RegisteredUsers\ShopAdminRegisteredUserShipmentAddressController;
 use Modules\Shop\Http\Controllers\admin\Settings\Currencies\CurrenciesController;
 use Modules\Shop\Http\Controllers\admin\Settings\Deliveries\DeliveriesController;
+use Modules\Shop\Http\Controllers\admin\Settings\InternalIntegrations\InternalIntegrationsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Main\ShopMainSettingsController;
 use Modules\Shop\Http\Controllers\admin\Settings\MeasuringUnits\MeasuringUnitsController;
 use Modules\Shop\Http\Controllers\admin\Settings\Payments\PaymentsController;
@@ -325,6 +326,17 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('edit', [MeasuringUnitsController::class, 'edit'])->name('admin.measuring-units.edit');
                 Route::post('update', [MeasuringUnitsController::class, 'update'])->name('admin.measuring-units.update');
                 Route::get('delete', [MeasuringUnitsController::class, 'delete'])->name('admin.measuring-units.delete');
+            });
+        });
+
+        /* Internal integrations */
+        Route::group(['prefix' => 'internal-integrations'], static function () {
+            Route::get('/', [InternalIntegrationsController::class, 'index'])->name('admin.shop.settings.internal-integrations.index');
+
+            /* MailChimp */
+            Route::group(['prefix' => 'mail-chimp'], static function () {
+                Route::get('edit', [InternalIntegrationsController::class, 'mailChimpEdit'])->name('admin.shop.settings.internal-integrations.mail-chimp.edit');
+                Route::post('update', [InternalIntegrationsController::class, 'mailChimpUpdate'])->name('admin.shop.settings.internal-integrations.mail-chimp.update');
             });
         });
     });
