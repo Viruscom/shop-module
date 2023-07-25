@@ -329,6 +329,12 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
                 Route::get('edit', [InternalIntegrationsController::class, 'mailChimpEdit'])->name('admin.shop.settings.internal-integrations.mail-chimp.edit');
                 Route::post('update', [InternalIntegrationsController::class, 'mailChimpUpdate'])->name('admin.shop.settings.internal-integrations.mail-chimp.update');
             });
+
+            /* ExchangeRate API */
+            Route::group(['prefix' => 'exchange-rate'], static function () {
+                Route::get('edit', [InternalIntegrationsController::class, 'exchangeRateEdit'])->name('admin.shop.settings.internal-integrations.exchange-rate.edit');
+                Route::post('update', [InternalIntegrationsController::class, 'exchangeRateUpdate'])->name('admin.shop.settings.internal-integrations.exchange-rate.update');
+            });
         });
     });
 

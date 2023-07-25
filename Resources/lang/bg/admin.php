@@ -492,4 +492,7 @@ return array(
     'mail_chimp'               => [
         'settings' => 'MailChimp настройки',
     ],
+    'exchange_rate'            => [
+        'settings' => 'Exchange Rate Настройки',
+    ],
 );

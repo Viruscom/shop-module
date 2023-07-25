@@ -32,4 +32,24 @@ class InternalIntegrationsController extends Controller
 
         return back()->with('success-message', trans('admin.common.successful_edit'));
     }
+
+    public function exchangeRateEdit()
+    {
+        $exchangeRateApi = InternalIntegration::where('key', 'exchangeRateApi')->first();
+        if (is_null($exchangeRateApi)) {
+            $exchangeRateApi = InternalIntegration::create(['key' => 'exchangeRateApi', 'data' => json_encode(['EXCHANGE_RATE_API_KEY' => ''])]);
+        }
+        $exchangeRateApi = json_decode($exchangeRateApi->data);
+
+        return view('shop::admin.settings.internal_integrations.exchange_rate.index', compact('exchangeRateApi'));
+    }
+
+    public function exchangeRateUpdate(Request $request)
+    {
+        $exchangeRateApi = InternalIntegration::where('key', 'exchangeRateApi')->first();
+
+        $exchangeRateApi->update(['data' => json_encode(['EXCHANGE_RATE_API_KEY' => $request->EXCHANGE_RATE_API_KEY])]);
+
+        return back()->with('success-message', trans('admin.common.successful_edit'));
+    }
 }

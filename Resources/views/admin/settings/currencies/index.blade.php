@@ -76,11 +76,11 @@
                                         <?php $i++; ?>
                                 @endforeach
                                 <tr style="display: none;">
-                                    <td colspan="4" class="no-table-rows">{{ trans('shop::admin.currencies.no_records') }}</td>
+                                    <td colspan="5" class="no-table-rows">{{ trans('shop::admin.currencies.no_records') }}</td>
                                 </tr>
                             @else
                                 <tr>
-                                    <td colspan="4" class="no-table-rows">{{ trans('shop::admin.currencies.no_records') }}</td>
+                                    <td colspan="5" class="no-table-rows">{{ trans('shop::admin.currencies.no_records') }}</td>
                                 </tr>
                             @endif
                             </tbody>

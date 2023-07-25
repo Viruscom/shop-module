@@ -19,6 +19,12 @@
                     </a>
                 </div>
 
+                <div>
+                    <a href="{{ route('admin.shop.settings.internal-integrations.exchange-rate.edit') }}" style="background: #ffffff;border: 1px solid #9E9E9E;">
+                        <img src="{{ asset('admin/assets/images/internal_integrations/logos/exchange_rate_api.webp') }}">
+                        <span>Exchange Rate API</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
