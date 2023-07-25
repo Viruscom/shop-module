@@ -1,16 +1,12 @@
 @extends('layouts.app')
 
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
-    {{-- <link href="{{ asset('admin/css/jquery.dataTables.min.css') }}" rel="stylesheet" /> --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/assets/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',

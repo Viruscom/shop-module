@@ -1,39 +1,14 @@
 @extends('layouts.admin.app')
 
 @section('styles')
-    <link href="{{ asset('admin/css/select2.min.css') }}" rel="stylesheet"/>
-    {{-- <link href="{{ asset('admin/css/jquery.dataTables.min.css') }}" rel="stylesheet" /> --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/r-2.2.6/datatables.min.css"/>
-    <link href="{{ asset('admin/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('admin/assets/css/fixedHeader.dataTables.min.css') }}" rel="stylesheet"/>
 @endsection
 @section('scripts')
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap-confirmation.js') }}"></script>
-    <script src="{{ asset('admin/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body',
-        });
-        $(".select2").select2({language: "bg"});
         $(document).ready(function () {
-            // Setup - add a text input to each footer cell
-            $('#example thead tr').clone(true).appendTo('#example thead');
-            $('#example thead tr:eq(1) th').each(function (i) {
-                var title = $(this).text();
-                $(this).html('<input type="text" class="datatable-filter-input" placeholder="филтрирай по ' + title + '" style="width:100%;" />');
-
-                $('input', this).on('keyup change', function () {
-                    if (table.column(i).search() !== this.value) {
-                        table
-                            .column(i)
-                            .search(this.value)
-                            .draw();
-                    }
-                });
-            });
-
             var table = $('#example').DataTable({
                 collectionCellsTop: true,
                 fixedHeader: true,
@@ -54,6 +29,22 @@
                         "sLast": "Последна"
                     }
                 }
+            });
+
+            // Setup - add a text input to each footer cell
+            $('#example thead tr').clone(true).appendTo('#example thead');
+            $('#example thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" class="datatable-filter-input" placeholder="филтрирай по ' + title + '" style="width:100%;" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
             });
         });
     </script>
@@ -109,7 +100,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="6" class="no-table-rows">{{ trans('shop::admin.product_collections.no_records') }}</td>
+                <td colspan="4" class="no-table-rows">{{ trans('shop::admin.product_collections.no_records') }}</td>
             </tr>
         @endif
         </tbody>

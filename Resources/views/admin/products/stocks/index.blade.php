@@ -55,16 +55,13 @@
                             <label for="">{{ $attribute->title }}</label>
                             <select name="" id="" class="form-control">
                                 <option value="">---Моля, изберете---</option>
-                                @foreach($productAttributeValues as $attributeId=>$valuesArray)
-                                    @if($attributeId == $attribute->id)
-                                        @foreach($valuesArray as $key=>$value)
-                                            <option value="{{ $value->id }}">{{ $value->title }}</option>
-                                        @endforeach
-                                    @endif
+                                @foreach($attribute->values as $value)
+                                    <option value="{{ $value->id }}">{{ $value->title }}</option>
                                 @endforeach
                             </select>
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </div>
