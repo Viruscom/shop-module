@@ -9,7 +9,7 @@ class ShopCountriesSeeder extends Seeder
 {
     public function run()
     {
-        $sql = file_get_contents('Modules/Shop/Database/countries.sql');
+        $sql = file_get_contents('Modules' . DIRECTORY_SEPARATOR . 'Shop' . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'countries.sql');
         DB::unprepared($sql);
     }
 }
