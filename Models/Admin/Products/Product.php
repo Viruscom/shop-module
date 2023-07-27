@@ -441,4 +441,125 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return $this->hasMany(ProductCombination::class, 'product_id', 'id');
     }
+
+    // BEGIN QUANTITY DISCOUNT
+    public function getQuantityDiscountRecord()
+    {
+        return Discount::getBaseQuery()->where('type_id', Discount::$QUANTITY_TYPE_ID)
+            ->where('product_id', $this->id)->orderBy('created_at', 'desc')->first();
+    }
+
+    public function getProductQuantityDiscountHtml()
+    {
+        //ako ne iskash da si generirash taka html prostro v html si vikash $product->getQuantityDiscountRecord(); i shte poluchis tozi zapis koito iteriram tuk
+        $productQuantityDiscount = $this->getQuantityDiscountRecord();
+        if(is_null($productQuantityDiscount)) {
+            return "";
+        }
+
+        $data = json_decode($productQuantityDiscount->data, true);
+        if(count($data) < 1) {
+            return "";
+        }
+
+        $html = "<table class='table'><thead><tr><th>FROM</th><th>TO</th><th>PRICE</th></tr><tbody>";
+        foreach ($data as $ranges) {
+            $html.= "<tr><td>".$ranges['from_quantity']."</td><td>".$ranges['to_quantity']."</td><td>".$ranges['price']."</td></tr>";
+        }
+        $html.="</tbody><table>";
+
+        return $html;
+    }
+    // END QUANTITY DISCOUNT
+
+    // BEGON FREE DELIVERY DISCOUT
+    public function getFreeDeliveryDiscountRecord()//ako e null nqma free deliveryako nee nul ima free delivery
+    {   
+        $product = $this;
+        return Discount::getBaseQuery()->where('type_id', Discount::$FIXED_FREE_DELIVERY_TYPE_ID)
+            ->where(function ($q) use ($product) {
+                return $q->where(function ($qq) {
+                    return $qq->where('applies_to', Discount::$EVERY_PRODUCT_APPLICATION);
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$PRODUCT_APPLICATION)->where('product_id', $product->id);
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$CATEGORY_APPLICATION)->whereHas('categories', function ($qqq) use ($product) {
+                        return $qqq->where('category_id', $product->category_id);
+                    });
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$BRAND_APPLICATION)->where('brand_id', $product->brand->id);
+                });
+            })->get()->first();
+    }
+
+    public function getFreeDeliveryDiscountHtml()
+    {
+        //ako ne iskash da si generirash taka html prostro v html si vikash $product->getFreeDeliveryDiscountRecord(); i shte poluchis tozi zapis koito proverqvam dali ne e null
+        return is_null($this->getFreeDeliveryDiscountRecord()) ? "":"<span>Free Delivery</span>";
+    }
+    // END FREE DELIVERY DISCOUNT
+
+    // BEGIN FIXED DISCOUNTS
+    public static function getFixedDiscountsRecords()
+    {
+        $product = $this;
+
+        $fixedDiscounts = Discount::getBaseQuery()->whereIn('type_id', [Discount::$FIXED_PERCENT_TYPE_ID, Discount::$FIXED_AMOUNT_TYPE_ID])
+            ->where(function ($q) use ($product) {
+                return $q->where(function ($qq) {
+                    return $qq->where('applies_to', Discount::$EVERY_PRODUCT_APPLICATION);
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$PRODUCT_APPLICATION)->where('product_id', $product->id);
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$CATEGORY_APPLICATION)->whereHas('categories', function ($qqq) use ($product) {
+                        return $qqq->where('category_id', $product->category_id);
+                    });
+                })->orWhere(function ($qq) use ($product) {
+                    return $qq->where('applies_to', Discount::$BRAND_APPLICATION)->where('brand_id', $product->brand->id);
+                });
+            })->get();
+
+        $discounts        = [];
+        $currentAppliesTo = null;
+        foreach ($fixedDiscounts as $fixedDiscount) {
+            if (count($discounts) == 0) {
+                $discounts[$fixedDiscount->id] = $fixedDiscount;
+                $currentAppliesTo              = $fixedDiscount->applies_to;
+            } else {
+                if ($currentAppliesTo == Discount::$PRODUCT_APPLICATION) {
+                    if ($fixedDiscount->applies_to == Discount::$PRODUCT_APPLICATION) {
+                        $discounts[$fixedDiscount->id] = $fixedDiscount;
+                    }
+                } else {
+                    if ($currentAppliesTo == $fixedDiscount->applies_to) {
+                        $discounts[$fixedDiscount->id] = $fixedDiscount;
+                    } else if ($currentAppliesTo < $fixedDiscount->applies_to) {
+                        $discounts                     = [];
+                        $discounts[$fixedDiscount->id] = $fixedDiscount;
+                        $currentAppliesTo              = $fixedDiscount->applies_to;
+                    }
+                }
+            }
+        }
+
+        if (count($discounts) < 1) {
+            return null;
+        }
+
+        return $discounts;
+    }
+
+
+    public function getFixedDiscountsHtml($country, $city)
+    {
+        //ako ne iskash da go polzvash taka mojesh da si gi polzvash po otderlo
+        $vat = $this->getVat($country, $city);
+        $vatAppliedPrice = $this->price + ($this->price * ($vat / 100));
+        $discounts = $this->getFixedDiscountsRecords();
+        $discountsAmount = Discount::getDiscountsAmount($discounts, $vatAppliedPrice);
+        $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
+        
+        return "<span>No VAT price: ".$this->price."</span><span> | </span><span>VAT: ".$vat."</span><span> | </span><span>VAT pice: ".$vatAppliedPrice."</span><span> | </span><span>Discounts: ".$discountsAmount."</span><span> | </span><span>Discounted price: ".$vatAppliedDiscountedPrice."</span><span> | </span>";
+    }
+    // BEGIN FIXED DISCOUNTS
 }
