@@ -561,5 +561,5 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         
         return "<span>No VAT price: ".$this->price."</span><span> | </span><span>VAT: ".$vat."</span><span> | </span><span>VAT pice: ".$vatAppliedPrice."</span><span> | </span><span>Discounts: ".$discountsAmount."</span><span> | </span><span>Discounted price: ".$vatAppliedDiscountedPrice."</span><span> | </span>";
     }
-    // BEGIN FIXED DISCOUNTS
+    // END FIXED DISCOUNTS
 }
