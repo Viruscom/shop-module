@@ -31,11 +31,11 @@ class BasketController extends Controller
         $basket->calculate($basketProducts, $country, $city);
         //TODO: Ima razlika, da sew vidi
 
-        //        if ($basket->total != $request->total || $basket->total_discounted != $request->total_discounted || $basket->total_free_delivery != $request->total_free_delivery) {
-        //            dd($basket->total . ' --- ' . $request->total . ' --- ' . $basket->total_discounted . ' --- ' . $request->total_discounted . ' --- ' . $basket->total_free_delivery . ' --- ' . $request->total_free_delivery);
-        //
-        //            return redirect(route('basket.index'))->withError(__('There are changes.'));
-        //        }
+        if ($basket->total != $request->total || $basket->total_discounted != $request->total_discounted || $basket->total_free_delivery != $request->total_free_delivery) {
+            dd($basket->total . ' --- ' . $request->total . ' --- ' . $basket->total_discounted . ' --- ' . $request->total_discounted . ' --- ' . $basket->total_free_delivery . ' --- ' . $request->total_free_delivery);
+
+            return redirect(route('basket.index'))->withError(__('There are changes.'));
+        }
 
         //TODO: check quantities
 
@@ -47,6 +47,7 @@ class BasketController extends Controller
         $request['delivered_at']       = null;
         $request['shipment_status']    = Order::SHIPMENT_WAITING;
         $request['payment_status']     = Order::PAYMENT_PENDING;
+        $request['total_default']      = $basket->total_default;
 
         $order = $action->storeOrder($request, $basket);
 
@@ -103,7 +104,10 @@ class BasketController extends Controller
         //get countries and cities for selects
         $countries = Country::limit(50)->get();
         $cities    = City::limit(50)->get();
-
+        //TODO: REmove from here
+        session()->put("city_id", 1);
+        session()->put("country_id", 1);
+        //END
         //get current coutry and city once chosen
         $country = Country::find(session()->get('country_id'));
         $city    = City::find(session()->get('city_id'));

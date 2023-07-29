@@ -53,11 +53,15 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{$product->id}}">
                                 <div class="prod-price">
-                                    <p class="price-old"><b>25.00</b> лв.</p>
+                                    @if($product->hasDiscounts())
+                                        <p class="price-old"><b>{{ $product->getVatPrice($country, $city) }}</b> лв.</p>
 
-                                    <p class="price-new"><b>{{ $product->getPrice() }}</b> лв.</p>
+                                        <p class="price-new"><b>{{$product->getVatDiscountedPrice($country, $city)}}</b> лв.</p>
+                                    @else
+                                        <p class="price-new"><b>{{$product->getVatPrice($country, $city)}}</b> лв.</p>
+                                    @endif
+
                                 </div>
-
                                 <div class="prod-info">
                                     <p>
                                         {{ __('shop::front.product.sku') }}:
@@ -85,6 +89,14 @@
 
                                     <strong>out of stock</strong>
                                 </p>
+
+                                <div class="quantity-discounts">
+                                    {!! $product->getProductQuantityDiscountHtml() !!}
+                                </div>
+
+                                <div class="free-delivery-discount">
+                                    {!! $product->getFreeDeliveryDiscountHtml() !!}
+                                </div>
 
                                 <div class="input-group-wrapper">
                                     <div class="input-group">
@@ -152,9 +164,9 @@
                             </p>
                         </div>
 
-{{--                        <div class="product-actions">--}}
-{{--                            <a href="" class="link-more-big">Request</a>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="product-actions">--}}
+                        {{--                            <a href="" class="link-more-big">Request</a>--}}
+                        {{--                        </div>--}}
                     </div>
 
                     <!-- <div class="article-dates">

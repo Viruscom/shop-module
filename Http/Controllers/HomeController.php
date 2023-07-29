@@ -34,9 +34,11 @@ class HomeController extends Controller
 
     public function setUserLocation(Request $request)
     {
+        //TODO: Change it with real code
         $zipCodeToSet   = null;
-        $cityIdToSet    = null;
-        $countryIdToSet = null;
+        $cityIdToSet    = 1;
+        $countryIdToSet = 1;
+        //End of change
 
         $cityId = $request->city_id;
         $city   = City::find($cityId);

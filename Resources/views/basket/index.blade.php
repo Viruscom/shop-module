@@ -12,17 +12,17 @@
                         <h3 class="title-main title-border">{!! trans('shop::front.basket.index') !!}</h3>
 
                         <div class="col-inner">
-{{--                            <div class="box-warning">--}}
-{{--                                <p>Някои от избраните продукти в момента не са налични.</p>--}}
-{{--                            </div>--}}
+                            {{--                            <div class="box-warning">--}}
+                            {{--                                <p>Някои от избраните продукти в момента не са налични.</p>--}}
+                            {{--                            </div>--}}
 
-{{--                            <div class="box-info">--}}
-{{--                                <img src="{{ asset('front/assets/icons/gift-box.svg') }}" alt="">--}}
+                            {{--                            <div class="box-info">--}}
+                            {{--                                <img src="{{ asset('front/assets/icons/gift-box.svg') }}" alt="">--}}
 
-{{--                                <p>--}}
-{{--                                    Изберете <strong>2 подаръка</strong> от нашите предложения в периода 01-31 януари--}}
-{{--                                </p>--}}
-{{--                            </div>--}}
+                            {{--                                <p>--}}
+                            {{--                                    Изберете <strong>2 подаръка</strong> от нашите предложения в периода 01-31 януари--}}
+                            {{--                                </p>--}}
+                            {{--                            </div>--}}
 
                             <div class="product-boxes">
                                 @if(is_null($basket) || $basket->basket_products->count()<1)
@@ -42,20 +42,19 @@
                                                     <h3><a href="{{ $basketProduct->product->getUrl($languageSlug) }}">{{ $basketProduct->product->title }}</a></h3>
 
                                                     <div class="prod-prices">
-                                                        @if($basketProduct->end_discounted_price !== $basketProduct->price)
+                                                        @if($basketProduct->vat_applied_default_price !== $basketProduct->vat_applied_discounted_price)
                                                             <p class="main-price price-old">
-                                                                <b>25.00</b> лв.
-                                                            </p>
+                                                                <b>{{ $basketProduct->vat_applied_default_price }}</b> лв. </p>
 
                                                             <p class="new-price">
-                                                                <b>{{$basketProduct->price}}</b> лв.
-                                                            </p>
+                                                                <b>{{$basketProduct->vat_applied_discounted_price}}</b> лв. </p>
                                                         @else
                                                             <p class="new-price">
-                                                                <b>{{$basketProduct->price}}</b> лв.
-                                                            </p>
+                                                                <b>{{ $basketProduct->vat_applied_default_price }}</b> лв. </p>
                                                         @endif
 
+                                                        <p class="new-price">
+                                                            <b>Стойност: {{ $basketProduct->vat_applied_default_price }}</b> лв. </p>
                                                     </div>
 
                                                     <div class="prod-qty hover-images">
@@ -66,7 +65,6 @@
 
                                                             <a href="" data-quantity="plus" data-field="quantity">+</a>
                                                         </div>
-
 
                                                         <a href="" class="prod-fav">
                                                             <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="">
@@ -98,12 +96,10 @@
 
                                                                 <div class="prod-prices">
                                                                     <p class="main-price price-old">
-                                                                        <b>25.00</b> лв.
-                                                                    </p>
+                                                                        <b>25.00</b> лв. </p>
 
                                                                     <p class="new-price">
-                                                                        <b>23.00</b> лв.
-                                                                    </p>
+                                                                        <b>23.00</b> лв. </p>
                                                                 </div>
 
                                                                 <div class="prod-actions">
@@ -125,12 +121,10 @@
 
                                                                 <div class="prod-prices">
                                                                     <p class="main-price price-old">
-                                                                        <b>25.00</b> лв.
-                                                                    </p>
+                                                                        <b>25.00</b> лв. </p>
 
                                                                     <p class="new-price">
-                                                                        <b>23.00</b> лв.
-                                                                    </p>
+                                                                        <b>23.00</b> лв. </p>
                                                                 </div>
 
                                                                 <div class="prod-actions">
@@ -188,77 +182,77 @@
 
                             </div>
 
-{{--                            <div class="product-boxes gift-boxes">--}}
-{{--                                <h3>Your gifts</h3>--}}
+                            {{--                            <div class="product-boxes gift-boxes">--}}
+                            {{--                                <h3>Your gifts</h3>--}}
 
-{{--                                <div class="product-box">--}}
-{{--                                    <div class="prod-content">--}}
-{{--                                        <div class="prod-image">--}}
-{{--                                            <a href=""></a>--}}
-{{--                                            <img src="assets/images/prod-img.png" alt="">--}}
-{{--                                        </div>--}}
+                            {{--                                <div class="product-box">--}}
+                            {{--                                    <div class="prod-content">--}}
+                            {{--                                        <div class="prod-image">--}}
+                            {{--                                            <a href=""></a>--}}
+                            {{--                                            <img src="assets/images/prod-img.png" alt="">--}}
+                            {{--                                        </div>--}}
 
-{{--                                        <div class="prod-inner">--}}
-{{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
+                            {{--                                        <div class="prod-inner">--}}
+                            {{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
 
-{{--                                            <div class="prod-prices">--}}
-{{--                                                <p class="main-price">--}}
-{{--                                                    <b>0.00</b> лв.--}}
-{{--                                                </p>--}}
-{{--                                            </div>--}}
+                            {{--                                            <div class="prod-prices">--}}
+                            {{--                                                <p class="main-price">--}}
+                            {{--                                                    <b>0.00</b> лв.--}}
+                            {{--                                                </p>--}}
+                            {{--                                            </div>--}}
 
-{{--                                            <div class="prod-gift-info">--}}
-{{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
+                            {{--                                            <div class="prod-gift-info">--}}
+                            {{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
 
-{{--                                                <span class="info-wrapper">--}}
-{{--													<strong>Подарък</strong>--}}
+                            {{--                                                <span class="info-wrapper">--}}
+                            {{--													<strong>Подарък</strong>--}}
 
-{{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
-{{--												</span>--}}
-{{--                                            </div>--}}
+                            {{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
+                            {{--												</span>--}}
+                            {{--                                            </div>--}}
 
-{{--                                            <div class="prod-actions">--}}
-{{--                                                <a href="" class="remove-prod">Remove</a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
+                            {{--                                            <div class="prod-actions">--}}
+                            {{--                                                <a href="" class="remove-prod">Remove</a>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                    </div>--}}
+                            {{--                                </div>--}}
 
-{{--                                <div class="product-box">--}}
-{{--                                    <div class="prod-content">--}}
-{{--                                        <div class="prod-image missing-prod">--}}
-{{--                                            <a href=""></a>--}}
-{{--                                            <img src="assets/images/prod-img.png" alt="">--}}
-{{--                                        </div>--}}
+                            {{--                                <div class="product-box">--}}
+                            {{--                                    <div class="prod-content">--}}
+                            {{--                                        <div class="prod-image missing-prod">--}}
+                            {{--                                            <a href=""></a>--}}
+                            {{--                                            <img src="assets/images/prod-img.png" alt="">--}}
+                            {{--                                        </div>--}}
 
-{{--                                        <div class="prod-inner">--}}
-{{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
+                            {{--                                        <div class="prod-inner">--}}
+                            {{--                                            <h3>Shampoo for all hair types and scalps for</h3>--}}
 
-{{--                                            <div class="prod-prices">--}}
-{{--                                                <p class="main-price">--}}
-{{--                                                    <b>0.00</b> лв.--}}
-{{--                                                </p>--}}
-{{--                                            </div>--}}
+                            {{--                                            <div class="prod-prices">--}}
+                            {{--                                                <p class="main-price">--}}
+                            {{--                                                    <b>0.00</b> лв.--}}
+                            {{--                                                </p>--}}
+                            {{--                                            </div>--}}
 
-{{--                                            <div class="prod-gift-info">--}}
-{{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
+                            {{--                                            <div class="prod-gift-info">--}}
+                            {{--                                                <img src="assets/icons/gift-box.svg" alt="">--}}
 
-{{--                                                <span class="info-wrapper">--}}
-{{--													<strong>Подарък</strong>--}}
+                            {{--                                                <span class="info-wrapper">--}}
+                            {{--													<strong>Подарък</strong>--}}
 
-{{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
-{{--												</span>--}}
-{{--                                            </div>--}}
+                            {{--													<span class="info-text">При поръчка над 75 лв избери 2 подаръка</span>--}}
+                            {{--												</span>--}}
+                            {{--                                            </div>--}}
 
-{{--                                            <div class="prod-actions">--}}
-{{--                                                <a href="" class="remove-prod">Remove</a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                            {{--                                            <div class="prod-actions">--}}
+                            {{--                                                <a href="" class="remove-prod">Remove</a>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                    </div>--}}
 
-{{--                                    <h4 class="title-warning">Продуктът не е наличен!</h4>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
+                            {{--                                    <h4 class="title-warning">Продуктът не е наличен!</h4>--}}
+                            {{--                                </div>--}}
+                            {{--                            </div>--}}
                         </div>
                     </div>
 
@@ -271,7 +265,7 @@
                                     <div class="box-row">
                                         <span>Цена на продуктите</span>
 
-                                        <strong>840.00  лв.</strong>
+                                        <strong>{{$basket->total_default}} лв.</strong>
                                     </div>
 
                                     <div class="box-row box-row-promo">
@@ -303,7 +297,7 @@
                                     <div class="box-row box-row-warning">
                                         <span>Общо отстъпки</span>
 
-                                        <strong>- 185.00  лв.</strong>
+                                        <strong>- {{$basket->total_default - $basket->total_discounted}} лв.</strong>
                                     </div>
                                 </div>
 
@@ -311,7 +305,7 @@
                                     <div class="box-row box-row-big">
                                         <span>Общо с ДДС</span>
 
-                                        <strong>655.00  лв.</strong>
+                                        <strong>{{ $basket->total_discounted }} лв.</strong>
                                     </div>
 
                                     <p>Остават ви 85.00 лв до безплатна доставка.</p>

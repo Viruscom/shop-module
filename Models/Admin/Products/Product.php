@@ -246,56 +246,6 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return $this->belongsTo(Brand::class);
     }
-    public function getVat($country, $city)
-    {
-        if (is_null($country) && is_null($city)) {
-            return 0;
-        }
-        $countryId = null;
-        if (!is_null($country)) {
-            $countryId = $country->id;
-        }
-        if (!is_null($city)) {
-            $countryId = $city->country->id;
-        }
-        if (!is_null($countryId)) {
-            $vatCategory = $this->getVatCategory($countryId);
-            if (!is_null($vatCategory)) {
-                if (!is_null($city)) {
-                    $cityVatCategory = $vatCategory->cityVatCategories->where('city_id', $city->id)->first();
-                    if (!is_null($cityVatCategory)) {
-                        return $cityVatCategory->vat;
-                    } else {
-                        $stateVatCategory = $vatCategory->stateVatCategories->where('state_id', $city->state_id)->first();
-                        if (!is_null($stateVatCategory)) {
-                            return $stateVatCategory->vat;
-                        }
-                    }
-                }
-
-                return $vatCategory->vat;
-            }
-        }
-
-        return self::getDefaultVat($country, $city);
-    }
-    public function getVatCategory($countryId)
-    {
-        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
-    }
-    private static function getDefaultVat($country, $city)
-    {
-        if ($city != null) {
-            if (!is_null($city->vat)) {
-                return $city->vat;
-            }
-            if (!is_null($city->state->vat)) {
-                return $city->state->vat;
-            }
-        }
-
-        return $country->vat;
-    }
     public function getFilepath($filename): string
     {
         return $this->getFilesPath() . $filename;
@@ -385,7 +335,6 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return $query->where('units_in_stock', '>', 0);
     }
-
     public function updateUnitsInStock($newQuantity): void
     {
         $this->update(['units_in_stock' => $newQuantity]);
@@ -394,12 +343,10 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
     {
         return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
     }
-
     public function getAdditionalFields($languageSlug)
     {
         return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id')->where('locale', $languageSlug)->whereNotNull(['name', 'text'])->get();
     }
-
     public function getPreviousProductUrl($languageSlug)
     {
         if ($this->position == 1) {
@@ -431,51 +378,51 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $nextProduct->getUrl($languageSlug);
     }
-
     public function measureUnit(): HasOne
     {
         return $this->hasOne(MeasureUnit::class, 'id', 'measure_unit_id')->with('translations');
     }
-
     public function combinations(): HasMany
     {
         return $this->hasMany(ProductCombination::class, 'product_id', 'id');
     }
-
-    // BEGIN QUANTITY DISCOUNT
-    public function getQuantityDiscountRecord()
-    {
-        return Discount::getBaseQuery()->where('type_id', Discount::$QUANTITY_TYPE_ID)
-            ->where('product_id', $this->id)->orderBy('created_at', 'desc')->first();
-    }
-
     public function getProductQuantityDiscountHtml()
     {
         //ako ne iskash da si generirash taka html prostro v html si vikash $product->getQuantityDiscountRecord(); i shte poluchis tozi zapis koito iteriram tuk
         $productQuantityDiscount = $this->getQuantityDiscountRecord();
-        if(is_null($productQuantityDiscount)) {
+        if (is_null($productQuantityDiscount)) {
             return "";
         }
 
         $data = json_decode($productQuantityDiscount->data, true);
-        if(count($data) < 1) {
+        if (count($data) < 1) {
             return "";
         }
 
         $html = "<table class='table'><thead><tr><th>FROM</th><th>TO</th><th>PRICE</th></tr><tbody>";
         foreach ($data as $ranges) {
-            $html.= "<tr><td>".$ranges['from_quantity']."</td><td>".$ranges['to_quantity']."</td><td>".$ranges['price']."</td></tr>";
+            $html .= "<tr><td>" . $ranges['from_quantity'] . "</td><td>" . $ranges['to_quantity'] . "</td><td>" . $ranges['price'] . "</td></tr>";
         }
-        $html.="</tbody><table>";
+        $html .= "</tbody><table>";
 
         return $html;
     }
-    // END QUANTITY DISCOUNT
+    public function getQuantityDiscountRecord()
+    {
+        return Discount::getBaseQuery()->where('type_id', Discount::$QUANTITY_TYPE_ID)
+            ->where('product_id', $this->id)->orderBy('created_at', 'desc')->first();
+    }
+    public function getFreeDeliveryDiscountHtml()
+    {
+        //ako ne iskash da si generirash taka html prostro v html si vikash $product->getFreeDeliveryDiscountRecord(); i shte poluchis tozi zapis koito proverqvam dali ne e null
+        return is_null($this->getFreeDeliveryDiscountRecord()) ? "" : "<span>Free Delivery</span>";
+    }
 
-    // BEGON FREE DELIVERY DISCOUT
+    // BEGIN QUANTITY DISCOUNT
     public function getFreeDeliveryDiscountRecord()//ako e null nqma free deliveryako nee nul ima free delivery
-    {   
+    {
         $product = $this;
+
         return Discount::getBaseQuery()->where('type_id', Discount::$FIXED_FREE_DELIVERY_TYPE_ID)
             ->where(function ($q) use ($product) {
                 return $q->where(function ($qq) {
@@ -491,16 +438,74 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
                 });
             })->get()->first();
     }
-
-    public function getFreeDeliveryDiscountHtml()
+    public function getFixedDiscountsHtml($country, $city)
     {
-        //ako ne iskash da si generirash taka html prostro v html si vikash $product->getFreeDeliveryDiscountRecord(); i shte poluchis tozi zapis koito proverqvam dali ne e null
-        return is_null($this->getFreeDeliveryDiscountRecord()) ? "":"<span>Free Delivery</span>";
+        //ako ne iskash da go polzvash taka mojesh da si gi polzvash po otderlo
+        $vat                       = $this->getVat($country, $city);
+        $vatAppliedPrice           = $this->price + ($this->price * ($vat / 100));
+        $discounts                 = $this->getFixedDiscountsRecords();
+        $discountsAmount           = Discount::getDiscountsAmount($discounts, $vatAppliedPrice);
+        $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
+
+        return "<span>No VAT price: " . $this->price . "</span><span> | </span><span>VAT: " . $vat . "</span><span> | </span><span>VAT pice: " . $vatAppliedPrice . "</span><span> | </span><span>Discounts: " . $discountsAmount . "</span><span> | </span><span>Discounted price: " . $vatAppliedDiscountedPrice . "</span><span> | </span>";
+    }
+    // END QUANTITY DISCOUNT
+
+    // BEGON FREE DELIVERY DISCOUT
+    public function getVat($country, $city)
+    {
+        if (is_null($country) && is_null($city)) {
+            return 0;
+        }
+        $countryId = null;
+        if (!is_null($country)) {
+            $countryId = $country->id;
+        }
+        if (!is_null($city)) {
+            $countryId = $city->country->id;
+        }
+        if (!is_null($countryId)) {
+            $vatCategory = $this->getVatCategory($countryId);
+            if (!is_null($vatCategory)) {
+                if (!is_null($city)) {
+                    $cityVatCategory = $vatCategory->cityVatCategories->where('city_id', $city->id)->first();
+                    if (!is_null($cityVatCategory)) {
+                        return $cityVatCategory->vat;
+                    } else {
+                        $stateVatCategory = $vatCategory->stateVatCategories->where('state_id', $city->state_id)->first();
+                        if (!is_null($stateVatCategory)) {
+                            return $stateVatCategory->vat;
+                        }
+                    }
+                }
+
+                return $vatCategory->vat;
+            }
+        }
+
+        return self::getDefaultVat($country, $city);
+    }
+    public function getVatCategory($countryId)
+    {
+        return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
     }
     // END FREE DELIVERY DISCOUNT
 
     // BEGIN FIXED DISCOUNTS
-    public static function getFixedDiscountsRecords()
+    private static function getDefaultVat($country, $city)
+    {
+        if ($city != null) {
+            if (!is_null($city->vat)) {
+                return $city->vat;
+            }
+            if (!is_null($city->state->vat)) {
+                return $city->state->vat;
+            }
+        }
+
+        return $country->vat;
+    }
+    public function getFixedDiscountsRecords()
     {
         $product = $this;
 
@@ -548,18 +553,29 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
 
         return $discounts;
     }
-
-
-    public function getFixedDiscountsHtml($country, $city)
-    {
-        //ako ne iskash da go polzvash taka mojesh da si gi polzvash po otderlo
-        $vat = $this->getVat($country, $city);
-        $vatAppliedPrice = $this->price + ($this->price * ($vat / 100));
-        $discounts = $this->getFixedDiscountsRecords();
-        $discountsAmount = Discount::getDiscountsAmount($discounts, $vatAppliedPrice);
-        $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
-        
-        return "<span>No VAT price: ".$this->price."</span><span> | </span><span>VAT: ".$vat."</span><span> | </span><span>VAT pice: ".$vatAppliedPrice."</span><span> | </span><span>Discounts: ".$discountsAmount."</span><span> | </span><span>Discounted price: ".$vatAppliedDiscountedPrice."</span><span> | </span>";
-    }
     // END FIXED DISCOUNTS
+    public function getVatDiscountedPrice($country, $city)
+    {
+        $vat                       = $this->getVat($country, $city);
+        $vatAppliedPrice           = $this->price + ($this->price * ($vat / 100));
+        $discounts                 = $this->getFixedDiscountsRecords();
+        $discountsAmount           = Discount::getDiscountsAmount($discounts, $vatAppliedPrice);
+        $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
+
+        return number_format($vatAppliedDiscountedPrice, 2, '.', '');
+    }
+    public function getVatPrice($country, $city)
+    {
+        $vat             = $this->getVat($country, $city);
+        $vatAppliedPrice = $this->price + ($this->price * ($vat / 100));
+
+        return number_format($vatAppliedPrice, 2, '.', '');
+    }
+
+    public function hasDiscounts()
+    {
+        $discounts = $this->getFixedDiscountsRecords();
+
+        return !is_null($discounts) && count($discounts) > 0;
+    }
 }

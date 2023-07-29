@@ -24,7 +24,8 @@ class BasketAction
                                                  'end_price'                    => $basketProduct->end_price,
                                                  'free_delivery'                => $basketProduct->free_delivery ? 1 : 0,
                                                  'vat_applied_discounted_price' => $basketProduct->vat_applied_discounted_price,
-                                                 'end_discounted_price'         => $basketProduct->end_discounted_price
+                                                 'end_discounted_price'         => $basketProduct->end_discounted_price,
+                                                 'vat_applied_default_price'    => $basketProduct->vat_applied_default_price,
                                              ]);
         }
 

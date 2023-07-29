@@ -89,6 +89,7 @@ class Basket extends Model
     public function calculate($basketProducts, $country, $city)
     {
         $this->discounts_to_apply         = self::getDefaultDiscountsArray();
+        $this->total_default              = 0;
         $this->total                      = 0;
         $this->total_discounted           = 0;
         $this->total_free_delivery        = false;
@@ -108,6 +109,7 @@ class Basket extends Model
                 continue;
             }
 
+            $basketProduct->default_price    = $basketProduct->product->price;
             $basketProduct->price            = $basketProduct->product->price;
             $basketProduct->discounts_amount = 0;
 
@@ -121,10 +123,19 @@ class Basket extends Model
 
             //vata na produkta v koi4kata
             $basketProduct->vat = $basketProduct->product->getVat($country, $city);
-            // cenata zalojena ot admina na product v koli4kata + na4islen vat
+
+            //tova e cenata na produkta bez nikakvi na4isleni otstupki samo s adnato dds
+            $basketProduct->vat_applied_default_price = $basketProduct->default_price + ($basketProduct->default_price * ($basketProduct->vat / 100));
+
+            // cenata zalojena ot admina  + quantity discaount na product v koli4kata + na4islen vat
             $basketProduct->vat_applied_price = $basketProduct->price + ($basketProduct->price * ($basketProduct->vat / 100));
-            //tova e cenata zalojena ot admina za producta s pribaven vat i umnojena po broikata na produkta v koli4kata
+
+            //tova e cenata zalojena ot admina + quantity discaount za producta s pribaven vat i umnojena po broikata na produkta v koli4kata
             $basketProduct->end_price = $basketProduct->product_quantity * $basketProduct->vat_applied_price;
+
+            //tova e cenata zalojena ot admina za producta s pribaven vat i umnojena po broikata na produkta v koli4kata
+            $basketProduct->end_default_price = $basketProduct->product_quantity * $basketProduct->vat_applied_default_price;
+            $this->total_default              += $basketProduct->end_default_price;
 
             $fixedFreeDeliveryDiscount = Discount::getFreeDeliveryDiscount($basketProduct, $this->promo_code);
             if (!is_null($fixedFreeDeliveryDiscount)) {

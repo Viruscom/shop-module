@@ -4,6 +4,8 @@ namespace Modules\Shop\Models;
 
 use App\Helpers\AdminHelper;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Shop\Entities\Settings\City;
+use Modules\Shop\Entities\Settings\Country;
 use Modules\Shop\Models\Admin\Brands\Brand;
 use Modules\Shop\Models\Admin\ProductCategory\Category;
 use Modules\Shop\Models\Admin\Products\Product;
@@ -14,7 +16,12 @@ class Shop extends Model
     {
         switch (class_basename($viewArray['currentModel']->parent)) {
             case 'Product':
-                return view('shop::front.products.show', ['viewArray' => $viewArray]);
+                //TODO: Remove form here
+                $country = Country::find(1);
+                $city    = City::find(1);
+
+                //To here
+                return view('shop::front.products.show', ['viewArray' => $viewArray, 'country' => $country, 'city' => $city]);
             case 'Brand':
                 return view('shop::front.brands.show', ['viewArray' => $viewArray]);
             case 'Category':
