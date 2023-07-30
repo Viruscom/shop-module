@@ -30,7 +30,12 @@ class Shop extends Model
                 abort(404);
         }
     }
+    public static function getDashboardInfo(): array
+    {
+        $data = [];
 
+        return $data;
+    }
     public function setKeys($array): array
     {
         $array[1]['sys_image_name'] = trans('shop::admin.product_brands.index');

@@ -554,6 +554,25 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         return $discounts;
     }
     // END FIXED DISCOUNTS
+    public function hasDiscounts()
+    {
+        $discounts = $this->getFixedDiscountsRecords();
+
+        return !is_null($discounts) && count($discounts) > 0;
+    }
+    public function getPercentDiscountsLabel($country, $city): string
+    {
+        $label = (($this->getVatPrice($country, $city) - $this->getVatDiscountedPrice($country, $city)) / $this->getVatPrice($country, $city)) * 100;
+
+        return number_format($label, 2, '.', '');
+    }
+    public function getVatPrice($country, $city)
+    {
+        $vat             = $this->getVat($country, $city);
+        $vatAppliedPrice = $this->price + ($this->price * ($vat / 100));
+
+        return number_format($vatAppliedPrice, 2, '.', '');
+    }
     public function getVatDiscountedPrice($country, $city)
     {
         $vat                       = $this->getVat($country, $city);
@@ -563,19 +582,5 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
 
         return number_format($vatAppliedDiscountedPrice, 2, '.', '');
-    }
-    public function getVatPrice($country, $city)
-    {
-        $vat             = $this->getVat($country, $city);
-        $vatAppliedPrice = $this->price + ($this->price * ($vat / 100));
-
-        return number_format($vatAppliedPrice, 2, '.', '');
-    }
-
-    public function hasDiscounts()
-    {
-        $discounts = $this->getFixedDiscountsRecords();
-
-        return !is_null($discounts) && count($discounts) > 0;
     }
 }

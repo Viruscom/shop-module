@@ -149,5 +149,14 @@ return array(
             'shipping_ang_taxes_calc_on_checkout' => 'Shipping and taxes will be calculated at checkout.',
             'go_to_checkout'                      => 'Отиди към каса',
             'continue_shipping'                   => 'Продължи с пазаруването',
+            'you_use_promo_code'                  => 'Вие ползвате Промо код',
+            'delete_promo_code'                   => 'Изтрий промо код',
+            'total_discounts'                     => 'Общо отстъпки',
+            'total_with_vat'                      => 'Общо с ДДС',
         ),
+    'emails'                  => [
+        'order'      => 'Поръчка',
+        'unit_price' => 'Ед.цена (лв.)',
+        'quantity'   => 'Количество',
+    ],
 );

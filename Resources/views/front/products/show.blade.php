@@ -39,9 +39,9 @@
                             </div>
 
                             <div class="promos-wrapper">
-                                <span class="promo">2 = 1</span>
-
-                                <span class="promo">-25 %</span>
+                                @if($product->hasDiscounts())
+                                    <span class="promo">-{{ $product->getPercentDiscountsLabel($country, $city) }} %</span>
+                                @endif
                                 @if($product->isNewProduct())
                                     <span class="promo promo-new">NEW</span>
                                 @endif
@@ -90,13 +90,13 @@
                                     <strong>out of stock</strong>
                                 </p>
 
-                                <div class="quantity-discounts">
-                                    {!! $product->getProductQuantityDiscountHtml() !!}
-                                </div>
+                                {{--                                <div class="quantity-discounts">--}}
+                                {{--                                    {!! $product->getProductQuantityDiscountHtml() !!}--}}
+                                {{--                                </div>--}}
 
-                                <div class="free-delivery-discount">
-                                    {!! $product->getFreeDeliveryDiscountHtml() !!}
-                                </div>
+                                {{--                                <div class="free-delivery-discount">--}}
+                                {{--                                    {!! $product->getFreeDeliveryDiscountHtml() !!}--}}
+                                {{--                                </div>--}}
 
                                 <div class="input-group-wrapper">
                                     <div class="input-group">
@@ -111,8 +111,6 @@
                                     {{--                                        <span>50</span> ml--}}
                                     {{--                                    </div>--}}
                                 </div>
-
-                                <p>Subtotal: 75.00 BGN</p>
 
                                 <div class="prod-content-actions">
                                     <!-- <a href="" class="btn btn-icon btn-black">

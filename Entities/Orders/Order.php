@@ -2,12 +2,18 @@
 
 namespace Modules\Shop\Entities\Orders;
 
+use App\Models\Settings\Post;
 use App\Models\Settings\ShopSetting;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Mail;
+use Modules\Shop\Emails\OrderPlacedToAdminMailable;
+use Modules\Shop\Emails\OrderPlacedToClientMailable;
+use Modules\Shop\Emails\PaymentStatusChangedMailable;
+use Modules\Shop\Emails\ShipmentStatusChangedMailable;
 use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
 use Modules\Shop\Entities\Settings\City;
 use Modules\Shop\Entities\Settings\Country;
@@ -203,22 +209,29 @@ class Order extends Model
 
     public function sendMailPaymentStatusChanged()
     {
-
+        $email = new PaymentStatusChangedMailable($this);
+        Mail::to($this->email)->send($email);
     }
 
     public function sendMailShipmentStatusChanged()
     {
-
+        $email = new ShipmentStatusChangedMailable($this);
+        Mail::to($this->email)->send($email);
     }
 
     public function sendMailOrderPlacedToClient()
     {
-
+        $email = new OrderPlacedToClientMailable($this);
+        Mail::to($this->email)->send($email);
     }
 
     public function sendMailOrderPlacedToAdmin()
     {
-
+        $postSetting = Post::first();
+        if (!is_null($postSetting) && !empty($postSetting->shop_orders_email)) {
+            $email = new OrderPlacedToAdminMailable($this);
+            Mail::to($postSetting->shop_orders_email)->send($email);
+        }
     }
 
 

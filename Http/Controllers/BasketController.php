@@ -22,7 +22,7 @@ class BasketController extends Controller
     {
         $basket = Basket::getCurrent();
         if ($basket->basket_products->count() < 1) {
-            return redirect(route('basket.index'))->withError(__('First add products to basket.'));
+            return redirect(route('basket.index'))->withErrors([__('First add products to basket.')]);
         }
 
         $basketProducts = $basket->basket_products;

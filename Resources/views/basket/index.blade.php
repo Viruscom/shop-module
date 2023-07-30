@@ -257,25 +257,27 @@
                     </div>
 
                     <div class="col col-1of3">
-                        <h3 class="title-main title-border">Обобщение</h3>
+                        <h3 class="title-main title-border">{{ __('shop::front.basket.summary') }}</h3>
 
                         <div class="col-inner">
                             <div class="summary-boxes">
                                 <div class="box">
                                     <div class="box-row">
-                                        <span>Цена на продуктите</span>
+                                        <span>{{ __('shop::front.basket.products_prices') }}</span>
 
                                         <strong>{{$basket->total_default}} лв.</strong>
                                     </div>
 
                                     <div class="box-row box-row-promo">
-                                        <div class="promo-info">
-                                            Кодът ви е добавен успешно!
-                                        </div>
-
-                                        <div class="promo-info promo-info-warning">
-                                            Кодът не е валиден или е грешен.
-                                        </div>
+                                        @if($basket->promo_code)
+                                            <div class="promo-info">
+                                                {{ __('shop::front.basket.you_use_promo_code') }}: {{ $basket->promo_code }}
+                                            </div>
+                                            <br>
+                                            <div class="delete-promo-code">
+                                                <a href="{{ route('basket.delete-promo-code') }}">{{ __('shop::front.basket.delete_promo_code') }}</a>
+                                            </div>
+                                        @endif
 
                                         <div class="form-wrapper form-wrapper-alt">
                                             <form method="post" enctype="multipart/form-data" action="{{ route('basket.apply-promo-code') }}">
@@ -293,21 +295,10 @@
                                                 </div>
                                             </form>
                                         </div>
-
-                                        @if($basket->promo_code)
-                                            <div class="promo-info">
-                                                Вие ползвате Промо код: {{ $basket->promo_code }}
-                                            </div>
-                                            <br>
-                                            <div class="delete-promo-code">
-                                                <a href="{{ route('basket.delete-promo-code') }}">Изтрий промо код</a>
-                                            </div>
-                                        @endif
-
                                     </div>
 
                                     <div class="box-row box-row-warning">
-                                        <span>Общо отстъпки</span>
+                                        <span>{{ __('shop::front.basket.total_discounts') }}</span>
 
                                         <strong>- {{$basket->total_default - $basket->total_discounted}} лв.</strong>
                                     </div>
@@ -315,7 +306,7 @@
 
                                 <div class="box">
                                     <div class="box-row box-row-big">
-                                        <span>Общо с ДДС</span>
+                                        <span>{{ __('shop::front.basket.total_with_vat') }}</span>
 
                                         <strong>{{ $basket->total_discounted }} лв.</strong>
                                     </div>

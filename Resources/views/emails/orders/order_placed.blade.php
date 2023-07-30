@@ -261,9 +261,9 @@
                                                             <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{!! trans('messages.order') !!} #{{ $order->id }}</td>
+                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ __('shop::front.emails.order') }} #{{ $order->id }}</td>
                                                                     <td width="30">&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{!! trans('messages.product_unit_price') !!}</td>
+                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ __('shop::front.emails.unit_price') }}</td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -283,21 +283,21 @@
                                                         <td>
                                                             <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
                                                                 <tbody>
-                                                                @foreach($order->products as $orderProduct)
+                                                                @foreach($order->order_products as $orderProduct)
                                                                     @php
                                                                         $product = $orderProduct->product;
                                                                     @endphp
                                                                     <tr>
-                                                                        <td width="130"><img width="130" style="display:block;width:100%;max-width:130px;" alt="img" src="{{ $product->fullImageFilePathUrl() }}"></td>
+                                                                        <td width="130"><img width="130" style="display:block;width:100%;max-width:130px;" alt="img" src="{{ $product->getFileUrl() }}"></td>
                                                                         <td width="20">&nbsp;</td>
                                                                         <td width="250">
                                                                             <table border="0" width="100%" cellpadding="0" cellspacing="0">
                                                                                 <tbody>
                                                                                 <tr>
-                                                                                    <td style="font-family:'Josefin Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;line-height: 21px;">{{ $product->currentTranslation->title }}</td>
+                                                                                    <td style="font-family:'Josefin Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;line-height: 21px;">{{ $product->title }}</td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 21px;">{{ __('messages.quantity') }} : 1</td>
+                                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 21px;">{{ __('shop::front.emails.quantity') }} : {{ $orderProduct->product_quantity }}</td>
                                                                                 </tr>
 
                                                                                 </tbody>
@@ -578,57 +578,50 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-
                                                             <table cellspacing="0" cellpadding="0" border="0" align="center">
                                                                 <tbody>
                                                                 <tr>
-                                                                    @foreach($settings as $setting)
-                                                                        @if($setting->key == 'socials_facebook_url' && $setting->value != '')
-                                                                            <td width="25">
-                                                                                <a href="{{ url($setting->value) }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/facebook_white.png') }}"></a>
+                                                                    @if(!empty($socialLinks->facebook_url))
+                                                                        <td width="25">
+                                                                            <a href="{{ $socialLinks->facebook_url }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/facebook_white.png') }}"></a>
 
-                                                                            </td>
-                                                                            <td width="10">&nbsp;</td>
-                                                                        @endif
-                                                                        @if($setting->key == 'socials_instagram_url' && $setting->value != '')
-                                                                            <td width="25">
-                                                                                <a href="{{ url($setting->value) }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/notif_in.png') }}"></a>
+                                                                        </td>
+                                                                        <td width="10">&nbsp;</td>
+                                                                    @endif
+                                                                    @if(!empty($socialLinks->instagram_url))
+                                                                        <td width="25">
+                                                                            <a href="{{ url($socialLinks->instagram_url) }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/notif_in.png') }}"></a>
 
-                                                                            </td>
-                                                                            <td width="10">&nbsp;</td>
-                                                                        @endif
-                                                                        @if($setting->key == 'socials_linkedin_url' && $setting->value != '')
-                                                                            <td width="25">
-                                                                                <a href="{{ url($setting->value) }}">
-                                                                                    <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/in.png">
-                                                                                </a>
-                                                                            </td>
-                                                                            <td width="10">&nbsp;</td>
-                                                                        @endif
-                                                                        @if($setting->key == 'socials_printerest_url' && $setting->value != '')
-                                                                            <td width="25">
-                                                                                <a href="{{ url($setting->value) }}">
-                                                                                    <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/pi.png">
-                                                                                </a>
-                                                                            </td>
-                                                                            <td width="10">&nbsp;</td>
-                                                                        @endif
-                                                                        @if($setting->key == 'socials_tweeter_url' && $setting->value != '')
-                                                                            <td width="25">
-                                                                                <a href="{{ url($setting->value) }}">
-                                                                                    <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/tw.png">
-                                                                                </a>
-                                                                            </td>
-                                                                            <td width="10">&nbsp;</td>
-                                                                        @endif
-                                                                        @if($setting->key == 'socials_google_url' && $setting->value != '')
-
-                                                                        @endif
-                                                                    @endforeach
+                                                                        </td>
+                                                                        <td width="10">&nbsp;</td>
+                                                                    @endif
+                                                                    @if(!empty($socialLinks->linkedin_url))
+                                                                        <td width="25">
+                                                                            <a href="{{ url($socialLinks->linkedin_url) }}">
+                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/in.png">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td width="10">&nbsp;</td>
+                                                                    @endif
+                                                                    @if(!empty($socialLinks->pinterest_url))
+                                                                        <td width="25">
+                                                                            <a href="{{ url($socialLinks->pinterest_url) }}">
+                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/pi.png">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td width="10">&nbsp;</td>
+                                                                    @endif
+                                                                    @if(!empty($socialLinks->tweeter_url))
+                                                                        <td width="25">
+                                                                            <a href="{{ url($socialLinks->tweeter_url) }}">
+                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/tw.png">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td width="10">&nbsp;</td>
+                                                                    @endif
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
-
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -647,7 +640,7 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     @foreach($lawPages as $lawPage)
-                                                                        <td align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 20px;text-decoration: underline"><a href="{{ url($lawPage->currentTranslation->language->code . '/law_page/'.$lawPage->currentTranslation->slug) }}" target="_blank" style="color: #dadada">{{ $lawPage->currentTranslation->title }}</a></td>
+                                                                        <td align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 20px;text-decoration: underline"><a href="{{ $lawPage->href() }}" target="_blank" style="color: #dadada">{{ $lawPage->title }}</a></td>
                                                                         @if(!$loop->last)
                                                                             <td width="20" align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 20px;">|</td>
                                                                         @endif
