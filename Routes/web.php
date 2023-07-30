@@ -586,6 +586,9 @@ Route::middleware(['web', 'set.sbuuid'])->group(function () {
         Route::get('/', [BasketController::class, 'index'])->name('basket.index');
         Route::post('add', [BasketController::class, 'addProduct'])->name('basket.products.add');
 
+        Route::post('apply-promo-code', [BasketController::class, 'applyPromoCode'])->name('basket.apply-promo-code');
+        Route::get('delete-promo-code', [BasketController::class, 'deletePromoCode'])->name('basket.delete-promo-code');
+
         /* Order */
         Route::group(['prefix' => 'order'], static function () {
             Route::get('preview/{id}', [BasketController::class, 'previewOrder'])->name('basket.order.preview');

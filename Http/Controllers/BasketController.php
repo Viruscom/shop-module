@@ -48,6 +48,7 @@ class BasketController extends Controller
         $request['shipment_status']    = Order::SHIPMENT_WAITING;
         $request['payment_status']     = Order::PAYMENT_PENDING;
         $request['total_default']      = $basket->total_default;
+        $request['promo_code']         = $basket->promo_code;
 
         $order = $action->storeOrder($request, $basket);
 
@@ -163,5 +164,43 @@ class BasketController extends Controller
         }
 
         return redirect()->route('basket.index');
+    }
+
+    public function applyPromoCode(Request $request)
+    {
+        if (!isset($request->promo_code) || empty($request->promo_code)) {
+            return back()->withErrors(['Няма промокод или не е валиден']);
+        }
+        $basket             = Basket::getCurrent();
+        $currentPromoCode   = $basket->promo_code;
+        $basket->promo_code = $request->promo_code;
+        $basket->save();
+        $country = Country::find(session()->get('country_id'));
+        $city    = City::find(session()->get('city_id'));
+        $basket->calculate($basket->basket_products, $country, $city);
+        //
+        $promoCodeValid = $basket->isCurrentPromoCodeValid();
+        if (!$promoCodeValid) {
+            $basket             = Basket::getCurrent();
+            $basket->promo_code = $currentPromoCode;
+            $basket->save();
+            $basket->calculate($basket->basket_products, $country, $city);
+
+            return redirect()->back()->withErrors(['Невалиден промо код']);
+        }
+
+        return redirect()->route('basket.index')->with('success-message', 'Успешно приложен промо код');
+    }
+
+    public function deletePromoCode()
+    {
+        $basket             = Basket::getCurrent();
+        $basket->promo_code = null;
+        $basket->save();
+        $country = Country::find(session()->get('country_id'));
+        $city    = City::find(session()->get('city_id'));
+        $basket->calculate($basket->basket_products, $country, $city);
+
+        return redirect()->route('basket.index')->with('success-message', 'Успешно изтрихте промо код');
     }
 }

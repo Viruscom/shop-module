@@ -23,7 +23,7 @@ class Basket extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'key'];
+    protected $fillable = ['user_id', 'key', 'promo_code'];
 
     public static function productsCount()
     {
@@ -224,6 +224,27 @@ class Basket extends Model
     public function setTotalFreeDelivery()
     {
         $this->total_free_delivery = isset($this->discountToApply) && isset($this->discountToApply['global']) && isset($this->discountToApply['global']['delivery']) && !is_null($this->discountToApply['global']['delivery']);
+    }
+
+    function isCurrentPromoCodeValid()
+    {
+        foreach ($this->discounts_to_apply as $key => $appliedDiscountsByType) {
+            foreach ($appliedDiscountsByType as $key2 => $appliedDiscountByType) {
+                if (is_array($appliedDiscountByType)) {
+                    foreach ($appliedDiscountByType as $key3 => $discount) {
+                        if (isset($discount->promo_code) && $discount->promo_code == $this->promo_code) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (isset($appliedDiscountByType->promo_code) && $appliedDiscountByType->promo_code == $this->promo_code) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 

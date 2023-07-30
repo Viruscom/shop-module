@@ -278,11 +278,12 @@
                                         </div>
 
                                         <div class="form-wrapper form-wrapper-alt">
-                                            <form method="post" enctype="multipart/form-data" action="">
+                                            <form method="post" enctype="multipart/form-data" action="{{ route('basket.apply-promo-code') }}">
+                                                @csrf
                                                 <div class="form-body">
                                                     <div class="form-row">
                                                         <div class="input-container">
-                                                            <input id="promo-code" class="promo-code" type="text" placeholder="Код за отстъпка">
+                                                            <input id="promo-code" class="promo-code" type="text" name="promo_code" placeholder="Код за отстъпка">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -292,6 +293,17 @@
                                                 </div>
                                             </form>
                                         </div>
+
+                                        @if($basket->promo_code)
+                                            <div class="promo-info">
+                                                Вие ползвате Промо код: {{ $basket->promo_code }}
+                                            </div>
+                                            <br>
+                                            <div class="delete-promo-code">
+                                                <a href="{{ route('basket.delete-promo-code') }}">Изтрий промо код</a>
+                                            </div>
+                                        @endif
+
                                     </div>
 
                                     <div class="box-row box-row-warning">
@@ -310,13 +322,13 @@
 
                                     <p>Остават ви 85.00 лв до безплатна доставка.</p>
 
-                                    <p>Shipping and taxes will be calculated at checkout.</p>
+                                    <p>{{ __('shop::front.basket.shipping_ang_taxes_calc_on_checkout') }}</p>
                                 </div>
 
                                 <div class="box-actions">
-                                    <a href="{{route('basket.order.create')}}" class="btn btn-black">go to check out</a>
+                                    <a href="{{route('basket.order.create')}}" class="btn btn-black">{{ __('shop::front.basket.go_to_checkout') }}</a>
 
-                                    <a href="" class="btn btn-outline">Continue shopping</a>
+                                    <a href="" class="btn btn-outline">{{ __('shop::front.basket.continue_shipping') }}</a>
                                 </div>
                             </div>
                         </div>
