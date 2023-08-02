@@ -583,6 +583,7 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
 Route::get('email/preview', function () {
     return view('shop::emails.orders.order_placed');
 });
+
 Route::middleware(['web', 'set.sbuuid'])->group(function () {
     Route::prefix('basket')->group(function () {
         Route::get('/', [BasketController::class, 'index'])->name('basket.index');
