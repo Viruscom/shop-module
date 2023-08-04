@@ -49,6 +49,10 @@ class BasketController extends Controller
         $request['payment_status']     = Order::PAYMENT_PENDING;
         $request['total_default']      = $basket->total_default;
         $request['promo_code']         = $basket->promo_code;
+        
+        if (is_null($basket->user_id)) {
+            $request['guest_validation_code'] = Str::random(100);
+        }
 
         $order = $action->storeOrder($request, $basket);
 

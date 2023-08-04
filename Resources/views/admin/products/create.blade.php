@@ -26,7 +26,7 @@
     @if($productCategories->isEmpty() || $brands->isEmpty())
         <div class="alert alert-warning">{!! __('shop::admin.products.create_not_allowed_add_product_category') !!}</div>
     @else
-        <form class="my-form" action="{{ route('admin.products.store', ['category_id' => Request::segment(5)]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
+        <form id="productForm" class="my-form" action="{{ route('admin.products.store', ['category_id' => Request::segment(5)]) }}" method="POST" data-form-type="store" enctype="multipart/form-data">
             <div class="col-xs-12 p-0">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="position" value="{{old('position')}}">
@@ -147,6 +147,9 @@
                                 {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false])--}}
                             </div>
 
+                            @if(array_key_exists('RetailObjectsRestourant', $activeModules))
+                                @include('retailobjectsrestourant::admin.product_additives.additives_list')
+                            @endif
                             <div class="row">
                                 <div class="col-md-12">
                                     <h4>ДДС ставки</h4>

@@ -34,7 +34,7 @@ class OrderReturnsController extends Controller
     {
         $return = OrderReturn::where('id', $request->return_id)->where('order_id', $request->order_id)->first();
         if (is_null($return)) {
-            return trans('administration_messages.page_not_found');
+            return trans('admin.common.record_not_found');
         }
 
         $return->update(['status_id' => $request->status_id]);

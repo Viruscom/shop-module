@@ -42,6 +42,7 @@ use Modules\Shop\Http\Controllers\BasketController;
 use Modules\Shop\Http\Controllers\CartController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
 use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
+use Modules\Shop\Http\Controllers\Front\ShopHomeController;
 use Modules\Shop\Http\Controllers\HomeController;
 
 /*
@@ -582,6 +583,11 @@ Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static functi
  */
 Route::get('email/preview', function () {
     return view('shop::emails.orders.order_placed');
+});
+
+Route::prefix('guest')->group(function () {
+    Route::get('show-order/{orderUid}', [ShopHomeController::class, 'showGuestOrder'])->name('guest.show-order');
+    Route::post('show-order/{orderUid}', [ShopHomeController::class, 'showGuestOrderView'])->name('guest.show-order-verified-access');
 });
 
 Route::middleware(['web', 'set.sbuuid'])->group(function () {

@@ -31,7 +31,7 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
+            return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
         }
 
         $adBox->update(['active' => $active]);
@@ -42,11 +42,11 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
+            return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
         }
 
         $languages = LanguageHelper::getActiveLanguages();
-        $data = $adBox->getUpdateData($request);
+        $data      = $adBox->getUpdateData($request);
 
         foreach ($languages as $language) {
             $data[$language->code] = AdBoxProductTranslation::getUpdateData($language, $request);
@@ -70,7 +70,7 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
+            return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
         }
 
         $action->delete(AdBoxProduct::class, $adBox);
@@ -90,7 +90,7 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
+            return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
         }
 
         $nextAdbox = AdBoxProduct::where('type', $adBox->type)->where('position', $adBox->position + 1)->first();
@@ -105,7 +105,7 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
     {
         $adBox = AdBoxProduct::find($id);
         if (is_null($adBox)) {
-            return redirect()->back()->withInput()->withErrors(['administration_messages.page_not_found']);
+            return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
         }
 
         $prevAdbox = AdBoxProduct::where('type', $adBox->type)->where('position', $adBox->position - 1)->first();
@@ -131,9 +131,9 @@ class AdBoxesProductsController extends Controller implements ShopProductAdBoxIn
         MainHelper::goBackIfNull($adBox);
 
         return view('shop::admin.adboxes_products.edit', [
-            'adBox'     => $adBox,
+            'adBox'         => $adBox,
             'waitingAction' => AdBoxProduct::$WAITING_ACTION,
-            'languages' => LanguageHelper::getActiveLanguages(),
+            'languages'     => LanguageHelper::getActiveLanguages(),
         ]);
     }
 }

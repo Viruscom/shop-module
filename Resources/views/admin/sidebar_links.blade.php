@@ -12,6 +12,9 @@
                 <li><a href="{{ route('admin.brands.index') }}"><i class="fas fa-copyright"></i> <span>{!! trans('shop::admin.product_brands.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-categories.index') }}"><i class="fas fa-outdent"></i> <span>{!! trans('shop::admin.product_categories.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.products.index') }}"><i class="far fa-list-alt"></i> <span>{!! trans('shop::admin.products.index') !!}</span></a></li>
+                @if(array_key_exists('RetailObjectsRestourant', $activeModules))
+                    <li><a href="{{ route('admin.product.additives.index') }}"><i class="far fa-list-alt"></i> <span>{!! trans('retailobjectsrestourant::admin.product_additives.index') !!}</span></a></li>
+                @endif
                 <li><a href="{{ route('admin.product-attributes.index') }}"><img src="{{ asset('admin/assets/images/product_attribute.svg') }}" alt="@lang('shop::admin.product_attributes.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_attributes.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.products.characteristics.index') }}"><img src="{{ asset('admin/assets/images/product_characteristics.svg') }}" alt="@lang('shop::admin.product_characteristics.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_characteristics.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-combinations.index') }}"><img src="{{ asset('admin/assets/images/product_combinations.svg') }}" alt="@lang('shop::admin.product_combinations.index')" width="18" style="margin-right: 12px;"> <span>{!! trans('shop::admin.product_combinations.index') !!}</span></a></li>
