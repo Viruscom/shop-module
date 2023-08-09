@@ -18,8 +18,11 @@ use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
+use Modules\RetailObjectsRestourant\Models\ProductAdditive;
+use Modules\RetailObjectsRestourant\Models\ProductAdditivePivot;
 use Modules\Shop\Entities\Settings\MeasureUnit;
 use Modules\Shop\Entities\Settings\VatCategory;
 use Modules\Shop\Models\Admin\Brands\Brand;
@@ -582,5 +585,17 @@ class Product extends Model implements TranslatableContract, ImageModelInterface
         $vatAppliedDiscountedPrice = $vatAppliedPrice - $discountsAmount;
 
         return number_format($vatAppliedDiscountedPrice, 2, '.', '');
+    }
+
+    public function additives($isWithoutList): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            ProductAdditive::class,
+            ProductAdditivePivot::class,
+            'product_id',
+            'id',
+            'id',
+            'product_additive_id'
+        )->where('in_without_list', $isWithoutList);
     }
 }

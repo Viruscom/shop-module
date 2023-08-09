@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                @for($i=0; $i<5; $i++)
+                @for($i=0; $i<30; $i++)
                     <div class="form-group @if($errors->has('main_product_id')) has-error @endif">
                         <label class="control-label col-md-3 col-xs-6">Допълнителен продукт</label>
                         <div class="col-md-4 col-xs-4">

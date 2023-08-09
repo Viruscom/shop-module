@@ -146,6 +146,10 @@
                             {{--                            @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['fieldName' => 'length', 'label' => trans('shop::admin.products.length'), 'required' => false, 'model' => $product])--}}
                         </div>
 
+                        @if(array_key_exists('RetailObjectsRestourant', $activeModules))
+                            @include('retailobjectsrestourant::admin.product_additives.additives_list_edit')
+                        @endif
+
                         <div class="row">
                             <div class="col-md-12">
                                 <h4>ДДС ставки</h4>

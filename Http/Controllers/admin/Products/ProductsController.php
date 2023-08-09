@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Catalogs\Models\MainCatalog;
 use Modules\RetailObjectsRestourant\Models\ProductAdditive;
+use Modules\RetailObjectsRestourant\Models\ProductAdditivePivot;
 use Modules\Shop\Actions\ProductAction;
 use Modules\Shop\Http\Requests\ProductStoreRequest;
 use Modules\Shop\Http\Requests\ProductUpdateRequest;
@@ -41,11 +42,127 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         $action->storeSeo($request, $product, 'Product');
         $productAction->createOrUpdateAdditionalFields($request, $product);
 
+        $activeModules = ModuleHelper::getActiveModules();
+        if (array_key_exists('RetailObjectsRestourant', $activeModules)) {
+            $selectedAdditives            = explode(',', $request->selectedAdditives[0]);
+            $selectedAdditivesWithoutList = explode(',', $request->selectedAdditivesWithoutList[0]);
+
+            ProductAdditivePivot::where('product_id', $product->id)->delete();
+            ProductAdditivePivot::updateAdditives($product, $selectedAdditives, $selectedAdditivesWithoutList);
+        }
+
         Product::cacheUpdate();
 
         $product->storeAndAddNew($request);
 
         return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', trans('admin.common.successful_create'));
+    }
+    public function delete($id, CommonControllerAction $action): RedirectResponse
+    {
+        $product = Product::find($id);
+        MainHelper::goBackIfNull($product);
+
+        $action->deleteFromUrlCache($product);
+        $action->delete(Product::class, $product);
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_delete');
+    }
+    public function edit($id, ProductAction $action)
+    {
+        $action->checkForFilesCache();
+        $action->checkForBrandsCache();
+        $action->checkForProductCategoriesAdminCache();
+        $action->checkForMeasureUnitsCache();
+
+        $product = Product::whereId($id)->with('translations', 'category', 'category.products')->first();
+        MainHelper::goBackIfNull($product);
+
+        $activeModules = ModuleHelper::getActiveModules();
+        $data          = [
+            'product'           => $product,
+            'products'          => $product->category->products,
+            'languages'         => LanguageHelper::getActiveLanguages(),
+            'files'             => Cache::get(CacheKeysHelper::$FILES),
+            'filesPathUrl'      => File::getFilesPathUrl(),
+            'fileRulesInfo'     => Product::getUserInfoMessage(),
+            'productCategoryId' => $product->category->id,
+            'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
+            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
+            'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
+            'activeModules'     => $activeModules
+        ];
+
+        if (array_key_exists('Catalogs', $activeModules)) {
+            if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
+                MainCatalog::cacheUpdate();
+            }
+            $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
+        }
+        if (array_key_exists('RetailObjectsRestourant', $activeModules)) {
+            if (is_null(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES)) {
+                ProductAdditive::cacheUpdate();
+            }
+            $data['productAdditives']                 = cache()->get(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES);
+            $data['selectedProductsAdditives']        = $product->additives(false)->get();
+            $data['selectedWithoutProductsAdditives'] = $product->additives(true)->get();
+        }
+
+        return view('shop::admin.products.edit', $data);
+    }
+    public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
+    {
+        if (!is_null($request->ids[0])) {
+            $action->deleteMultiple($request, Product::class);
+
+            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
+        }
+
+        return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
+    }
+    public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
+    {
+        $action->activeMultiple(Product::class, $request, $active);
+        Product::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function active($id, $active): RedirectResponse
+    {
+        $product = Product::find($id);
+        MainHelper::goBackIfNull($product);
+
+        $product->update(['active' => $active]);
+        Product::cacheUpdate();
+
+        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+    }
+    public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
+    {
+        $product = Product::whereId($id)->with('translations')->first();
+        MainHelper::goBackIfNull($product);
+
+        $action->doSimpleUpdate(Product::class, ProductTranslation::class, $product, $request);
+        $action->updateUrlCache($product, ProductTranslation::class);
+        $action->updateSeo($request, $product, 'Product');
+        $productAction->createOrUpdateAdditionalFields($request, $product);
+
+        if ($request->has('image')) {
+            $request->validate(['image' => Product::getFileRules()], [Product::getUserInfoMessage()]);
+            $product->saveFile($request->image);
+        }
+
+        $activeModules = ModuleHelper::getActiveModules();
+        if (array_key_exists('RetailObjectsRestourant', $activeModules)) {
+            $selectedAdditives            = explode(',', $request->selectedAdditives[0]);
+            $selectedAdditivesWithoutList = explode(',', $request->selectedAdditivesWithoutList[0]);
+
+            ProductAdditivePivot::where('product_id', $product->id)->delete();
+            ProductAdditivePivot::updateAdditives($product, $selectedAdditives, $selectedAdditivesWithoutList);
+        }
+
+        Product::cacheUpdate();
+
+        return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
     }
     public function create($category_id, ProductAction $action): Renderable
     {
@@ -88,102 +205,6 @@ class ProductsController extends Controller implements ShopProductInterface, Pos
         }
 
         return view('shop::admin.products.create', $data);
-    }
-    public function edit($id, ProductAction $action)
-    {
-        $action->checkForFilesCache();
-        $action->checkForBrandsCache();
-        $action->checkForProductCategoriesAdminCache();
-        $action->checkForMeasureUnitsCache();
-
-        $product = Product::whereId($id)->with('translations', 'category', 'category.products')->first();
-        MainHelper::goBackIfNull($product);
-
-        $activeModules = ModuleHelper::getActiveModules();
-        $data          = [
-            'product'           => $product,
-            'products'          => $product->category->products,
-            'languages'         => LanguageHelper::getActiveLanguages(),
-            'files'             => Cache::get(CacheKeysHelper::$FILES),
-            'filesPathUrl'      => File::getFilesPathUrl(),
-            'fileRulesInfo'     => Product::getUserInfoMessage(),
-            'productCategoryId' => $product->category->id,
-            'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
-            'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
-            'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
-            'activeModules'     => $activeModules
-        ];
-
-        if (array_key_exists('Catalogs', $activeModules)) {
-            if (is_null(CacheKeysHelper::$CATALOGS_MAIN_FRONT)) {
-                MainCatalog::cacheUpdate();
-            }
-            $data['mainCatalogs'] = cache()->get(CacheKeysHelper::$CATALOGS_MAIN_FRONT);
-        }
-        if (array_key_exists('RetailObjectsRestourant', $activeModules)) {
-            if (is_null(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES)) {
-                ProductAdditive::cacheUpdate();
-            }
-            $data['productAdditives'] = cache()->get(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES);
-        }
-
-        return view('shop::admin.products.edit', $data);
-    }
-    public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
-    {
-        if (!is_null($request->ids[0])) {
-            $action->deleteMultiple($request, Product::class);
-
-            return redirect()->back()->with('success-message', 'admin.common.successful_delete');
-        }
-
-        return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
-    }
-    public function delete($id, CommonControllerAction $action): RedirectResponse
-    {
-        $product = Product::find($id);
-        MainHelper::goBackIfNull($product);
-
-        $action->deleteFromUrlCache($product);
-        $action->delete(Product::class, $product);
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_delete');
-    }
-    public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
-    {
-        $action->activeMultiple(Product::class, $request, $active);
-        Product::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function active($id, $active): RedirectResponse
-    {
-        $product = Product::find($id);
-        MainHelper::goBackIfNull($product);
-
-        $product->update(['active' => $active]);
-        Product::cacheUpdate();
-
-        return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-    }
-    public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
-    {
-        $product = Product::whereId($id)->with('translations')->first();
-        MainHelper::goBackIfNull($product);
-
-        $action->doSimpleUpdate(Product::class, ProductTranslation::class, $product, $request);
-        $action->updateUrlCache($product, ProductTranslation::class);
-        $action->updateSeo($request, $product, 'Product');
-        $productAction->createOrUpdateAdditionalFields($request, $product);
-
-        if ($request->has('image')) {
-            $request->validate(['image' => Product::getFileRules()], [Product::getUserInfoMessage()]);
-            $product->saveFile($request->image);
-        }
-
-        Product::cacheUpdate();
-
-        return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
     }
     public function positionUp($id, CommonControllerAction $action): RedirectResponse
     {
