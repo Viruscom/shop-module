@@ -63,7 +63,7 @@
                     });
 
                     $.ajax({
-                        url: $('.base-url').text() + '/admin/shop/product_combinations/getProductSkuNumber',
+                        url: '{{ route('admin.product-combinations.getProductSkuNumber') }}',
                         type: 'POST',
                         data: {
                             _token: $('input[name="_token"]').val(), product_id: $(this).val()
