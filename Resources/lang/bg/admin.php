@@ -475,7 +475,10 @@
             ),
         'deliveries'               =>
             array(
-                'index' => 'Методи на доставка',
+                'index'           => 'Методи на доставка',
+                'delivery_system' => 'Метод на доставка',
+                'status'          => 'Статус',
+                'no-deliveries'   => 'Няма добавени методи на доставка',
             ),
         'delivery_systems'         =>
             array(
