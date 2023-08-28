@@ -12,7 +12,7 @@
             <ul class="nav">
                 <li><a href="{{ route('admin.brands.index') }}" class="{{ WebsiteHelper::isActiveRoute('admin.brands.*') ? 'active' : '' }}"><i class="fas fa-copyright"></i> <span>{!! trans('shop::admin.product_brands.index') !!}</span></a></li>
                 <li><a href="{{ route('admin.product-categories.index') }}" class="{{ WebsiteHelper::isActiveRoute('admin.product-categories.*') ? 'active' : '' }}"><i class="fas fa-outdent"></i> <span>{!! trans('shop::admin.product_categories.index') !!}</span></a></li>
-                <li><a href="{{ route('admin.products.index') }}" class="{{ WebsiteHelper::isActiveRoute('admin.products.*') ? 'active' : '' }}"><i class="far fa-list-alt"></i> <span>{!! trans('shop::admin.products.index') !!}</span></a></li>
+                <li><a href="{{ route('admin.products.index') }}" class="{{ WebsiteHelper::isActiveRoute('admin.products.*') && !WebsiteHelper::isActiveRoute('admin.products.characteristics.*') ? 'active' : '' }}"><i class="far fa-list-alt"></i> <span>{!! trans('shop::admin.products.index') !!}</span></a></li>
                 @if(array_key_exists('RetailObjectsRestourant', $activeModules))
                     <li><a href="{{ route('admin.product.additives.index') }}" class="{{ WebsiteHelper::isActiveRoute('admin.product.additives.*') ? 'active' : '' }}"><i class="far fa-list-alt"></i> <span>{!! trans('retailobjectsrestourant::admin.product_additives.index') !!}</span></a></li>
                 @endif
