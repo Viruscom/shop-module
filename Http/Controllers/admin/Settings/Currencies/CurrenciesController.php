@@ -15,7 +15,7 @@
             if ($currencies->isEmpty()) {
                 $exchangeRateApi = InternalIntegration::where('key', 'exchangeRateApi')->first();
                 if (is_null($exchangeRateApi)) {
-                    return redirect()->back()->withErrors(['Не е въжможно да видите валутите. Първо добавете Ключ за достъп до "Exchange Rate API".']);
+                    return redirect()->back()->withErrors([trans('shop::admin.currencies.api_key_needed_error')]);
                 }
 
                 $exchangeRateApi = json_decode($exchangeRateApi->data);

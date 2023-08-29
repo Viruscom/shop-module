@@ -503,6 +503,7 @@
                 'name'                        => 'Име на валута',
                 'no_records'                  => 'Няма добавени валути.',
                 'manual_exchange_rate_update' => 'Ръчно обновяване на валутния курс.',
+                'api_key_needed_error'        => 'Не е въжможно да видите валутите. Първо добавете Ключ за достъп до "Exchange Rate API".',
             ),
         'measure_units'            =>
             array(
