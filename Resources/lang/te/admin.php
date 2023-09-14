@@ -424,6 +424,7 @@ return array (
     'amount_type_1' => 'Стойност',
     'amount_type_2' => 'Процент',
     'max_uses_per_order' => 'Максимално пъти за използване в количка',
+    'active' => 'Активен',
   ),
   'shop_settings' => 
   array (
@@ -475,6 +476,9 @@ return array (
   'deliveries' => 
   array (
     'index' => 'Методи на доставка',
+    'delivery_system' => 'Метод на доставка',
+    'status' => 'Статус',
+    'no-deliveries' => 'Няма добавени методи на доставка',
   ),
   'delivery_systems' => 
   array (
@@ -483,6 +487,10 @@ return array (
   'post_codes' => 
   array (
     'index' => 'Пощенски кодове',
+    'no-records' => 'Няма добавени пощенски кодове',
+    'country' => 'Държава',
+    'state' => 'Област',
+    'city' => 'Град',
   ),
   'vats' => 
   array (
@@ -495,6 +503,7 @@ return array (
     'name' => 'Име на валута',
     'no_records' => 'Няма добавени валути.',
     'manual_exchange_rate_update' => 'Ръчно обновяване на валутния курс.',
+    'api_key_needed_error' => 'Не е въжможно да видите валутите. Първо добавете Ключ за достъп до "Exchange Rate API".',
   ),
   'measure_units' => 
   array (
