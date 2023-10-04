@@ -1,91 +1,87 @@
 @php use Carbon\Carbon; @endphp@php use App\Models\AdBoxButton; @endphp
-<section class="section">
+<section class="section section-meals">
     <div class="section-head">
-        <div class="shell">
-            <h3 class="section-title">{{ __('messages.trainings') }}</h3>
+        <h3 data-aos="fade-up" data-aos-delay="60">
+            {{ __('front.choose') }}
+            <span data-aos="fade-up" data-aos-delay="100">{{ __('front.order_small_letters') }}</span>
+        </h3>
 
-            <img src="{{ asset('website/assets/icons/shape-1.svg') }}" alt="">
-        </div>
+        <p data-aos="fade-up" data-aos-delay="200">{{ __('front.and_enjoy') }}</p>
     </div>
 
-    <div class="boxes-type-1">
-        @foreach($productAdBoxesFirstType as $adBox)
-            @php
-                $adBoxTranslation = $adBox->currentTranslation;
-                if(is_null($adBoxTranslation)){
-                    continue;
-                }
-                $startEventDate = Carbon::parse($adBox->product->start_event);
-                $endEventDate = Carbon::parse($adBox->product->end_event);
-                $endPromoDate = ($adBox->product->early_booking_days) ? Carbon::parse($adBox->product->start_event)->subDays($adBox->product->early_booking_days+1) : $now->subDays(100);
-            @endphp
+    <div class="boxes boxes-type-2">
+        @foreach($viewArray['shopProductAdBoxes'] as $adBox)
             <div class="box" data-aos="fade-up">
-                <div class="box-image-wrapper">
-                    @if($adBox->product->is_new_product)
-                        <div class="label">{{ __('messages.new') }}</div>
-                    @endif
+                <div class="box-statuses">
+                    <div class="status status-tooltip">
+                        <i class="custom-icon icon-leaf"></i>
 
-                    @if($adBox->product->is_in_promotion)
-                        <div class="label label-promo">{{ __('messages.promo') }}</div>
-                    @endif
-
-                    <a href="{{ $adBox->product->getProductUrl($language) }}"></a>
-
-                    <div class="box-image parent-image-wrapper">
-                        <img src="{{ $adBox->product->fullImageFilePathUrl() }}" alt="{{ $adBoxTranslation->title }}" class="bg-image">
+                        <div class="status-text">{{ __('front.products.status_vegan') }}</div>
                     </div>
+
+                    <div class="status status-tooltip">
+                        <i class="custom-icon icon-fire"></i>
+
+                        <div class="status-text">{{ __('front.products.status_hot') }}</div>
+                    </div>
+
+                    @if($adBox->product->isNewProduct())
+                        <div class="status status-new">
+                            <span>{{ __('front.products.status_new') }}</span>
+                        </div>
+                    @endif
+
+                    @if($adBox->product->hasDiscounts())
+                        <div class="status status-tooltip status-discount">
+                            <span>{{ __('front.products.status_promo') }}</span>
+
+                            <div class="status-text">-{{ $product->getPercentDiscountsLabel($country, $city) }}%</div>
+                        </div>
+                    @endif
                 </div>
 
-                <p class="date">{{ $startEventDate->format('d.m.Y') }} - {{ $endEventDate->format('d.m.Y') }}</p>
+                <div class="box-image-wrapper">
+                    <a href="{{ $adBox->product->getUrl($languageSlug) }}"></a>
+
+                    <div class="box-image parent-image-wrapper">
+                        <img src="{{ $adBox->product->getFileUrl() }}" alt="{{ $adBox->product->title }}" class="bg-image">
+                    </div>
+                </div>
 
                 <div class="box-content">
                     <h3>
-                        <a href="{{ $adBox->product->getProductUrl($language) }}">{{ $adBoxTranslation->title }}</a>
+                        <a href="{{ $adBox->product->getUrl($languageSlug) }}">{{ $adBox->product->title }}</a>
                     </h3>
 
-                    <p>{!! \Illuminate\Support\Str::limit($adBoxTranslation->short_description, 255, ' ...') !!}</p>
+                    <div class="box-inner">
+                        <span>{{ $adBox->product->measure_unit_value }} {{ $adBox->product->measureUnit->title }}</span>
 
-                    <div class="box-info">
-                        @if(! is_null($adBox->product->price) && $adBox->product->price > 0)
-                            <div class="prices">
-                                @if($adBox->product->discount_price > 0 && $now->diffInDays($endPromoDate, false) >= 0 && $now->diffInDays($startEventDate, false) >= 0)
-                                    <p class="old-price">{!! trans('messages.price') !!} <span>{{ $adBox->product->formatedPrice($adBox->product->price) }} {!! trans('messages.bgn') !!}</span>.</p>
+                        <div class="box-prices">
+                            @if($adBox->product->hasDiscounts())
+                                <p class="old-price"><strong>{{ $adBox->product->getVatPrice($country, $city) }}</strong> <span>{{ __('front.currency') }}</span></p>
 
-                                    {{--                                    <p class="text-black">{!! trans('messages.price') !!} <span>{{ $adBox->product->formatedPrice($adBox->product->discount_price) }} {!! trans('messages.bgn') !!}</span></p>--}}
-                                @else
-                                    <p class="text-black">{!! trans('messages.price') !!} <span>{{ $adBox->product->formatedPrice($adBox->product->price) }} {!! trans('messages.bgn') !!}</span></p>
-                                @endif
-                            </div>
-                        @endif
-
-                        @if($now->diffInDays($endPromoDate, false) >= 0)
-                            <div class="promo">
-                                <p class="text-warning">{{ __('messages.price_early_book_seat') }} <span>{{ $adBox->product->formatedPrice($adBox->product->discount_price) }} {!! trans('messages.bgn') !!}</span></p>
-
-                                <p>{{ __('messages.remaining') }}: <span>{{ $now->diffInDays($endPromoDate, false) }} {{ __('messages.days') }}</span></p>
-                            </div>
-                        @endif
-
-                        <div class="total-places">
-                            <p class="text-warning">{{ __('messages.count_seats') }}: <span>{{ $adBox->product->seats }}</span></p>
-
-                            <p class="text-success">{{ __('messages.free_seats') }}: <span>{{ $adBox->product->units_in_stock }}</span></p>
+                                <p><strong>{{$adBox->product->getVatDiscountedPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                            @else
+                                <p><strong>{{$adBox->product->getVatPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                            @endif
                         </div>
                     </div>
-                    <a href="{{ $adBox->product->getProductUrl($language) }}" class="btn btn-main">{{ ($adBox->product->units_in_stock && $now->diffInDays($startEventDate, false) >= 0)  ? __('messages.book_seat') : __('messages.no_free_seats') }}</a>
                 </div>
+
+                <a href="{{ $adBox->product->getUrl($languageSlug) }}" class="btn btn-outline">{{ __('front.choose_big_letter') }}</a>
             </div>
         @endforeach
     </div>
 
-    {{--    @php--}}
-    {{--        $adBoxButton = AdBoxButton::getTranslation(1, $language->id);--}}
-    {{--    @endphp--}}
-    {{--    @if($adBoxButton && $adBoxButton->url)--}}
-    {{--        <div class="section-actions">--}}
-    {{--            <a href="{{ (!is_null($adBoxButton)) ? ($adBoxButton->external_url) ? $adBoxButton->url : url($adBoxButton->url) :''}}" class="btn btn-gray btn-big">{!! $adBoxButton->title !!}</a>--}}
-    {{--        </div>--}}
-    {{--    @endif--}}
+    <div class="section-info">
+        <h4 data-aos="fade-up" data-aos-delay="60">{{ __('front.view_all_menu') }}</h4>
 
+        <a href="" class="btn btn-red" data-aos="fade-up" data-aos-delay="100">{{ __('front.menu') }}</a>
+    </div>
+
+    @if(!is_null($viewArray['homePage']))
+        <div class="section-content" data-aos="fade-up" data-aos-delay="200">
+            <p>{!! $viewArray['homePage']->announce !!}</p>
+        </div>
+    @endif
 </section>
-

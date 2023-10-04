@@ -15,6 +15,7 @@
     use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
     use Astrotomic\Translatable\Translatable;
     use Auth;
+    use Illuminate\Database\Eloquent\Collection;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
     use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -597,5 +598,17 @@
                 'id',
                 'product_additive_id'
             )->where('in_without_list', $isWithoutList);
+        }
+
+        public function additivesCollection($isWithoutList): Collection
+        {
+            return $this->hasManyThrough(
+                ProductAdditive::class,
+                ProductAdditivePivot::class,
+                'product_id',
+                'id',
+                'id',
+                'product_additive_id'
+            )->where('in_without_list', $isWithoutList)->get();
         }
     }

@@ -41,7 +41,9 @@
     use Modules\Shop\Http\Controllers\BasketController;
     use Modules\Shop\Http\Controllers\CartController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
+    use Modules\Shop\Http\Controllers\Front\RegisteredUser\PaymentAddressesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
+    use Modules\Shop\Http\Controllers\Front\RegisteredUser\ShipmentAddressesController;
     use Modules\Shop\Http\Controllers\Front\ShopHomeController;
     use Modules\Shop\Http\Controllers\HomeController;
 
@@ -621,6 +623,42 @@
                     Route::get('personal-data', [RegisteredUserAccountController::class, 'personalData'])->name('shop.registered_user.account.personal-data');
                     Route::post('/{id}/update', [RegisteredUserAccountController::class, 'update'])->name('shop.registered_user.account.personal-data.update');
                     Route::post('/subscribe', [RegisteredUserAccountController::class, 'subscribe'])->name('shop.registered_user.account.subscribe');
+
+                    //TODO: Favorite products - Ne e napraveno
+                    /* Favorite products */
+                    Route::group(['prefix' => 'favorites'], static function () {
+                        Route::get('/', [RegisteredUserAccountController::class, 'getFavoriteProducts'])->name('shop.registered_user.account.favorites');
+                        Route::post('{id}/store', [RegisteredUserAccountController::class, 'favoriteProductStore'])->name('shop.registered_user.account.favorites.store');
+                        Route::post('{id}/delete', [RegisteredUserAccountController::class, 'favoriteProductDelete'])->name('shop.registered_user.account.favorites.delete');
+                    });
+
+                    //TODO: Orders - Ne e napraveno
+                    /* Orders */
+                    Route::group(['prefix' => 'orders'], static function () {
+                        Route::get('/', [RegisteredUserAccountController::class, 'getOrders'])->name('shop.registered_user.account.orders.get-orders');
+                        Route::get('{order_hash}/show', [RegisteredUserAccountController::class, 'showOrderDetails'])->name('shop.registered_user.account.orders.show');
+                    });
+
+                    //TODO: Orders - Ne e napraveno
+                    /* Addresses */
+                    Route::group(['prefix' => 'shipment-addresses'], static function () {
+                        Route::get('/', [ShipmentAddressesController::class, 'index'])->name('shop.registered_user.account.addresses');
+                        Route::get('/create', [ShipmentAddressesController::class, 'create'])->name('shop.registered_user.account.addresses.create');
+                        Route::post('/store', [ShipmentAddressesController::class, 'store'])->name('shop.registered_user.account.addresses.store');
+                        Route::get('/{id}/edit', [ShipmentAddressesController::class, 'edit'])->name('shop.registered_user.account.addresses.edit');
+                        Route::post('/{id}/update', [ShipmentAddressesController::class, 'update'])->name('shop.registered_user.account.addresses.update');
+                        Route::get('/{id}/delete', [ShipmentAddressesController::class, 'delete'])->name('shop.registered_user.account.addresses.delete');
+                    });
+
+                    //TODO: Orders - Ne e napraveno
+                    /* Payment Addresses */
+                    Route::group(['prefix' => 'payment-addresses'], static function () {
+                        Route::get('/create', [PaymentAddressesController::class, 'create'])->name('shop.registered_user.account.addresses.billing.create');
+                        Route::post('/store', [PaymentAddressesController::class, 'store'])->name('shop.registered_user.account.addresses.billing.store');
+                        Route::get('/{id}/edit', [PaymentAddressesController::class, 'edit'])->name('shop.registered_user.account.addresses.billing.edit');
+                        Route::post('/{id}/update', [PaymentAddressesController::class, 'update'])->name('shop.registered_user.account.addresses.billing.update');
+                        Route::get('/{id}/delete', [PaymentAddressesController::class, 'delete'])->name('shop.registered_user.account.addresses.billing.delete');
+                    });
 
                     /* Companies */
                     Route::group(['prefix' => 'companies'], static function () {
