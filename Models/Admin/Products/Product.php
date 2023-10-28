@@ -611,4 +611,13 @@
                 'product_additive_id'
             )->where('in_without_list', $isWithoutList)->get();
         }
+
+        public function isInFavoriteProducts(): bool
+        {
+            if (!is_null(ProductFavorite::where(['user_id' => Auth::guard('shop')->user()->id, 'product_id' => $this->id])->first())) {
+                return true;
+            }
+
+            return false;
+        }
     }

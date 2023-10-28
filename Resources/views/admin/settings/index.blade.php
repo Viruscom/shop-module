@@ -14,7 +14,7 @@
             <div class="settings-icons-wrapper">
                 <div>
                     <a href="{{ route('admin.shop.settings.main.index') }}">
-                        <img src="{{ asset('admin/assets/images/cart.svg') }}">
+                        <img src="{{ asset('admin/assets/images/main_settings.svg') }}">
                         <span>{{ __('shop::admin.main_settings.index') }}</span>
                     </a>
                 </div>
@@ -28,35 +28,35 @@
 
                 <div>
                     <a href="{{ route('deliveries.index') }}">
-                        <i class="fas fa-truck fa-5x"></i>
+                        <img src="{{ asset('admin/assets/images/delivery.svg') }}">
                         <span>{{ __('shop::admin.deliveries.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="{{ route('zip_codes.index') }}">
-                        <img src="{{ asset('admin/assets/images/cart.svg') }}">
+                        <img src="{{ asset('admin/assets/images/zip-code.svg') }}">
                         <span>{{ __('shop::admin.post_codes.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="{{ route('vats.countries.index') }}">
-                        <img src="{{ asset('admin/assets/images/cart.svg') }}">
+                        <img src="{{ asset('admin/assets/images/tax.svg') }}">
                         <span>{{ __('shop::admin.vats.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="{{ route('admin.currencies.index') }}" class="text-center">
-                        <i class="fas fa-pound-sign fa-5x"></i>
+                        <img src="{{ asset('admin/assets/images/currency.svg') }}">
                         <span>{{ __('shop::admin.currencies.index') }}</span>
                     </a>
                 </div>
 
                 <div>
                     <a href="{{ route('admin.measuring-units.index') }}">
-                        <i class="fas fa-balance-scale-right fa-5x"></i>
+                        <img src="{{ asset('admin/assets/images/measuring_units.svg') }}">
                         <span>{{ __('shop::admin.measure_units.index') }}</span>
                     </a>
                 </div>

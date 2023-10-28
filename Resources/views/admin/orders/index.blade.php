@@ -6,6 +6,11 @@
         #example {
             font-size: 13px;
         }
+
+        table.dataTable thead th, table.dataTable thead td {
+            font-size:   13px;
+            font-weight: 500;
+        }
     </style>
 @endsection
 @section('scripts')

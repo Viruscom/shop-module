@@ -504,7 +504,7 @@
                                                                                 <td height="18">&nbsp;</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ $order->paymentTypeHumanReadable() }}</td>
+                                                                                <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ $order->getReadablePaymentMethod() }}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td height="30">&nbsp;</td>
