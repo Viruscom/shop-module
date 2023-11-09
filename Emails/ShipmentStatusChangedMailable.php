@@ -30,6 +30,10 @@
         public function build()
         {
             return $this->view('shop::emails.orders.shipment_status_change')
-                ->with(['order' => $this->order, 'shopSettings' => $this->shopSettings, 'socialLinks' => $this->socialLinks, 'lawPages' => $this->lawPages]);
+                ->with([
+                           'order'        => $this->order,
+                           'shopSettings' => $this->shopSettings,
+                           'socialLinks'  => $this->socialLinks,
+                           'lawPages'     => $this->lawPages])->subject(trans('shop::admin.email_template_shipment_status_changed.status_changed_subject') . $this->order->getReadableShipmentStatus());
         }
     }
