@@ -1,680 +1,763 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+@php use Carbon\Carbon; @endphp
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-    <!--[if (gte mso 9)|(IE)]>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="telephone=no" name="format-detection">
+    <title>New message</title><!--[if (mso 16)]>
+    <style type="text/css">
+        a {text-decoration: none;}
+    </style>
+                              <![endif]--><!--[if gte mso 9]>
+    <style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>
     <xml>
         <o:OfficeDocumentSettings>
-            <o:AllowPNG/>
+            <o:AllowPNG></o:AllowPNG>
             <o:PixelsPerInch>96</o:PixelsPerInch>
         </o:OfficeDocumentSettings>
-    </xml><![endif]-->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- So that mobile will display zoomed in -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- enable media queries for windows phone 8 -->
-    <meta name="format-detection" content="telephone=no"> <!-- disable auto telephone linking in iOS -->
-    <meta name="format-detection" content="date=no"> <!-- disable auto date linking in iOS -->
-    <meta name="format-detection" content="address=no"> <!-- disable auto address linking in iOS -->
-    <meta name="format-detection" content="email=no"> <!-- disable auto email linking in iOS -->
-    <title>{!! trans('messages.new_order') !!}</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lora:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Dancing+Script:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-
-    <!-- CSS - you can't modify or add anything of it, as the StampReady Editor uses a copy of these styles. -->
+    </xml>
+                              <![endif]-->
     <style type="text/css">
-
-        /* basics */
-        body { margin: 0px !important; padding: 70px 0px !important; background: #f4f4f4; display: block !important; min-width: 100% !important; width: 100% !important; -webkit-text-size-adjust: none; }
-
-        table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-
-        table td { border-collapse: collapse; }
-
-        strong { font-weight: bold !important; }
-
-        td img { -ms-interpolation-mode: bicubic; display: block; width: auto; max-width: auto; height: auto; margin: auto; display: block !important; border: 0px !important; }
-
-        td p { margin: 0 !important; padding: 0 !important; display: inline-block !important; font-family: inherit !important; }
-
-        td a { text-decoration: none !important; }
-
-        /* outlook */
-        .ExternalClass { width: 100%; }
-
-        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: inherit; }
-
-        .ReadMsgBody { width: 100%; background-color: #ffffff; }
-
-        /* iOS blue links */
-        a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
-
-        /* gmail blue links */
-        u + #body a { color: inherit; text-decoration: none; font-size: inherit; font-family: inherit; font-weight: inherit; line-height: inherit; }
-
-        /* buttons fix */
-        .undoreset a, .undoreset a:hover { text-decoration: none !important; }
-
-        .yshortcuts a { border-bottom: none !important; }
-
-        .ios-footer a { color: #aaaaaa !important; text-decoration: none; }
-
-        /* responsive */
-        @media screen and (max-width: 640px) {
-
-            td.img-responsive img { width: 100% !important; max-width: 100% !important; height: auto !important; margin: auto; }
-
-            table.row { width: 100% !important; max-width: 100% !important; }
-
-            table.center-float, td.center-float { float: none !important; }
-
-            /* stops floating modules next to each other */
-            td.center-text { text-align: center !important; }
-
-            td.container-padding { width: 100% !important; padding-left: 15px !important; padding-right: 15px !important; }
-
-            table.hide-mobile, tr.hide-mobile, td.hide-mobile, br.hide-mobile { display: none !important; }
-
-            td.menu-container { text-align: center !important; }
-
-            td.autoheight { height: auto !important; }
-
-            table.mobile-padding { margin: 15px 0 !important; }
-
-            table.br-mobile-true td br { display: initial !important; }
-
+        #outlook a {
+            padding: 0;
         }
 
+        .es-button {
+            mso-style-priority: 100 !important;
+            text-decoration:    none !important;
+        }
+
+        a[x-apple-data-detectors] {
+            color:           inherit !important;
+            text-decoration: none !important;
+            font-size:       inherit !important;
+            font-family:     inherit !important;
+            font-weight:     inherit !important;
+            line-height:     inherit !important;
+        }
+
+        .es-desk-hidden {
+            display:     none;
+            float:       left;
+            overflow:    hidden;
+            width:       0;
+            max-height:  0;
+            line-height: 0;
+            mso-hide:    all;
+        }
+
+        td.law-pages {
+            margin:         0;
+            padding-left:   5px;
+            padding-right:  5px;
+            padding-top:    5px;
+            padding-bottom: 5px;
+            border:         0
+        }
+
+        td.law-pages > a {
+            -webkit-text-size-adjust: none;
+            -ms-text-size-adjust:     none;
+            mso-line-height-rule:     exactly;
+            text-decoration:          none;
+            display:                  block;
+            font-family:              arial, 'helvetica neue', helvetica, sans-serif;
+            color:                    #999999;
+            font-size:                12px;
+        }
+
+        td.law-pages.not-first {
+            border-left: 1px solid #cccccc;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+
+        .table-order {
+            width:         100%;
+            text-align:    left;
+            border-bottom: 1px solid #dedede;
+        }
+
+        .table-order th {
+            border-bottom: 1px solid #dedede;
+            padding:       0 10px 8px;
+            font-weight:   300;
+            font-size:     14px;
+            color:         #999999;
+        }
+
+        .table-order td {
+            padding: 0px 5px;
+        }
+
+        .table-order td > h4 {
+            font-size:     16px;
+            font-weight:   700;
+            margin-top:    5px;
+            margin-bottom: 5px;
+        }
+
+        .addition-box h4 {
+            margin:  0;
+            padding: 5px 0px;
+        }
+
+        .table-order .addition-box h4 strong,
+        .table-order td > h4 strong {
+            color: #B20000;
+        }
+
+        .table-order .addition-box h4 > a,
+        .table-order td > h4 a {
+            color:           #111;
+            text-decoration: none;
+        }
+
+        .table-order .addition-box h4 > a:hover,
+        .table-order td > h4 a:hover {
+            color: #DF2121;
+        }
+
+        .table-order td > h5 {
+            font-size:   14px;
+            font-weight: 600;
+            line-height: 1.42;
+        }
+
+        .prod-additions {
+            color: #000;
+        }
+
+        .addition-box ~ .addition-box {
+            margin-top: 20px;
+        }
+
+        .addition-box h4 {
+            font-size:   16px;
+            font-weight: 700;
+            color:       #111111;
+        }
+
+        .addition-box-green h4 {
+            color: #6FAE00;
+        }
+
+        .addition-box-green span {
+            color: #6FAE00;
+        }
+
+        .addition-box-orange h4 {
+            color: #E28800;
+        }
+
+        .addition-box-red h4 {
+            color:       #B20000;
+            font-weight: 400;
+        }
+
+        .addition-box .box-row {
+            display:     flex;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .addition-box .box-row .aside {
+            display:     flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .addition-box .box-row .aside img {
+            margin-right: 10px;
+        }
+
+        .addition-box .box-row .aside .quantity {
+            margin-right: 40px;
+        }
+
+        table .addition-box .box-row p {
+            margin: 0 !important;
+        }
+
+        .addition-box .box-row span {
+            font-size:    24px;
+            display:      inline-block;
+            margin-right: 6px;
+        }
+
+        .addition-box .box-row .aside {}
+
+        @media only screen and (max-width: 600px) {
+            p, ul li, ol li, a { line-height: 150% !important }
+
+            h1, h2, h3, h1 a, h2 a, h3 a { line-height: 120% !important }
+
+            h1 { font-size: 36px !important; text-align: left }
+
+            h2 { font-size: 26px !important; text-align: left }
+
+            h3 { font-size: 20px !important; text-align: left }
+
+            .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size: 36px !important; text-align: left }
+
+            .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size: 26px !important; text-align: left }
+
+            .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size: 20px !important; text-align: left }
+
+            .es-menu td a { font-size: 12px !important }
+
+            .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size: 14px !important }
+
+            .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size: 14px !important }
+
+            .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size: 14px !important }
+
+            .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size: 12px !important }
+
+            *[class="gmail-fix"] { display: none !important }
+
+            .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align: center !important }
+
+            .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align: right !important }
+
+            .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align: left !important }
+
+            .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display: inline !important }
+
+            .es-button-border { display: inline-block !important }
+
+            a.es-button, button.es-button { font-size: 20px !important; display: inline-block !important }
+
+            .es-adaptive table, .es-left, .es-right { width: 100% !important }
+
+            .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width: 100% !important; max-width: 600px !important }
+
+            .es-adapt-td { display: block !important; width: 100% !important }
+
+            .adapt-img { width: 100% !important; height: auto !important }
+
+            .es-m-p0 { padding: 0 !important }
+
+            .es-m-p0r { padding-right: 0 !important }
+
+            .es-m-p0l { padding-left: 0 !important }
+
+            .es-m-p0t { padding-top: 0 !important }
+
+            .es-m-p0b { padding-bottom: 0 !important }
+
+            .es-m-p20b { padding-bottom: 20px !important }
+
+            .es-mobile-hidden, .es-hidden { display: none !important }
+
+            tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width: auto !important; overflow: visible !important; float: none !important; max-height: inherit !important; line-height: inherit !important }
+
+            tr.es-desk-hidden { display: table-row !important }
+
+            table.es-desk-hidden { display: table !important }
+
+            td.es-desk-menu-hidden { display: table-cell !important }
+
+            .es-menu td { width: 1% !important }
+
+            table.es-table-not-adapt, .esd-block-html table { width: auto !important }
+
+            table.es-social { display: inline-block !important }
+
+            table.es-social td { display: inline-block !important }
+
+            .es-m-p5 { padding: 5px !important }
+
+            .es-m-p5t { padding-top: 5px !important }
+
+            .es-m-p5b { padding-bottom: 5px !important }
+
+            .es-m-p5r { padding-right: 5px !important }
+
+            .es-m-p5l { padding-left: 5px !important }
+
+            .es-m-p10 { padding: 10px !important }
+
+            .es-m-p10t { padding-top: 10px !important }
+
+            .es-m-p10b { padding-bottom: 10px !important }
+
+            .es-m-p10r { padding-right: 10px !important }
+
+            .es-m-p10l { padding-left: 10px !important }
+
+            .es-m-p15 { padding: 15px !important }
+
+            .es-m-p15t { padding-top: 15px !important }
+
+            .es-m-p15b { padding-bottom: 15px !important }
+
+            .es-m-p15r { padding-right: 15px !important }
+
+            .es-m-p15l { padding-left: 15px !important }
+
+            .es-m-p20 { padding: 20px !important }
+
+            .es-m-p20t { padding-top: 20px !important }
+
+            .es-m-p20r { padding-right: 20px !important }
+
+            .es-m-p20l { padding-left: 20px !important }
+
+            .es-m-p25 { padding: 25px !important }
+
+            .es-m-p25t { padding-top: 25px !important }
+
+            .es-m-p25b { padding-bottom: 25px !important }
+
+            .es-m-p25r { padding-right: 25px !important }
+
+            .es-m-p25l { padding-left: 25px !important }
+
+            .es-m-p30 { padding: 30px !important }
+
+            .es-m-p30t { padding-top: 30px !important }
+
+            .es-m-p30b { padding-bottom: 30px !important }
+
+            .es-m-p30r { padding-right: 30px !important }
+
+            .es-m-p30l { padding-left: 30px !important }
+
+            .es-m-p35 { padding: 35px !important }
+
+            .es-m-p35t { padding-top: 35px !important }
+
+            .es-m-p35b { padding-bottom: 35px !important }
+
+            .es-m-p35r { padding-right: 35px !important }
+
+            .es-m-p35l { padding-left: 35px !important }
+
+            .es-m-p40 { padding: 40px !important }
+
+            .es-m-p40t { padding-top: 40px !important }
+
+            .es-m-p40b { padding-bottom: 40px !important }
+
+            .es-m-p40r { padding-right: 40px !important }
+
+            .es-m-p40l { padding-left: 40px !important }
+
+            .es-desk-hidden { display: table-row !important; width: auto !important; overflow: visible !important; max-height: inherit !important }
+        }
     </style>
 </head>
-<body>
-<!--module-->
-<table style="width:100%;max-width:100%;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-    <tbody>
-    <tr>
-        <td bgcolor="#F4F4F4" align="center">
+<body style="width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
+<div dir="ltr" class="es-wrapper-color" lang="en" style="background-color:#FAFAFA"><!--[if gte mso 9]>
+    <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+        <v:fill type="tile" color="#fafafa"></v:fill>
+    </v:background>
+                                                                                   <![endif]-->
+    <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#FAFAFA">
+        <tr>
+            <td valign="top" style="padding:0;Margin:0">
+                <table cellpadding="0" cellspacing="0" class="es-content" align="center" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%">
+                    <tr>
+                        <td align="center" style="padding:0;Margin:0">
+                            <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px">
+                                <tr>
+                                    <td align="left" style="padding:0;Margin:0;padding-top:15px;padding-left:20px;padding-right:20px">
+                                        <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="100"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Потвърждение на поръчката</h1></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <table cellpadding="0" cellspacing="0" class="es-content" align="center" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%">
+                    <tr>
+                        <td align="center" style="padding:0;Margin:0">
+                            <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px">
+                                <tr>
+                                    <td align="left" style="padding:20px;Margin:0">
+                                        <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="center" class="es-m-txt-c" style="padding:0;Margin:0"><h2 style="Margin:0;line-height:31px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:26px;font-style:normal;font-weight:bold;color:#333333">Поръчка&nbsp;<a target="_blank" href="" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#5C68E2;font-size:26px">#{{ $order->id }}</a></h2></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" class="es-m-p0r es-m-p0l" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">{{ Carbon::parse($order->created_at)->format('d.m.Y') }}</p></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="esdev-adapt-off" align="left" style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px">
+                                        <table class="table-order table-order-prod">
+                                            <thead>
+                                            <th>Продукт</th>
+                                            <th class="align-right">Брой</th>
+                                            <th class="align-right">Ед. цена (лв.)</th>
+                                            <th class="align-right">Общо (лв.)</th>
+                                            </thead>
 
-            <!--container-->
-            <table class="row" style="width:600px;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                <tr>
-                    <td bgcolor="#282828" align="center">
+                                            <tbody>
+                                            @foreach($order->order_products as $orderProduct)
+                                                <tr class="{{ !$loop->first && !$loop->last ? 'border-row': '' }}">
+                                                    <td>
+                                                        <h4>
+                                                            <a href="{{ $orderProduct->product->getUrl($languageSlug) }}">{{ $orderProduct->product->title }} / <strong>{{ $orderProduct->product->measure_unit_value }} {{ $orderProduct->product->measureUnit->title }}</strong></a>
+                                                        </h4>
+                                                    </td>
 
-                        <!--wrapper-->
-                        <table class="row" style="width:540px;max-width:540px;" width="540" cellspacing="0" cellpadding="0" border="0" align="center">
-                            <tbody>
-                            <tr>
-                                <td class="container-padding" align="center">
+                                                    <td class="align-right">
+                                                        <strong>{{ $orderProduct->product_quantity }}</strong>
+                                                    </td>
 
-                                    <!-- content container -->
-                                    <table width="540" border="0" cellpadding="0" cellspacing="0" align="center" class="row" style="width:540px;max-width:540px;">
-                                        <tbody>
-                                        <tr>
-                                            <td align="center">
+                                                    @if($orderProduct->vat_applied_default_price !== $orderProduct->vat_applied_discounted_price)
+                                                        <td class="align-right">{{$orderProduct->vat_applied_discounted_price}} {{ __('front.currency') }}</td>
+                                                    @else
+                                                        <td class="align-right">{{ $orderProduct->vat_applied_default_price }} {{ __('front.currency') }}</td>
+                                                    @endif
 
-                                                <!-- content -->
-                                                <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center" style="width:100%; max-width:100%;">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td height="25">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td width="80" align="left">
-                                                                        <img width="130" style="display:block;width:130px;max-width:260px;" alt="img" src="{{ asset('website/email_icons/logo_white.png') }}">
-                                                                    </td>
-                                                                    <td>&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #ffffff;"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="25">&nbsp;</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                                                    <td class="align-right">
+                                                        <strong>{{ $orderProduct->end_discounted_price }} {{ __('front.currency') }}</strong>
+                                                    </td>
+                                                </tr>
 
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
 
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                                                @if($orderProduct->additives->isNotEmpty() || $orderProduct->additiveExcepts->isNotEmpty() || $orderProduct->productCollection->isNotEmpty())
 
-        </td>
-    </tr>
-    </tbody>
-</table>
-<!--module-->
-<table style="width:100%;max-width:100%;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-    <tbody>
-    <tr>
-        <td bgcolor="#F4F4F4" align="center">
+                                                    @if($orderProduct->additives->isNotEmpty())
+                                                        @php
+                                                            $additiveTotal = 0;
+                                                        @endphp
+                                                        <tr class="no-padding">
+                                                            <td>
+                                                                <div class="addition-box addition-box-green">
+                                                                    <h4>Добавки:</h4>
+                                                                </div>
+                                                            </td>
 
-            <!--container-->
-            <table class="row" style="width:600px;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                <tr>
-                    <td bgcolor="#f6f6f4" align="center">
+                                                            <td class="align-right"></td>
 
-                        <!--wrapper-->
-                        <table class="row" style="width:540px;max-width:540px;" width="540" cellspacing="0" cellpadding="0" border="0" align="center">
-                            <tbody>
-                            <tr>
-                                <td class="container-padding" align="center">
+                                                            <td class="align-right"></td>
 
-                                    <!-- content container -->
-                                    <table width="540" border="0" cellpadding="0" cellspacing="0" align="center" class="row" style="width:540px;max-width:540px;">
-                                        <tbody>
-                                        <tr>
-                                            <td align="center">
+                                                            <td class="align-right"></td>
+                                                        </tr>
 
-                                                <!-- content -->
-                                                <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center" style="width:100%; max-width:100%;">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center"><img width="100" style="display:block;width:100%;max-width:100px;" alt="img" src="http://emailmug.com/premium-template/emailpaws/notif/cr.png"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="20">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" style="font-family:'Josefin Sans', Arial, Helvetica, sans-serif;font-size: 30px;color: #282828;">{{ __('messages.new_order') }}</td>
-                                                    </tr>
+                                                        @foreach($orderProduct->additives as $additive)
+                                                            <tr class="no-padding">
+                                                                <td>
+                                                                    <div class="addition-box addition-box-green">
+                                                                        <div class="box-row">
+                                                                            <span>+</span>
 
-                                                    <tr></tr>
+                                                                            <p>{{ $additive->productAdditive->title }}</p>
 
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
 
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                                                <td class="align-right">
+                                                                    <strong>{{ number_format($additive->quantity, 0, ',', '') }}</strong>
+                                                                </td>
 
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                                                <td class="align-right">{{ $additive->price }} лв.</td>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                                                                <td class="align-right">
+                                                                    <strong>{{ $additive->total }} лв.</strong>
+                                                                </td>
+                                                            </tr>
+                                                            @php
+                                                                $additiveTotal+=$additive->total;
+                                                            @endphp
+                                                        @endforeach
+                                                    @endif
 
-        </td>
-    </tr>
-    </tbody>
-</table>
-<!--module-->
-<table style="width:100%;max-width:100%;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-    <tbody>
-    <tr>
-        <td bgcolor="#F4F4F4" align="center">
-            <!--container-->
-            <table class="row" style="width:600px;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                <tr>
-                    <td bgcolor="#FFFFFF" align="center">
 
-                        <!--wrapper-->
-                        <table class="row" style="width:540px;max-width:540px;" width="540" cellspacing="0" cellpadding="0" border="0" align="center">
-                            <tbody>
-                            <tr>
-                                <td class="container-padding" align="center">
+                                                    @if($orderProduct->additiveExcepts->isNotEmpty())
+                                                        <tr>
+                                                            <td>
+                                                                <div class="addition-box addition-box-orange">
+                                                                    <h4>Без:</h4>
 
-                                    <!-- content container -->
-                                    <table width="540" border="0" cellpadding="0" cellspacing="0" align="center" class="row" style="width:540px;max-width:540px;">
-                                        <tbody>
-                                        <tr>
-                                            <td align="center">
+                                                                    <p>
+                                                                        @foreach($orderProduct->additiveExcepts as $additive)
+                                                                            {{ $additive->productAdditive->title }}
+                                                                            @if(!$loop->last)
+                                                                                {{ ', ' }}
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </p>
+                                                                </div>
+                                                            </td>
 
-                                                <!-- content -->
-                                                <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center" style="width:100%; max-width:100%;">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
+                                                            <td class="align-right"></td>
 
-                                                    <tr>
-                                                        <td>
-                                                            <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ __('shop::front.emails.order') }} #{{ $order->id }}</td>
-                                                                    <td width="30">&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ __('shop::front.emails.unit_price') }}</td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="line-height: 8px;height: 8px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td bgcolor="#e7e6e2" style="line-height: 8px;height: 8px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="20">&nbsp;</td>
-                                                    </tr>
+                                                            <td class="align-right"></td>
 
-                                                    <tr>
-                                                        <td>
-                                                            <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
-                                                                <tbody>
-                                                                @foreach($order->order_products as $orderProduct)
-                                                                    @php
-                                                                        $product = $orderProduct->product;
-                                                                    @endphp
+                                                            <td class="align-right"></td>
+                                                        </tr>
+                                                    @endif
+
+                                                    @if($orderProduct->productCollection->isNotEmpty())
+                                                        @php
+                                                            $collectionTotal = 0;
+                                                        @endphp
+                                                        <tr class="{{ $orderProduct->additiveExcepts->isEmpty() ? '':'no-padding' }}">
+                                                            <td>
+                                                                <div class="addition-box">
+                                                                    <h4>Комбинирай с...</h4>
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="align-right"></td>
+
+                                                            <td class="align-right"></td>
+
+                                                            <td class="align-right"></td>
+                                                        </tr>
+
+                                                        @foreach($orderProduct->productCollection as $productCollection)
+                                                            <tr class="no-padding">
+                                                                <td>
+                                                                    <div class="addition-box">
+                                                                        <div class="box-row">
+                                                                            <span>+</span>
+                                                                            <p>{{ $productCollection->product->title }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+                                                                <td class="align-right">{{ number_format($productCollection->quantity, 0, '.', '') }}</td>
+                                                                <td class="align-right">{{ $productCollection->price }} лв.</td>
+                                                                <td class="align-right">{{ $productCollection->total }} лв.</td>
+                                                            </tr>
+                                                            @php
+                                                                $collectionTotal+=$productCollection->total;
+                                                            @endphp
+                                                        @endforeach
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="esdev-adapt-off" align="left" style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px">
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="padding:0;Margin:0;padding-top:10px;padding-left:20px;padding-right:20px">
+                                        <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td class="es-m-p0r" align="center" style="padding:0;Margin:0;width:560px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;border-top:2px solid #efefef;border-bottom:2px solid #efefef" role="presentation">
+                                                        <tr>
+                                                            <td align="right" class="es-m-txt-r" style="padding:0;Margin:0;padding-top:10px;padding-bottom:20px">
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">Сума:&nbsp;<strong>{{ $order->totalEndDiscountedPriceWithAdditivesAndCollection() }} лв.</strong>
+                                                                    <br>Доставка:&nbsp;<strong>{{ $order->getFixedDeliveryPrice() }} лв.</strong>
+                                                                    <br>Обща сума с ДДС:&nbsp;<strong>{{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</strong></p></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="Margin:0;padding-bottom:10px;padding-top:20px;padding-left:20px;padding-right:20px"><!--[if mso]>
+                                        <table style="width:560px" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width:280px" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-left" align="left" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left">
+                                            <tr>
+                                                <td class="es-m-p0r es-m-p20b" align="center" style="padding:0;Margin:0;width:280px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="left" style="padding:0;Margin:0">
+                                                                <p style="margin: 0;font-size: 14px;">Коментари по доставката</p>
+
+                                                                <strong>
+                                                                    @if($order->with_utensils)
+                                                                        <p style="margin: 5px 0px;font-size: 14px;">Искам прибори.</p>
+                                                                    @endif
+                                                                    @if(!is_null($order->comment))
+                                                                        <p style="margin: 5px 0px;font-size: 14px;">34534{!! $order->comment !!}</p>
+                                                                    @endif
+                                                                </strong>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                                                                                                                                <!--[if mso]></td>
+                                        <td style="width:0px"></td>
+                                        <td style="width:280px" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-right" align="right" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right">
+                                            <tr>
+                                                <td class="es-m-p0r" align="center" style="padding:0;Margin:0;width:280px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="left" class="es-m-txt-l" style="padding:0;Margin:0">
+                                                                <p style="margin: 0;font-size: 14px;"><strong>Фирмени данни</strong></p>
+
+                                                                @if($order->invoice_required)
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ $order->company_name }}</p>
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ $order->company_mol }}</p>
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ $order->company_eik }}</p>
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ ($order->company_vat_eik =='') ? 'Няма': '' }}</p>
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ $order->company_address }}</p>
+                                                                @else
+                                                                    <p style="margin: 5px 0px;font-size: 14px;">{{ trans('shop::admin.registered_users.no_companies') }}</p>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                                                                                                                                <!--[if mso]></td></tr></table><![endif]--></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="Margin:0;padding-bottom:10px;padding-top:20px;padding-left:20px;padding-right:20px"><!--[if mso]>
+                                        <table style="width:560px" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width:280px" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-left" align="left" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left">
+                                            <tr>
+                                                <td class="es-m-p0r es-m-p20b" align="center" style="padding:0;Margin:0;width:280px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="left" style="padding:0;Margin:0">
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">Клиент: <strong>{{ $order->first_name . ' ' . $order->last_name }}</strong></p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">Email:&nbsp;<strong>{{ $order->email }}</strong></p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">@lang('shop::front.registered_user_profile.payment_method'):&nbsp;<strong>{{ $order->getReadablePaymentMethod() }}</strong></p>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                                                                                                                                <!--[if mso]></td>
+                                        <td style="width:0px"></td>
+                                        <td style="width:280px" valign="top"><![endif]-->
+                                        <table cellpadding="0" cellspacing="0" class="es-right" align="right" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right">
+                                            <tr>
+                                                <td class="es-m-p0r" align="center" style="padding:0;Margin:0;width:280px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="left" class="es-m-txt-l" style="padding:0;Margin:0"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">{{ __('shop::front.basket.delivery_method') }}: <strong>{{ $order->getReadableShipmentMethod() }}</strong></p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">@lang('front.shipment_addresses.delivery_address'):</p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>{{ $order->street . ', № ' . $order->street_number }}<br>{{ $order->city->name }} {{ $order->zip_code }}</strong></p></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                                                                                                                                <!--[if mso]></td></tr></table><![endif]--></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <table cellpadding="0" cellspacing="0" class="es-footer" align="center" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top">
+                    <tr>
+                        <td align="center" style="padding:0;Margin:0">
+                            <table class="es-footer-body" align="center" cellpadding="0" cellspacing="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px" role="none">
+                                <tr>
+                                    <td align="left" style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px">
+                                        <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                            <tr>
+                                                <td align="left" style="padding:0;Margin:0;width:600px">
+                                                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                        <tr>
+                                                            <td align="center" style="padding:0;Margin:0;padding-top:15px;padding-bottom:15px;font-size:0">
+                                                                <table cellpadding="0" cellspacing="0" class="es-table-not-adapt es-social" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                                     <tr>
-                                                                        <td width="130"><img width="130" style="display:block;width:100%;max-width:130px;" alt="img" src="{{ $product->getFileUrl() }}"></td>
-                                                                        <td width="20">&nbsp;</td>
-                                                                        <td width="250">
-                                                                            <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                                                                                <tbody>
-                                                                                <tr>
-                                                                                    <td style="font-family:'Josefin Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;line-height: 21px;">{{ $product->title }}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 21px;">{{ __('shop::front.emails.quantity') }} : {{ $orderProduct->product_quantity }}</td>
-                                                                                </tr>
-
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td align="right" width="60">
-                                                                            <table border="0" width="90" cellpadding="0" cellspacing="0">
-                                                                                <tbody>
-                                                                                @if($orderProduct->total_with_discounts > 0)
-                                                                                    <tr>
-                                                                                        <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;">{{ number_format($orderProduct->total_with_discounts,2,'.','') }} {!! trans('messages.bgn') !!}</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #5d5d5d;text-decoration: line-through">{{ number_format($orderProduct->total,2,'.','') }} {!! trans('messages.bgn') !!}</td>
-                                                                                    </tr>
-                                                                                @else
-                                                                                    <tr>
-                                                                                        <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;">{{ number_format($orderProduct->total,2,'.','') }} {!! trans('messages.bgn') !!}</td>
-                                                                                    </tr>
-                                                                                @endif
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="20">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td bgcolor="#e7e6e2" style="line-height: 8px;height: 8px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right">
-
-                                                            <table border="0" width="280" cellpadding="0" cellspacing="0">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 24px;">{!! trans('messages.subtotal') !!}</td>
-                                                                    <td>&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;">{{ number_format($order->total,2,'.','') }} {!! trans('messages.bgn') !!}</td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 24px;">{!! trans('messages.discounts') !!}</td>
-                                                                    <td>&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;text-decoration: ">-{{ number_format($order->total_discounts,2,'.','') }} {!! trans('messages.bgn') !!}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;font-weight: 600;line-height: 24px;">{!! trans('messages.total_lv') !!}</td>
-                                                                    <td>&nbsp;</td>
-                                                                    <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;"><strong>{{ number_format($order->total - $order->total_discounts,2,'.','') }} {!! trans('messages.bgn') !!}</strong></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;line-height: 24px;">&nbsp;</td>
-                                                                    <td>&nbsp;</td>
-
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td bgcolor="#e7e6e2" style="line-height: 8px;height: 8px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="line-height: 15px;height: 15px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<!--module-->
-<table style="width:100%;max-width:100%;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-    <tbody>
-    <tr>
-        <td bgcolor="#F4F4F4" align="center">
-
-            <!--container-->
-            <table class="row" style="width:600px;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                <tr>
-                    <td bgcolor="#FFFFFF" align="center">
-
-                        <!--wrapper-->
-                        <table class="row" style="width:540px;max-width:540px;" width="540" cellspacing="0" cellpadding="0" border="0" align="center">
-                            <tbody>
-                            <tr>
-                                <td class="container-padding" align="center">
-
-                                    <!-- content container -->
-                                    <table width="540" border="0" cellpadding="0" cellspacing="0" align="center" class="row" style="width:540px;max-width:540px;">
-                                        <tbody>
-                                        <tr>
-                                            <td align="center">
-
-                                                <!-- content -->
-                                                <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center" style="width:100%; max-width:100%;">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td style="line-height: 15px;height: 15px;font-size: 0px;">&nbsp;</td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td align="center">
-
-                                                            <!--[if (gte mso 9)|(IE)]>
-                                                            <table border="0" cellpadding="0" cellspacing="0">
-                                                                <tr>
-                                                                    <td><![endif]-->
-
-                                                            <!-- column -->
-                                                            <table class="row" style="width:260px;max-width:260px;" width="260" cellspacing="0" cellpadding="0" border="0" align="left">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td align="center">
-
-                                                                        <!-- content -->
-                                                                        <table width="260" style="width:260px;max-width:260px;" cellspacing="0" cellpadding="0" border="0" align="center">
-
-                                                                            <tbody>
-                                                                            <tr>
-                                                                                <td align="center" bgcolor="">
-
-                                                                                    <table border="0" width="200" cellpadding="0" cellspacing="0" align="center">
-                                                                                        <tbody>
-
-                                                                                        <tr>
-                                                                                            <td height="30">&nbsp;</td>
-                                                                                        </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-
-                                                                                </td>
-                                                                            </tr>
-
-                                                                            </tbody>
-                                                                        </table>
-
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <!--[if (gte mso 9)|(IE)]></td>
-                                                            <td><![endif]-->
-
-                                                            <!-- gap -->
-                                                            <table class="row" style="width:50px;max-width:50px;" width="50" cellspacing="0" cellpadding="0" border="0" align="left">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td height="30"></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <!--[if (gte mso 9)|(IE)]></td>
-                                                            <td><![endif]-->
-
-                                                            <!-- column -->
-                                                            <table class="row" style="width:230px;max-width:230px;" width="230" cellspacing="0" cellpadding="0" border="0" align="right">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td align="center">
-
-                                                                        <!-- content -->
-                                                                        <table width="230" style="width:230px;max-width:230px;" cellspacing="0" cellpadding="0" border="0" align="center">
-
-                                                                            <tbody>
-
-                                                                            <tr>
-                                                                                <td align="right" style="font-family:'Josefin Sans', Arial, Helvetica, sans-serif;font-size: 18px;color: #282828;">{!! trans('messages.payment_type') !!}</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td height="18">&nbsp;</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 13px;color: #282828;">{{ $order->getReadablePaymentMethod() }}</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td height="30">&nbsp;</td>
-                                                                            </tr>
-
-                                                                            </tbody>
-                                                                        </table>
-
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="30">&nbsp;</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-        </td>
-    </tr>
-    </tbody>
-</table>
-<!--module-->
-<table style="width:100%;max-width:100%;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-    <tbody>
-    <tr>
-        <td bgcolor="#F4F4F4" align="center">
-
-            <!--container-->
-            <table class="row" style="width:600px;max-width:600px;" width="600" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                <tr>
-                    <td bgcolor="#282828" align="center">
-
-                        <!--wrapper-->
-                        <table class="row" style="width:540px;max-width:540px;" width="540" cellspacing="0" cellpadding="0" border="0" align="center">
-                            <tbody>
-                            <tr>
-                                <td class="container-padding" align="center">
-
-                                    <!-- content container -->
-                                    <table width="540" border="0" cellpadding="0" cellspacing="0" align="center" class="row" style="width:540px;max-width:540px;">
-                                        <tbody>
-                                        <tr>
-                                            <td align="center">
-
-                                                <!-- content -->
-                                                <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center" style="width:100%; max-width:100%;">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td height="20">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <table cellspacing="0" cellpadding="0" border="0" align="center">
-                                                                <tbody>
-                                                                <tr>
-                                                                    @if(!empty($socialLinks->facebook_url))
-                                                                        <td width="25">
-                                                                            <a href="{{ $socialLinks->facebook_url }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/facebook_white.png') }}"></a>
-
-                                                                        </td>
-                                                                        <td width="10">&nbsp;</td>
-                                                                    @endif
-                                                                    @if(!empty($socialLinks->instagram_url))
-                                                                        <td width="25">
-                                                                            <a href="{{ url($socialLinks->instagram_url) }}"><img width="25" style="display:block;width:100%;max-width:25px;" src="{{ asset('website/email_icons/notif_in.png') }}"></a>
-
-                                                                        </td>
-                                                                        <td width="10">&nbsp;</td>
-                                                                    @endif
-                                                                    @if(!empty($socialLinks->linkedin_url))
-                                                                        <td width="25">
-                                                                            <a href="{{ url($socialLinks->linkedin_url) }}">
-                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/in.png">
-                                                                            </a>
-                                                                        </td>
-                                                                        <td width="10">&nbsp;</td>
-                                                                    @endif
-                                                                    @if(!empty($socialLinks->pinterest_url))
-                                                                        <td width="25">
-                                                                            <a href="{{ url($socialLinks->pinterest_url) }}">
-                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/pi.png">
-                                                                            </a>
-                                                                        </td>
-                                                                        <td width="10">&nbsp;</td>
-                                                                    @endif
-                                                                    @if(!empty($socialLinks->tweeter_url))
-                                                                        <td width="25">
-                                                                            <a href="{{ url($socialLinks->tweeter_url) }}">
-                                                                                <img width="25" style="display:block;width:100%;max-width:25px;" src="http://emailmug.com/premium-template/emailpaws/notif/tw.png">
-                                                                            </a>
-                                                                        </td>
-                                                                        <td width="10">&nbsp;</td>
-                                                                    @endif
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="20">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 19px;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center">
-
-                                                            <table cellspacing="0" cellpadding="0" border="0">
-                                                                <tbody>
-                                                                <tr>
-                                                                    @foreach($lawPages as $lawPage)
-                                                                        <td align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 20px;text-decoration: underline"><a href="{{ $lawPage->href() }}" target="_blank" style="color: #dadada">{{ $lawPage->title }}</a></td>
-                                                                        @if(!$loop->last)
-                                                                            <td width="20" align="center" style="font-family:'Roboto', Arial, Helvetica, sans-serif;font-size: 13px;color: #dadada;line-height: 20px;">|</td>
+                                                                        @if(!empty($socialLinks->facebook_url))
+                                                                            <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
+                                                                                <a href="{{ $socialLinks->facebook_url }}" target="_blank"><img title="Facebook" src="{{ asset('common/email_social_icons/facebook.svg') }}" alt="Fb" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
+                                                                            </td>
                                                                         @endif
-                                                                    @endforeach
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="40">&nbsp;</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-        </td>
-    </tr>
-    </tbody>
-</table>
+                                                                        @if(!empty($socialLinks->instagram_url))
+                                                                            <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
+                                                                                <a href="{{ url($socialLinks->instagram_url) }}" target="_blank"><img title="Instagram" src="{{ asset('common/email_social_icons/instagram.svg') }}" alt="Inst" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
+                                                                            </td>
+                                                                        @endif
+                                                                        @if(!empty($socialLinks->linkedin_url))
+                                                                            <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
+                                                                                <a href="{{ url($socialLinks->linkedin_url) }}" target="_blank">
+                                                                                    <img title="LinkedIn" src="{{ asset('common/email_social_icons/linkedin.svg') }}" alt="Ln" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                </a>
+                                                                            </td>
+                                                                        @endif
+                                                                        @if(!empty($socialLinks->pinterest_url))
+                                                                            <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
+                                                                                <a href="{{ url($socialLinks->pinterest_url) }}" target="_blank">
+                                                                                    <img title="Pinterest" src="{{ asset('common/email_social_icons/pinterest.svg') }}" alt="Pt" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                </a>
+                                                                            </td>
+                                                                        @endif
+                                                                        @if(!empty($socialLinks->tweeter_url))
+                                                                            <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
+                                                                                <a href="{{ url($socialLinks->tweeter_url) }}" target="_blank">
+                                                                                    <img title="Twitter" src="{{ asset('common/email_social_icons/twitter.svg') }}" alt="Tw" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                </a>
+                                                                            </td>
+                                                                        @endif
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding:0;Margin:0">
+                                                                <table cellpadding="0" cellspacing="0" width="100%" class="es-menu" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                                                                    <tr class="links" style="display: flex;flex-direction: row;align-items: center;">
+                                                                        @foreach($lawPages as $lawPage)
+                                                                            <td align="center" valign="top" class="law-pages {{!$loop->first ? 'not-first': ''}}"><a target="_blank" href="{{ $lawPage->href() }}">{{ $lawPage->title }}</a></td>
+                                                                        @endforeach
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
