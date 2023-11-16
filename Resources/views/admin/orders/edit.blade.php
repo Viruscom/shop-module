@@ -38,6 +38,33 @@
                     }
                 }
             });
+
+            $('#submitCompany').click(function () {
+                var form     = $('#addCompanyForm');
+                var formData = form.serialize(); // Serialize form data
+
+                $.ajax({
+                    url: form.attr('action'), // Replace with your URL
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        var newCompanyRow = '<tr>' +
+                            '<td>' + response.company_name + '</td>' +
+                            '<td>' + response.company_mol + '</td>' +
+                            '<td>' + response.company_eik + '</td>' +
+                            '<td>' + (response.company_vat_eik || 'Няма') + '</td>' +
+                            '<td>' + response.company_address + '</td>' +
+                            '</tr>';
+                        $('.firm-accounts-table tbody').html('');
+                        $('.firm-accounts-table tbody').html(newCompanyRow);
+                        $('#addCompanyModal').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle error
+                        console.log(error);
+                    }
+                });
+            });
         });
     </script>
     <script>
@@ -357,6 +384,8 @@
     <div class="row">
         <div class="col-md-12" style="display: flex;justify-content: space-between;align-items: center;">
             <h3 class="text-purple">Фирмени данни</h3>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyModal"><i class="fas fa-pencil-alt"></i></button>
+            @include('shop::admin.orders.add_firm_modal')
         </div>
         <div class="col-md-12 col-xs-12">
             <table class="table table-striped firm-accounts-table">

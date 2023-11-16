@@ -94,6 +94,9 @@
                 /* Update Status */
                 Route::post('payment-status/update', [OrdersController::class, 'paymentStatusUpdate'])->name('admin.shop.orders.payment-status-update');
                 Route::post('shipment-status/update', [OrdersController::class, 'shipmentStatusUpdate'])->name('admin.shop.orders.shipment-status-update');
+
+                /* Update company info */
+                Route::post('company-info/update', [OrdersController::class, 'companyInfoUpdate'])->name('admin.shop.orders.company-info-update');
             });
 
             /* Documents */

@@ -373,7 +373,7 @@
                                                 <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
-                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="100"></td>
                                                         </tr>
                                                         <tr>
                                                             <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Нова поръчка</h1></td>
@@ -599,14 +599,14 @@
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
                                                             <td align="left" style="padding:0;Margin:0">
-                                                                <p style="margin: 0;font-size: 14px;">Коментари по доставката</p>
+                                                                <p style="margin: 0;font-size: 14px;"><strong>Коментари по доставката</strong></p>
 
                                                                 <strong>
                                                                     @if($order->with_utensils)
                                                                         <p style="margin: 5px 0px;font-size: 14px;">Искам прибори.</p>
                                                                     @endif
                                                                     @if(!is_null($order->comment))
-                                                                        <p style="margin: 5px 0px;font-size: 14px;">34534{!! $order->comment !!}</p>
+                                                                        <p style="margin: 5px 0px;font-size: 14px;">{!! $order->comment !!}</p>
                                                                     @endif
                                                                 </strong>
                                                             </td>
@@ -654,9 +654,9 @@
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
                                                             <td align="left" style="padding:0;Margin:0">
-                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">Клиент: <strong>{{ $order->first_name . ' ' . $order->last_name }}</strong></p>
-                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">Email:&nbsp;<strong>{{ $order->email }}</strong></p>
-                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">@lang('shop::front.registered_user_profile.payment_method'):&nbsp;<strong>{{ $order->getReadablePaymentMethod() }}</strong></p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>Клиент:</strong> {{ $order->first_name . ' ' . $order->last_name }}</p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>Email:&nbsp;</strong>{{ $order->email }}</p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>@lang('shop::front.registered_user_profile.payment_method'):&nbsp;</strong>{{ $order->getReadablePaymentMethod() }}</p>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -671,9 +671,9 @@
                                                 <td class="es-m-p0r" align="center" style="padding:0;Margin:0;width:280px">
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
-                                                            <td align="left" class="es-m-txt-l" style="padding:0;Margin:0"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">{{ __('shop::front.basket.delivery_method') }}: <strong>{{ $order->getReadableShipmentMethod() }}</strong></p>
-                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">@lang('front.shipment_addresses.delivery_address'):</p>
-                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>{{ $order->street . ', № ' . $order->street_number }}<br>{{ $order->city->name }} {{ $order->zip_code }}</strong></p></td>
+                                                            <td align="left" class="es-m-txt-l" style="padding:0;Margin:0"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>{{ __('shop::front.basket.delivery_method') }}: </strong>{{ $order->getReadableShipmentMethod() }}</p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px"><strong>@lang('front.shipment_addresses.delivery_address'):</strong></p>
+                                                                <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">{{ $order->street . ', № ' . $order->street_number }}<br>{{ $order->city->name }} {{ $order->zip_code }}</p></td>
                                                         </tr>
                                                     </table>
                                                 </td>
