@@ -532,5 +532,9 @@
         ),
         'email_template_order_placed_to_client'  => array(
             'new_order_arrived' => 'Успешна поръчка № '
-        )
+        ),
+        'yanak_soft_api'                         => array(
+            'settings'       => 'YanakSoft API настройки',
+            'choose_product' => 'Асоциирайте продукт'
+        ),
     );

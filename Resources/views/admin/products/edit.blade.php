@@ -138,6 +138,9 @@
                         </div>
 
                         <div class="col-md-6">
+                            @if(array_key_exists('YanakSoftApi', $activeModules))
+                                @include('yanaksoftapi::admin.partials.on_edit_select', ['fieldName' => 'stk_idnumb', 'label' => trans('shop::admin.yanak_soft_api.choose_product'), 'models' => $yanakProducts, 'modelId' => $product->stk_idnumb, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix', 'withPleaseSelect' => true])
+                            @endif
                             @include('admin.partials.on_edit.checkbox', ['fieldName' => 'catalog_from_discounted_price', 'label' => __('shop::admin.products.from_price'), 'required' => false, 'model' => $product])
                             @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['fieldName' => 'catalog_discounted_price', 'label' => __('shop::admin.products.catalog_discounted_price'), 'required' => false, 'class' => 'width-p100', 'model' => $product])
                             {{--                            @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false, 'model' => $product])--}}

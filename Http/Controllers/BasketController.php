@@ -54,9 +54,11 @@
                 $request['guest_validation_code'] = Str::random(100);
             }
 
+            $action->prepareShipmentAddressFields($request);
+            $action->prepareCompanyFields($request);
             $order = $action->storeOrder($request, $basket);
 
-            //TODO: decrement quantities?
+            //            $action->decrementProductsQuantities($request, $basket);
             $basket->delete();
             $order->sendMailOrderPlacedToClient();
             $order->sendMailOrderPlacedToAdmin();

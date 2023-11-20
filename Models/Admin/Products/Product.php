@@ -49,7 +49,7 @@
                                               'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
                                               'text_additional_3', 'text_additional_4', 'text_additional_5', 'text_additional_6'];
         protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
-                                              'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value', 'catalog_from_price', 'catalog_discounted_price', 'catalog_from_discounted_price'];
+                                              'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value', 'catalog_from_price', 'catalog_discounted_price', 'catalog_from_discounted_price', 'stk_idnumb'];
         protected    $table                = 'products';
 
         public static function getFileRules(): string
@@ -156,6 +156,10 @@
 
             if ($request->has('catalog_discounted_price')) {
                 $data['catalog_discounted_price'] = $request->catalog_discounted_price;
+            }
+
+            if ($request->has('stk_idnumb')) {
+                $data['stk_idnumb'] = $request->stk_idnumb;
             }
 
             $data['catalog_from_discounted_price'] = false;

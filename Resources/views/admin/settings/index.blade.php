@@ -63,7 +63,7 @@
 
                 <div>
                     <a href="{{ route('admin.shop.settings.internal-integrations.index') }}">
-                        <i class="fas fa-rocket fa-5x"></i>
+                        <img src="{{ asset('admin/assets/images/internal_integrations.svg') }}">
                         <span>{{ __('shop::admin.main_settings.integrations') }}</span>
                     </a>
                 </div>

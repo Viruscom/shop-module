@@ -24,6 +24,7 @@
     use Modules\Shop\Models\Admin\ProductCategory\Category;
     use Modules\Shop\Models\Admin\Products\Product;
     use Modules\Shop\Models\Admin\Products\ProductTranslation;
+    use Modules\YanakSoftApi\Entities\YanakProduct;
 
     class ProductsController extends Controller implements ShopProductInterface, PositionInterface
     {
@@ -107,6 +108,12 @@
                 $data['productAdditives']                 = cache()->get(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES);
                 $data['selectedProductsAdditives']        = $product->additives(false)->get();
                 $data['selectedWithoutProductsAdditives'] = $product->additives(true)->get();
+            }
+            if (array_key_exists('YanakSoftApi', $activeModules)) {
+                if (is_null(CacheKeysHelper::$YANAK_API_PRODUCTS_ADMIN)) {
+                    YanakProduct::cacheUpdate();
+                }
+                $data['yanakProducts'] = cache()->get(CacheKeysHelper::$YANAK_API_PRODUCTS_ADMIN);
             }
 
             return view('shop::admin.products.edit', $data);
@@ -204,6 +211,12 @@
                     ProductAdditive::cacheUpdate();
                 }
                 $data['productAdditives'] = cache()->get(CacheKeysHelper::$SHOP_PRODUCT_ADDITIVES);
+            }
+            if (array_key_exists('YanakSoftApi', $activeModules)) {
+                if (is_null(CacheKeysHelper::$YANAK_API_PRODUCTS_ADMIN)) {
+                    YanakProduct::cacheUpdate();
+                }
+                $data['yanakProducts'] = cache()->get(CacheKeysHelper::$YANAK_API_PRODUCTS_ADMIN);
             }
 
             return view('shop::admin.products.create', $data);
