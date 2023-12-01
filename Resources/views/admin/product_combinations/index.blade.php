@@ -44,7 +44,7 @@
                     $('.actions').addClass('hidden');
                 } else {
                     $.ajax({
-                        url: $('.base-url').text() + '/admin/shop/product_combinations/getAttributesByProductCategory',
+                        url: '{{ route('admin.product-combinations.getAttributesByProductCategory') }}',
                         type: 'POST',
                         data: {
                             _token: $('input[name="_token"]').val(), product_id: $(this).val()
@@ -97,16 +97,12 @@
             }
             initDatatable('example', options);
 
-            $('.decimal').keyup(function (evt) {
-                var self = $(this);
-
-                if (evt.keyCode != '13') {
-                    var val = parseFloat(self.val().replace(/[^0-9\.,]/g, ''));
-                    self.val(val.toFixed(2));
-                }
-
-                if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
-                    evt.preventDefault();
+            $('.decimal').on('blur', function (e) {
+                var value = $(this).val().replace(/,/g, '.');
+                if (value && !value.match(/^\d*\.?\d{0,4}$/)) {
+                    $(this).val('0.00');
+                } else {
+                    $(this).val(value);
                 }
             });
 
@@ -171,17 +167,18 @@
 
                 var combosArray = [];
                 $('.checkbox-row:checked').each(function () {
-                    var comboId      = this.value;
-                    var element      = {};
-                    element.comboId  = comboId;
-                    element.quantity = $('.quantity-' + comboId).val();
-                    element.price    = $('.price-' + comboId).val();
-                    element.sku      = $('.sku-' + comboId).val();
+                    var comboId          = this.value;
+                    var element          = {};
+                    element.comboId      = comboId;
+                    element.quantity     = $('.quantity-' + comboId).val();
+                    element.price        = $('.price-' + comboId).val();
+                    element.sku          = $('.sku-' + comboId).val();
+                    element.stock_status = $('.stock_status-' + comboId).val();
                     combosArray.push(element);
                 });
 
                 $.ajax({
-                    url: $('.base-url').text() + '/admin/shop/product_combinations/multiple/update',
+                    url: '{{ route('admin.product-combinations.update-multiple') }}',
                     type: 'POST',
                     data: {_token: $('input[name="_token"]').val(), combos: combosArray},
                     async: false,
@@ -209,7 +206,7 @@
     </script>
 @endsection
 @section('content')
-    @include('shop::admin.product_combinations.breadcrumbs')
+    @include('product::admin.product_combinations.breadcrumbs')
     @include('admin.notify')
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
@@ -261,11 +258,12 @@
                     <tr>
                         <th class="width-2-percent"></th>
                         <th class="width-2-percent">{{ __('admin.number') }}</th>
-                        <th>{{ __('admin.title') }}</th>
+                        <th style="max-width: 250px;">{{ __('admin.title') }}</th>
                         <th>Категория</th>
                         {{--                        <th class="width-220">Количество</th>--}}
                         <th class="width-220">Ед.цена</th>
                         <th class="width-220">SKU</th>
+                        <th class="width-220">Статус</th>
                         <th class="width-220 text-right">{{ __('admin.actions') }}</th>
                     </tr>
                     </thead>
@@ -290,7 +288,7 @@
                                     </div>
                                 </td>
                                 <td class="width-2-percent">{{$i}}</td>
-                                <td>
+                                <td style="max-width: 250px;">
                                     <div>
                                         <div>{{ $combinationProduct->title }}
                                         </div>
@@ -321,7 +319,7 @@
                                     <td class="text-right">
                                         <p class="m-b-0">Ед.цена: {{ $combination->price }}</p>
                                         <label>
-                                            <input type="text" name="price" class="decimal text-right price-{{$combination->id}}" value="{{ old('price') ?? ($combination->price == '' ? '0.00': $combination->price) }}">
+                                            <input type="number" name="price" step="0.01" class="decimal text-right price-{{$combination->id}}" value="{{ old('price') ?? ($combination->price == '' ? '0.00': $combination->price) }}">
                                         </label>
                                     </td>
                                     <td class="text-right">
@@ -329,6 +327,20 @@
                                         <label>
                                             <input type="text" name="sku" class="text-right sku-{{$combination->id}}" value="{{ old('sku') ?? $combination->sku }}">
                                         </label>
+                                    </td>
+                                    <td class="text-right">
+                                        <p class="m-b-0">Статус:
+                                            @if(!is_null($combination->stock_status))
+                                                @lang('front.stock_status_'.$combination->stock_status)
+                                            @endif
+                                        </p>
+                                        <select id="stock_status" class="form-control stock_status-{{$combination->id}}" name="stock_status" style="max-width: 200px;">
+                                            <option value="1" {{(old('stock_status')) || $combination->stock_status == 1 ? 'selected': ''}}>@lang('front.stock_status_1')</option>
+                                            <option value="2" {{(old('stock_status')) || $combination->stock_status == 2 ? 'selected': ''}}>@lang('front.stock_status_2')</option>
+                                            <option value="3" {{(old('stock_status')) || $combination->stock_status == 3 ? 'selected': ''}}>@lang('front.stock_status_3')</option>
+                                            <option value="4" {{(old('stock_status')) || $combination->stock_status == 4 ? 'selected': ''}}>@lang('front.stock_status_4')</option>
+                                            <option value="5" {{(old('stock_status')) || $combination->stock_status == 5 ? 'selected': ''}}>@lang('front.stock_status_5')</option>
+                                        </select>
                                     </td>
                                     <td class="pull-right">
                                         <p></p>
@@ -343,7 +355,7 @@
 
                     @else
                         <tr>
-                            <td colspan="7" class="no-table-rows">{{ trans('shop::admin.product_combinations.no_records') }}</td>
+                            <td colspan="8" class="no-table-rows">{{ trans('product::admin.product_combinations.no_records') }}</td>
                         </tr>
                     @endif
                     </tbody>
@@ -358,7 +370,7 @@
         <form action="{{ route('admin.product-combinations.generate') }}" method="POST">
             @csrf
             <div class="mb-1">
-                <label for="main_product_id" class="form-label w-100" style="display: flex">1. @lang('shop::admin.product_combinations.step_1')</label>
+                <label for="main_product_id" class="form-label w-100" style="display: flex">1. @lang('product::admin.product_combinations.step_1')</label>
                 <select name="main_product_id" class="select2 form-control m-b-20 pcombo-mpselect" style="display: flex;width: 100%" id="main_product_id">
                     <option value="">{{ __('admin.common.please_select') }}</option>
                     @foreach($products as $product)
@@ -367,7 +379,7 @@
                 </select>
             </div>
             <div style="margin-top: 20px;margin-bottom: 5px;">
-                <b>2. @lang('shop::admin.product_combinations.step_2')</b>
+                <b>2. @lang('product::admin.product_combinations.step_2')</b>
             </div>
             @if($productAttributes)
                 @foreach($productAttributes as $productAttribute)
@@ -415,6 +427,16 @@
                 <div class="mb-1">
                     <label for="sku" class="form-label w-100">SKU</label>
                     <input type="text" name="sku" class="form-control m-b-20" id="sku" value="" autocomplete="off">
+                </div>
+                <div class="mb-1">
+                    <label for="sku" class="form-label w-100">Статус</label>
+                    <select id="stock_status" class="form-control m-b-20 w-100" name="stock_status" autocomplete="off">
+                        <option value="1" {{(old('stock_status')) ? 'selected': ''}}>@lang('front.stock_status_1')</option>
+                        <option value="2" {{(old('stock_status')) ? 'selected': ''}}>@lang('front.stock_status_2')</option>
+                        <option value="3" {{(old('stock_status')) ? 'selected': ''}}>@lang('front.stock_status_3')</option>
+                        <option value="4" {{(old('stock_status')) ? 'selected': ''}}>@lang('front.stock_status_4')</option>
+                        <option value="5" {{(old('stock_status')) ? 'selected': ''}}>@lang('front.stock_status_5')</option>
+                    </select>
                 </div>
             </div>
 
