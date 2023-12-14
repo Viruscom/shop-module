@@ -57,6 +57,9 @@
                     <th class="width-2-percent"></th>
                     <th class="width-2-percent">{{ __('admin.number') }}</th>
                     <th>{{ __('admin.title') }}</th>
+                    @if(array_key_exists('YanakSoftApi', $activeModules))
+                        <th class="width-2-percent">Янак</th>
+                    @endif
                     <th class="width-220">{{ __('admin.actions') }}</th>
                     </thead>
                     <tbody>
@@ -76,6 +79,11 @@
                                 <td>
                                     {{ $product->title }}
                                 </td>
+                                @if(array_key_exists('YanakSoftApi', $activeModules) && !is_null($product->stk_idnumb))
+                                    <td class="text-center"><i class="fas fa-link" style="color: #c82864;"></i></td>
+                                @else
+                                    <td></td>
+                                @endif
                                 <td class="pull-right">
                                     <a href="{{ route('admin.products.send-to-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_adbox')"><i class="fas fa-ad"></i></a>
                                     <a href="{{ route('admin.products.send-to-product-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_product_adbox')"><i class="fas fa-ad"></i></a>

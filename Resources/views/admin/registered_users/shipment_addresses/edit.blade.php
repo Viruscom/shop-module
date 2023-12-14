@@ -78,7 +78,10 @@
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $address, 'fieldName' => 'zip_code', 'label' => 'Пощенски код', 'required' => false])
                 <div class="form-group @if($errors->has('is_default')) has-error @endif">
                     <label class="control-label p-b-10">@lang('shop::admin.registered_users.default'):</label>
-                    <input type="checkbox" name="is_default" value="{{ old('is_default') }}" autocomplete="off">
+                    <select name="is_default" autocomplete="off" class="form-control">
+                        <option value="0">НЕ</option>
+                        <option value="1" {{ $address->is_default ? 'selected':'' }}>ДА</option>
+                    </select>
                     @if($errors->has('is_default'))
                         <span class="help-block">{{ trans($errors->first('is_default')) }}</span>
                     @endif
