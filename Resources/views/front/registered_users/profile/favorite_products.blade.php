@@ -9,7 +9,6 @@
 
                 <div class="page-content">
                     <h3 class="page-title">{{ __('front.products.favorites') }}</h3>
-
                     <div class="boxes boxes-type-2 boxes-type-2-alt">
                         @forelse($registeredUser->favoriteProducts as $favorite)
                             <div class="box" data-aos="fade-up">
@@ -71,19 +70,24 @@
 
                                 <div class="box-actions">
                                     <div class="hover-images">
-                                        <a href="" class="btn-icon">
-                                            <img src="{{ asset('front/assets/icons/heart-filled.svg') }}" alt="" width="19">
+                                        <form action="{{ route('shop.registered_user.account.favorites.delete', ['languageSlug' => $languageSlug, 'id' => $favorite->product->id]) }}" method="POST" class="w-100">
+                                            @csrf
+                                            <button type="submit" class="btn-icon">
+                                                <img src="{{ asset('front/assets/icons/heart-filled.svg') }}" alt="" width="19">
+                                                <img src="{{ asset('front/assets/icons/heart-filled-white.svg') }}" alt="" width="19">
+                                                {{ __('front.products.delete_from_favorites') }}
+                                            </button>
+                                        </form>
 
-                                            <img src="{{ asset('front/assets/icons/heart-filled-white.svg') }}" alt="" width="19">
-
-                                            {{ __('front.products.delete_from_favorites') }}
-                                        </a>
                                     </div>
-
-                                    <a href="" class="btn-filled btn-icon">
-                                        <img src="{{ asset('front/assets/icons/cart.svg') }}" alt="">
-                                        {{ __('front.products.add') }}
-                                    </a>
+                                    <form action="{{ route('basket.products.add') }}" method="POST" class="w-100">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{$favorite->product->id}}">
+                                        <button type="submit" class="btn-filled btn-icon">
+                                            <img src="{{ asset('front/assets/icons/cart.svg') }}" alt="">
+                                            {{ __('front.products.add') }}
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @empty

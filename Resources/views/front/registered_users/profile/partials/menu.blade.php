@@ -9,10 +9,13 @@
     <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.orders.get-orders') ? 'active' : '' }}">
         <a href="{{ route('shop.registered_user.account.orders.get-orders', ['languageSlug' => $languageSlug]) }}">{{ __('shop::front.registered_user_profile.orders') }}</a>
     </li>
-    <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.addresses') ? 'active' : '' }}">
+    <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.addresses.*') ? 'active' : '' }}">
         <a href="{{ route('shop.registered_user.account.addresses', ['languageSlug' => $languageSlug]) }}">{{ __('shop::front.registered_user_profile.addresses') }}</a>
     </li>
-    <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.companies') ? 'active' : '' }}">
+{{--    <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.addresses.billing.*') ? 'active' : '' }}">--}}
+{{--        <a href="{{ route('shop.registered_user.account.addresses.billing', ['languageSlug' => $languageSlug]) }}">{{ __('shop::front.registered_user_profile.addresses') }}</a>--}}
+{{--    </li>--}}
+    <li class="{{ WebsiteHelper::isActiveRoute('shop.registered_user.account.companies.*') || WebsiteHelper::isActiveRoute('shop.registered_user.account.companies') ? 'active' : '' }}">
         <a href="{{ route('shop.registered_user.account.companies', ['languageSlug' => $languageSlug]) }}">{{ __('shop::front.registered_user_profile.firms') }}</a>
     </li>
     {{--    <li class="{{ WebsiteHelper::isActiveRoute('admin.brands.*') ? 'active' : '' }}">--}}

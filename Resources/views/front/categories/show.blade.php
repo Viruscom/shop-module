@@ -1,4 +1,4 @@
-@extends('layouts.front.app')
+@extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/cubeportfolio.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/remove_padding.css') }}">
@@ -10,29 +10,45 @@
 @endsection
 
 @section('content')
-    @include('front.partials.inner_header')
-    @include('front.partials.breadcrumbs')
+    <section class="section-top-container">
+        @include('shop::front.partials.choose_address_head')
+        @include('front.partials.breadcrumbs')
 
-    <section class="section-top section-top-2">
-        <div class="shell">
-            <img src="{{ asset('front/assets/icons/attachment-6.svg') }}" alt="" data-aos="fade-up" data-aos-delay="50">
+        <h3 class="title" data-aos="fade-up" data-aos-delay="100">{{ $viewArray['currentModel']->title }}</h3>
 
-            <div class="label" data-aos="fade-up" data-aos-delay="50"></div>
+        @include('shop::front.categories.category_picker')
 
-            <div class="section-content">
-                <h3 data-aos="fade-up" data-aos-delay="100">{{ $viewArray['currentModel']->title }}<span class="color-red">:</span></h3>
+        @if(!is_null($viewArray['currentModel']->parent->main_category))
+            <div class="top-nav-pages hover-images">
+                <a href="{{ $viewArray['currentModel']->parent->mainCategory->getUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100">
+                    <img src="{{ asset('front/assets/icons/arrow.svg') }}" alt="">
 
-                <p data-aos="fade-up" data-aos-delay="150">{!! $viewArray['currentModel']->announce !!}</p>
+                    <img src="{{ asset('front/assets/icons/arrow-red.svg') }}" alt="">
+
+                    {{ __('admin.common.back') }}
+                </a>
             </div>
-        </div>
+        @endif
     </section>
+
+    @if($viewArray['currentModel']->announce != '')
+        <section class="section-text">
+            <div class="shell">
+                <div class="section-content">
+                    <p data-aos="fade-up" data-aos-delay="150">{!! $viewArray['currentModel']->announce !!}</p>
+                </div>
+            </div>
+        </section>
+    @endif
 
     @include('shop::front.categories.list_products', ['products' => $viewArray['currentModel']->parent->getActiveProducts])
 
-    <section class="section-text section-text-alt section-text-3">
+    <section class="section-bottom">
         <div class="shell">
-            <div class="section-content" data-aos="fade-up" data-aos-delay="50">
-                <p>{!! $viewArray['currentModel']->description !!}</p>
+            <div class="section-content">
+                <img src="{{ asset('front/assets/icons/bottom-icon-2.svg') }}" alt="" data-aos="fade-up" data-aos-delay="50">
+
+                <p data-aos="fade-up" data-aos-delay="150">{!! $viewArray['currentModel']->description !!}</p>
             </div>
         </div>
     </section>

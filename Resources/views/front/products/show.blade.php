@@ -1,4 +1,4 @@
-@extends('layouts.front.app')
+@extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/cubeportfolio.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/front/plugins/cubeportfolio/css/remove_padding.css') }}">
@@ -9,174 +9,178 @@
     <script type="text/javascript" src="{{ asset('/front/plugins/cubeportfolio/js/main.js') }}"></script>
 @endsection
 @section('content')
-    @include('front.partials.inner_header')
-    @include('front.partials.breadcrumbs')
     @php
         $product = $viewArray['currentModel']->parent;
     @endphp
-    <section class="section-article">
-        <article class="article-single">
-            <div class="shell">
-                <div class="article-head">
-                    <div class="article-info">
-                        <p class="brand" data-aos="fade-up" data-aos-delay="50">
-                            <a href="">Brilliance</a>
-                        </p>
+    <section class="section-top-container">
+        @include('shop::front.partials.choose_address_head')
 
-                        <p class="path" data-aos="fade-up" data-aos-delay="50">
-                            <a href="" class="link-more link-more-alt">Products</a>
-                        </p>
-                    </div>
+        @include('front.partials.breadcrumbs')
 
-                    <h3 class="article-title" data-aos="fade-up" data-aos-delay="150">{{ $viewArray['currentModel']->title }}</h3>
-                </div>
+        <div class="top-nav-pages hover-images">
+            <a href="{{ $product->category->getUrl($languageSlug) }}" data-aos="fade-up" data-aos-delay="100">
+                <img src="{{ asset('front/assets/icons/arrow.svg') }}" alt="">
 
-                <div class="product-wrapper">
-                    <div class="product-main">
-                        <div class="prod-aside">
-                            <div class="prod-image">
-                                <img src="{{ $product->getFileUrl() }}" alt="" class="">
-                            </div>
+                <img src="{{ asset('front/assets/icons/arrow-red.svg') }}" alt="">
 
-                            <div class="promos-wrapper">
-                                @if($product->hasDiscounts())
-                                    <span class="promo">-{{ $product->getPercentDiscountsLabel($country, $city) }} %</span>
-                                @endif
-                                @if($product->isNewProduct())
-                                    <span class="promo promo-new">NEW</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="prod-content">
-                            <form method="post" enctype="multipart/form-data" id="" action="{{ route('basket.products.add') }}">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{$product->id}}">
-                                <div class="prod-price">
-                                    @if($product->hasDiscounts())
-                                        <p class="price-old"><b>{{ $product->getVatPrice($country, $city) }}</b> лв.</p>
-
-                                        <p class="price-new"><b>{{$product->getVatDiscountedPrice($country, $city)}}</b> лв.</p>
-                                    @else
-                                        <p class="price-new"><b>{{$product->getVatPrice($country, $city)}}</b> лв.</p>
-                                    @endif
-
-                                </div>
-                                <div class="prod-info">
-                                    <p>
-                                        {{ __('shop::front.product.sku') }}:
-                                        <strong>{{$product->sku}}</strong>
-                                    </p>
-
-                                    <p>
-                                        {{ __('shop::front.product.barcode') }}:
-                                        <strong>{{$product->barcode}}</strong>
-                                    </p>
-
-                                    <p>
-                                        {{ __('shop::front.product.brand') }}:
-                                        <strong>{{$product->brand->title}}</strong>
-                                    </p>
-
-                                    <p>
-                                        {{ __('shop::front.product.category') }}:
-                                        <strong>{{$product->category->title}}</strong>
-                                    </p>
-                                </div>
-
-                                <p class="out-of-stock">
-                                    {{ __('shop::front.product.availability') }}:
-
-                                    <strong>out of stock</strong>
-                                </p>
-
-                                {{--                                <div class="quantity-discounts">--}}
-                                {{--                                    {!! $product->getProductQuantityDiscountHtml() !!}--}}
-                                {{--                                </div>--}}
-
-                                {{--                                <div class="free-delivery-discount">--}}
-                                {{--                                    {!! $product->getFreeDeliveryDiscountHtml() !!}--}}
-                                {{--                                </div>--}}
-
-                                <div class="input-group-wrapper">
-                                    <div class="input-group">
-                                        <a href="" data-quantity="minus" data-field="quantity">-</a>
-
-                                        <input class="input-group-field" type="number" name="quantity" value="1">
-
-                                        <a href="" data-quantity="plus" data-field="quantity">+</a>
-                                    </div>
-
-                                    {{--                                    <div class="qty-wrapper">--}}
-                                    {{--                                        <span>50</span> ml--}}
-                                    {{--                                    </div>--}}
-                                </div>
-
-                                <div class="prod-content-actions">
-                                    <!-- <a href="" class="btn btn-icon btn-black">
-                                        <img src="assets/icons/cart-white.svg" alt="" width="21.5">
-                                        <img src="assets/icons/cart-white.svg" alt="" width="21.5">
-
-                                        <span>add to cart</span>
-                                    </a> -->
-
-                                    <button type="submit" class="btn btn-icon btn-black" value="Поръчай">
-                                        <img src="{{ asset('front/assets/icons/cart-empty.svg') }}" alt="" width="21.5">
-
-                                        <span>{{__('shop::front.product.add_to_cart')}}</span>
-                                    </button>
-
-                                    @if(!Auth::guard('shop')->guest())
-                                        <a href="" class="btn btn-icon">
-                                            <img src="{{ asset('front/assets/icons/heart-alt.svg') }}" alt="" width="21.21">
-
-                                            <span>{{__('shop::front.product.add_to_wishlist')}}</span>
-                                        </a>
-                                    @endif
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    @include('shop::front.partials.product_collections.collection', ['model' => $viewArray['currentModel']])
-                </div>
-
-                <div class="article-body" data-aos="fade-up" data-aos-delay="200">
-                    <div class="article-inner">
-                        {!! $viewArray['currentModel']->description !!}
-
-                        @include('front.partials.content.after_description_modules', ['model' => $viewArray['currentModel']])
-                        @include('front.partials.content.additional_titles_and_texts', ['model' => $viewArray['currentModel']])
-                    </div>
-
-                    <div class="article-product-info">
-                        <div class="product-info">
-                            <p class="quantity">50<span class="currency">ml</span></p>
-
-                            <p class="price">
-								<span class="old-price">
-									93.00<span class="currency">&euro;</span>
-								</span>
-
-                                <span>68.00<span class="currency">&euro;</span></span>
-                            </p>
-                        </div>
-
-                        {{--                        <div class="product-actions">--}}
-                        {{--                            <a href="" class="link-more-big">Request</a>--}}
-                        {{--                        </div>--}}
-                    </div>
-
-                    <!-- <div class="article-dates">
-                        <p>08.03.2020</p>
-
-                        <p>26.03.2020</p>
-                    </div> -->
-                </div>
-            </div>
-        </article>
-
-        @include('front.partials.content.inner_gallery')
+                {{ __('admin.common.back') }}
+            </a>
+        </div>
     </section>
 
+    <div class="shell">
+        <div class="product-main-data">
+            <div class="prod-image-wrapper">
+                <div class="box-statuses">
+                    @if($product->isVeganProduct())
+                        <div class="status status-tooltip">
+                            <i class="custom-icon icon-leaf"></i>
+
+                            <div class="status-text">{{ __('front.products.status_vegan') }}</div>
+                        </div>
+                    @endif
+                    @if($product->isHotProduct())
+                        <div class="status status-tooltip">
+                            <i class="custom-icon icon-fire"></i>
+
+                            <div class="status-text">{{ __('front.products.status_hot') }}</div>
+                        </div>
+                    @endif
+
+                    @if($product->isNewProduct())
+                        <div class="status status-new">
+                            <span>{{ __('front.products.status_new') }}</span>
+                        </div>
+                    @endif
+
+                    @if($product->hasDiscounts())
+                        <div class="status status-tooltip status-discount">
+                            <span>{{ __('front.products.status_promo') }}</span>
+
+                            <div class="status-text">-{{ $product->getPercentDiscountsLabel($country, $city) }}%</div>
+                        </div>
+                    @endif
+
+                </div>
+
+                <div class="box-image parent-image-wrapper">
+                    <img src="{{ $product->getFileUrl() }}" alt="{{ $viewArray['currentModel']->title }}" class="bg-image">
+                </div>
+            </div>
+
+            <div class="prod-content">
+                <h3>{{ $viewArray['currentModel']->title }}</h3>
+                {!! $viewArray['currentModel']->description !!}
+
+                @include('front.partials.content.after_description_modules', ['model' => $viewArray['currentModel']])
+                @include('front.partials.content.additional_titles_and_texts', ['model' => $viewArray['currentModel']])
+
+                <div class="net-weight">{{ $product->measure_unit_value }} {{ $product->measureUnit->title }}</div>
+
+                @if(!Auth::guard('shop')->guest() && !$product->isInFavoriteProducts())
+                    <form action="{{ route('shop.registered_user.account.favorites.store', ['languageSlug' => $languageSlug, 'id' => $product->id]) }}" method="post" class="d-inline-block">
+                        @csrf
+                        <button class="prod-fav"></button>
+                    </form>
+                @endif
+                @if(!Auth::guard('shop')->guest() && $product->isInFavoriteProducts())
+                    <form action="{{ route('shop.registered_user.account.favorites.delete', ['languageSlug' => $languageSlug, 'id' => $product->id]) }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button class="prod-fav active"></button>
+                    </form>
+                @endif
+
+                <div class="box-prices">
+                    {{ __('front.products.end_price') }}:
+
+                    @if($product->hasDiscounts())
+                        <p class="old-price"><strong>{{ $product->getVatPrice($country, $city) }}</strong> <span>{{ __('front.currency') }}</span></p>
+
+                        <p><strong class="final-price" data-additions-value=0 data-initial-value="{{$product->getVatDiscountedPrice($country, $city)}}">{{$product->getVatDiscountedPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                    @else
+                        <p><strong class="final-price" data-additions-value=0 data-initial-value="{{$product->getVatPrice($country, $city)}}">{{$product->getVatPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                    @endif
+                </div>
+
+                <form action="{{ route('basket.products.add') }}" method="POST" class="form-product">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{$product->id}}">
+                    <div class="input-group">
+                        <a href="" class="minus-btn disabled" data-quantity="minus" data-field="quantity"></a>
+
+                        <input class="input-group-field" type="number" name="product_quantity" value="1" readonly>
+
+                        <a href="" class="plus-btn" data-quantity="plus" data-field="quantity"></a>
+                    </div>
+
+                    <button type="submit" class="submit-button">
+                        <i class="custom-icon icon-cart"></i>
+
+                        {{ __('front.products.add') }}
+                    </button>
+
+            </div>
+        </div>
+
+        <div class="prod-features">
+            <div class="prod-cols">
+                <div class="col-1of3">
+                    @if($product->additivesCollection(false)->isNotEmpty())
+                        <div class="box box-green">
+                            <h4>{{ __('front.products.add_big_letter') }}</h4>
+                            @foreach($product->additivesCollection(false) as $additive)
+                                <div class="box-row">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" name="additivesAdd[{{$additive->id}}][selected]" class="addition-input" data-input-id="1">
+                                        <span class="checkmark"></span>
+                                        <span class="check-text">{{ $additive->title }}</span>
+                                    </label>
+
+                                    <select class="select-custom select-count" name="additivesAdd[{{$additive->id}}][quantity]" data-prev-value="1" data-select-id="1">
+                                        <option value="1.00" selected>1</option>
+                                        <option value="2.00">2</option>
+                                        <option value="3.00">3</option>
+                                        <option value="4.00">4</option>
+                                        <option value="5.00">5</option>
+                                    </select>
+
+                                    <div class="box-price">
+                                        <span data-addition-price="1">{{ $additive->price }}</span> {{ __('front.currency') }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if($product->additivesCollection(true)->isNotEmpty())
+                        <div class="box box-orange">
+                            <h4>{{ __('front.products.izvadi_big') }}</h4>
+
+                            <div class="box-checkboxes">
+                                @foreach($product->additivesCollection(true) as $additive)
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" name="additivesExcept[{{$additive->id}}][selected]">
+                                        <span class="checkmark"></span>
+                                        <span class="check-text">{{ $additive->title }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(array_key_exists('Icons', $activeModules) && $viewArray['currentModel']['Icons']['0']->isNotEmpty())
+                        <div class="box">
+                            <h4>{{ __('front.products.alergens') }}</h4>
+                            @include('shop::front.products.alergens', ['icons' => $viewArray['currentModel']['Icons']['0']])
+                        </div>
+                    @endif
+                </div>
+
+                <div class="col-2of3">
+                    @include('shop::front.partials.product_collections.collection', ['model' => $viewArray['currentModel']])
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
 @endsection

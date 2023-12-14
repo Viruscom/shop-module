@@ -13,17 +13,20 @@
         @foreach($viewArray['shopProductAdBoxes'] as $adBox)
             <div class="box" data-aos="fade-up">
                 <div class="box-statuses">
-                    <div class="status status-tooltip">
-                        <i class="custom-icon icon-leaf"></i>
+                    @if($adBox->product->isVeganProduct())
+                        <div class="status status-tooltip">
+                            <i class="custom-icon icon-leaf"></i>
 
-                        <div class="status-text">{{ __('front.products.status_vegan') }}</div>
-                    </div>
+                            <div class="status-text">{{ __('front.products.status_vegan') }}</div>
+                        </div>
+                    @endif
+                    @if($adBox->product->isHotProduct())
+                        <div class="status status-tooltip">
+                            <i class="custom-icon icon-fire"></i>
 
-                    <div class="status status-tooltip">
-                        <i class="custom-icon icon-fire"></i>
-
-                        <div class="status-text">{{ __('front.products.status_hot') }}</div>
-                    </div>
+                            <div class="status-text">{{ __('front.products.status_hot') }}</div>
+                        </div>
+                    @endif
 
                     @if($adBox->product->isNewProduct())
                         <div class="status status-new">
@@ -73,11 +76,13 @@
         @endforeach
     </div>
 
-    <div class="section-info">
-        <h4 data-aos="fade-up" data-aos-delay="60">{{ __('front.view_all_menu') }}</h4>
+    @if(!is_null($firstProductCategory))
+        <div class="section-info">
+            <h4 data-aos="fade-up" data-aos-delay="60">{{ __('front.view_all_menu') }}</h4>
 
-        <a href="" class="btn btn-red" data-aos="fade-up" data-aos-delay="100">{{ __('front.menu') }}</a>
-    </div>
+            <a href="{{ $firstProductCategory->getUrl($languageSlug) }}" class="btn btn-red" data-aos="fade-up" data-aos-delay="100">{{ __('front.menu') }}</a>
+        </div>
+    @endif
 
     @if(!is_null($viewArray['homePage']))
         <div class="section-content" data-aos="fade-up" data-aos-delay="200">

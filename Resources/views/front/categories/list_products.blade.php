@@ -1,55 +1,64 @@
-<div class="boxes-type-5">
+<div class="boxes boxes-type-2">
     @foreach($products as $product)
         <div class="box" data-aos="fade-up">
-            <div class="box-image-wrapper">
-                    <div class="labels">
-                        @if($product->isNewProduct())
-                            <div class="label label-new">{{ __('shop::front.product.label_new') }}</div>
-                        @endif
-
-                        @if($product->isPromoProduct())
-                            <div class="label">{{ __('shop::front.product.label_promo') }}</div>
-                        @endif
+            <div class="box-statuses">
+                @if($product->isNewProduct())
+                    <div class="status status-new">
+                        <span>{{ __('front.products.status_new') }}</span>
                     </div>
+                @endif
 
-                <a href="{{ $product->getUrl($languageSlug) }}"></a>
+                @if($product->hasDiscounts())
+                    <div class="status status-tooltip status-discount">
+                        <span>{{ __('front.products.status_promo') }}</span>
 
-                <div class="box-image-inner">
-                    <div class="box-image parent-image-wrapper">
-                        <img src="{{ $product->getFileUrl() }}" alt="{{ $product->title }}" class="bg-image">
+                        <div class="status-text">-{{ $product->getPercentDiscountsLabel($country, $city) }}%</div>
                     </div>
-                </div>
+                @endif
+                @if($product->isVeganProduct())
+                    <div class="status status-tooltip">
+                        <i class="custom-icon icon-leaf"></i>
+
+                        <div class="status-text">{{ __('front.products.status_vegan') }}</div>
+                    </div>
+                @endif
+                @if($product->isHotProduct())
+                    <div class="status status-tooltip">
+                        <i class="custom-icon icon-fire"></i>
+
+                        <div class="status-text">{{ __('front.products.status_hot') }}</div>
+                    </div>
+                @endif
             </div>
 
+            <div class="box-image-wrapper">
+                <a href="{{ $product->getUrl($languageSlug) }}"></a>
+
+                <div class="box-image parent-image-wrapper">
+                    <img src="{{ $product->getFileUrl() }}" alt="{{ $product->title }}" class="bg-image">
+                </div>
+            </div>
             <div class="box-content">
                 <h3>
                     <a href="{{ $product->getUrl($languageSlug) }}">{{ $product->title }}</a>
                 </h3>
 
-                <p>{!! $product->announce !!}</p>
+                <div class="box-inner">
+                    <span>{{ $product->measure_unit_value }} {{ $product->measureUnit->title }}</span>
 
-                <div class="box-actions">
                     <div class="box-prices">
-                        <p class="old-price">
-                            <span>{{ __('front.from') }}</span>
+                        @if($product->hasDiscounts())
+                            <p class="old-price"><strong>{{ $product->getVatPrice($country, $city) }}</strong> <span>{{ __('front.currency') }}</span></p>
 
-                            <strong>118.00
-                                <span>{{ __('front.currency') }}</span>
-                            </strong>
-                        </p>
-
-                        <p>
-                            <span>{{ __('front.from') }}</span>
-
-                            <strong>96.00
-                                <span>{{ __('front.currency') }}</span>
-                            </strong>
-                        </p>
+                            <p><strong class="final-price" data-additions-value=0 data-initial-value="{{$product->getVatDiscountedPrice($country, $city)}}">{{$product->getVatDiscountedPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                        @else
+                            <p><strong class="final-price" data-additions-value=0 data-initial-value="{{$product->getVatPrice($country, $city)}}">{{$product->getVatPrice($country, $city)}}</strong> <span>{{ __('front.currency') }}</span></p>
+                        @endif
                     </div>
-
-                    <a href="{{ $product->getUrl($languageSlug) }}" class="link-more color-red">...{{ __('front.see_more') }}</a>
                 </div>
             </div>
+
+            <a href="{{ $product->getUrl($languageSlug) }}" class="btn btn-outline">{{ __('front.products.choose') }}</a>
         </div>
     @endforeach
 </div>

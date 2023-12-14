@@ -1,18 +1,18 @@
-@extends('layouts.front.app')
+@extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 
 @section('content')
+        @include('shop::front.partials.registered_user_head')
     <div class="page-wrapper">
-        @include('shop::front.registered_users.profile.breadcrumbs')
+{{--        @include('shop::front.registered_users.profile.breadcrumbs')--}}
 
         <section class="settings-page">
             <div class="shell">
                 @include('shop::front.registered_users.profile.partials.menu')
-
-                <div class="page-content">
+                <div class="page-content-shop">
                     <h3 class="page-title">{{ __('shop::front.registered_user_profile.personal_data') }}</h3>
 
                     <div class="form-wrapper form-wrapper-alt">
-                        <form method="post" enctype="multipart/form-data" id="personal-data" action="{{ route('shop.registered_user.account.personal-data.update', ['languageSlug' => $languageSlug, 'id' => $registeredUser->id]) }}">
+                        <form method="post" enctype="multipart/form-data" id="personal-data" action="{{ route('shop.registered_user.account.personal-data.update', ['languageSlug' => $languageSlug, 'id' => encrypt($registeredUser->id)]) }}">
                             @csrf
                             <div class="form-body">
                                 <div class="form-row">

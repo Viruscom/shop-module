@@ -1,25 +1,26 @@
-@extends('layouts.front.app')
+@php use Carbon\Carbon; @endphp@extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 
 @section('content')
+    @include('shop::front.partials.registered_user_head')
     <div class="page-wrapper">
-        @include('shop::front.registered_users.profile.breadcrumbs')
-
+        {{--        @include('shop::front.registered_users.profile.breadcrumbs')--}}
         <section class="settings-page">
             <div class="shell">
                 @include('shop::front.registered_users.profile.partials.menu')
-                <div class="page-content">
+                <div class="page-content-shop">
                     <h3 class="page-title">{{ __('shop::front.registered_user_profile.my_account') }}</h3>
 
                     <div class="box-cols">
                         <div class="col col-1of2">
                             <h5><span>{{ __('shop::front.registered_user_profile.hello') }},</span> {{ $registeredUser->first_name }} {{ $registeredUser->last_name }}!</h5>
-                            <p>
-                                <span>{{ __('shop::front.registered_user_profile.email') }}:</span> {{ $registeredUser->email }} </p>
+                            @if($registeredUser->email != '')
+                                <p><span>{{ __('shop::front.registered_user_profile.email') }}:</span> {{ $registeredUser->email }} </p>
+                            @endif
+                            @if($registeredUser->phone != '')
+                                <p><span>{{ __('shop::front.registered_user_profile.phone') }}:</span> {{ $registeredUser->phone }} </p>
+                            @endif
 
-                            <p>
-                                <span>{{ __('shop::front.registered_user_profile.phone') }}:</span> {{ $registeredUser->phone }} </p>
-
-                            <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
+                            <a href="{{ route('shop.registered_user.account.personal-data', ['languageSlug' => $languageSlug]) }}" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
                         </div>
 
                         <div class="col col-1of2">
@@ -27,7 +28,17 @@
 
                             <p>{{ __('shop::front.registered_user_profile.not_subscribed') }}</p>
 
-                            <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.subscribe') }}</a>
+                            <a href="{{ route('shop.registered_user.account.subscribe', ['languageSlug' => $languageSlug]) }}" class="btn btn-outline" onclick="event.preventDefault();
+                                    document.getElementById('subscribe-form').submit();">
+                                @if($registeredUser->newsletter_subscribed)
+                                    {{ __('shop::front.registered_user_profile.unsubscribe') }}
+                                @else
+                                    {{ __('shop::front.registered_user_profile.subscribe') }}
+                                @endif
+                            </a>
+                            <form id="subscribe-form" action="{{ route('shop.registered_user.account.subscribe', ['languageSlug' => $languageSlug]) }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
                         </div>
                     </div>
 
@@ -45,51 +56,29 @@
                             </thead>
 
                             <tbody>
-                            <tr>
-                                <td>132648</td>
-                                <td>12.06.2020</td>
-                                <td>Daniel Yordanov</td>
-                                <td class="align-right">1 559.00 BGN</td>
-                                <td>{{ __('shop::front.registered_user_profile.sent') }}</td>
-                                <td class="align-right">
-                                    <a href="">{{ __('shop::front.registered_user_profile.details') }}</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>132648</td>
-                                <td>12.06.2020</td>
-                                <td>Daniel Yordanov</td>
-                                <td class="align-right">1 559.00 BGN</td>
-                                <td>{{ __('shop::front.registered_user_profile.sent') }}</td>
-                                <td class="align-right">
-                                    <a href="">{{ __('shop::front.registered_user_profile.details') }}</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>132648</td>
-                                <td>12.06.2020</td>
-                                <td>Anna-Maria Daniel Yordanova-Popova Marinova</td>
-                                <td class="align-right">1 559.00 BGN</td>
-                                <td>{{ __('shop::front.registered_user_profile.sent') }}</td>
-                                <td class="align-right">
-                                    <a href="">{{ __('shop::front.registered_user_profile.details') }}</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>132648</td>
-                                <td>12.06.2020</td>
-                                <td>Daniel Yordanov</td>
-                                <td class="align-right">1 559.00 BGN</td>
-                                <td>{{ __('shop::front.registered_user_profile.sent') }}</td>
-                                <td class="align-right">
-                                    <a href="">{{ __('shop::front.registered_user_profile.details') }}</a>
-                                </td>
-                            </tr>
+                            @forelse($orders as $order)
+                                <tr>
+                                    <td><strong>{{ $order->id }}</strong></td>
+                                    <td>{{ Carbon::parse($order->created_at)->format('d.m.Y') }}</td>
+                                    <td>{{ $order->first_name . ' ' . $order->last_name }}</td>
+                                    <td class="align-right"><strong>{{ $order->totalEndDiscountedPrice() }} @lang('front.currency')</strong></td>
+                                    <td>{{ $order->getReadableShipmentStatus() }}</td>
+                                    <td class="align-right">
+                                        <a href="{{ route('shop.registered_user.account.orders.show', ['languageSlug' => $languageSlug, 'order_hash' => encrypt($order->id)]) }}"><strong>{{ __('shop::front.registered_user_profile.details') }}</strong></a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="alert alert-danger">@lang('admin.no-records')</div>
+                                    </td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
 
                         <div class="table-bottom">
-                            <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.view_all') }}</a>
+                            <a href="{{ route('shop.registered_user.account.orders.get-orders', ['languageSlug' => $languageSlug]) }}" class="btn btn-outline">{{ __('shop::front.registered_user_profile.view_all') }}</a>
                         </div>
                     </div>
 
@@ -98,16 +87,18 @@
                             <div class="box-text">
                                 <div class="box-content">
                                     <h4>{{ __('shop::front.registered_user_profile.shipping_address') }}</h4>
+                                    @if(!is_null($defaultShipmentAddress))
+                                        <p>{{ $defaultShipmentAddress->name }}</p>
 
-                                    <p>Daniel Yordanov</p>
+                                        <p>{{ $defaultShipmentAddress->street . ', № ' . $defaultShipmentAddress->street_number }}</p>
 
-                                    <p>+359896669928</p>
+                                        <p>{{ $defaultShipmentAddress->city->name }} {{ $defaultShipmentAddress->zip_code }} </p>
 
-                                    <p>47-47B, Edisson Str., ground floor, office 6 Creative studio GD styles</p>
+                                        <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
+                                    @else
+                                        <p>Няма добавен адрес.</p>
+                                    @endif
 
-                                    <p>Sofia 1111 </p>
-
-                                    <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -116,16 +107,18 @@
                             <div class="box-text">
                                 <div class="box-content">
                                     <h4>{{ __('shop::front.registered_user_profile.billing_address') }}</h4>
+                                    @if(!is_null($defaultPaymentAddress))
+                                        <p>{{ $defaultPaymentAddress->name }}</p>
 
-                                    <p>Daniel Yordanov</p>
+                                        <p>{{ $defaultPaymentAddress->street . ', № ' . $defaultPaymentAddress->street_number }}</p>
 
-                                    <p>200436302</p>
+                                        <p>{{ $defaultPaymentAddress->city->name }} {{ $defaultPaymentAddress->zip_code }} </p>
 
-                                    <p>47-47B, Edisson Str., ground floor, office 6 Creative studio GD styles</p>
+                                        <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
+                                    @else
+                                        <p>Няма добавен адрес.</p>
+                                    @endif
 
-                                    <p>Sofia 1111</p>
-
-                                    <a href="" class="btn btn-outline">{{ __('shop::front.registered_user_profile.edit') }}</a>
                                 </div>
                             </div>
                         </div>
