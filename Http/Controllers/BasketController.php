@@ -3,6 +3,7 @@
     namespace Modules\Shop\Http\Controllers;
 
     use App\Http\Controllers\Controller;
+    use App\Models\LawPages\LawPageTranslation;
     use Auth;
     use Illuminate\Http\Request;
     use Illuminate\Support\Str;
@@ -12,6 +13,7 @@
     use Modules\Shop\Entities\Settings\City;
     use Modules\Shop\Entities\Settings\Country;
     use Modules\Shop\Entities\Settings\Delivery;
+    use Modules\Shop\Entities\Settings\Main\CountrySale;
     use Modules\Shop\Entities\Settings\Payment;
     use Modules\Shop\Http\Requests\OrderRequest;
     use Modules\Shop\Models\Admin\Products\Product;
@@ -88,8 +90,6 @@
         }
         public function createOrder()
         {
-            //        TODO:: Basket Step 2
-            //get current coutry and city once chosen
             $country = Country::find(session()->get('country_id'));
             $city    = City::find(session()->get('city_id'));
 
@@ -104,7 +104,17 @@
             $paymentMethods  = Payment::orderBy('position', 'asc')->get();
             $deliveryMethods = Delivery::orderBy('position', 'asc')->get();
 
-            return view('shop::basket.order.create', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities, 'paymentMethods' => $paymentMethods, 'deliveryMethods' => $deliveryMethods]);
+            $countriesSale = CountrySale::with('country', 'country.cities')->get();
+
+            return view('shop::basket.order.create', [
+                'basket'          => $basket,
+                'countries'       => $countries,
+                'cities'          => $cities,
+                'paymentMethods'  => $paymentMethods,
+                'deliveryMethods' => $deliveryMethods,
+                'countriesSale'   => $countriesSale,
+                'termsOfUse'      => LawPageTranslation::where('url', 'obshchi-usloviya')->with('parent', 'parent.translations')->first()
+            ]);
         }
         public function index()
         {

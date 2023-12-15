@@ -67,13 +67,20 @@
 
             <div class="box-row">
                 <div class="checkboxes-wrapper">
-                    <label class="checkbox-wrapper">
-                        <input type="checkbox" id="privacy" name="checkbox_privacy_agree">
+                    @if(!is_null($termsOfUse))
+                        @php
+                            $termsOfUseTranslated = $termsOfUse->parent->translate($languageSlug);
+                        @endphp
+                        @if(!is_null($termsOfUseTranslated))
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="privacy" name="checkbox_privacy_agree" required>
 
-                        <span class="checkmark"></span>
+                                <span class="checkmark"></span>
 
-                        <span class="check-text">Прочетох и съм съгласен с това, което е описано в <a href="" target="_blank"><strong>Общи условия*</strong></a></span>
-                    </label>
+                                <span class="check-text">Прочетох и съм съгласен с това, което е описано в  <a href="{{ $termsOfUseTranslated->parent->href() }}" target="_blank"><strong>{{ $termsOfUseTranslated->title }}*</strong></a></span>
+                            </label>
+                        @endif
+                    @endif
                 </div>
             </div>
 
