@@ -39,7 +39,6 @@
     use Modules\Shop\Http\Controllers\Auth\ShopResetPasswordController;
     use Modules\Shop\Http\Controllers\Auth\ShopVerificationController;
     use Modules\Shop\Http\Controllers\BasketController;
-    use Modules\Shop\Http\Controllers\CartController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\PaymentAddressesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
@@ -609,10 +608,6 @@
                 Route::get('create', [BasketController::class, 'createOrder'])->name('basket.order.create');
                 Route::post('store', [BasketController::class, 'storeOrder'])->name('basket.order.store');
             });
-        });
-
-        Route::prefix('cart')->group(function () {
-            Route::get('/', [CartController::class, 'index'])->name('cart.index');
         });
 
         /* Shop Auth */

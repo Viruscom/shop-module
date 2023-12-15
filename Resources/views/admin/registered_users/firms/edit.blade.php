@@ -17,12 +17,14 @@
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'company_address', 'label' => 'Адрес на регистрация', 'required' => true])
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'phone', 'label' => 'Телефон', 'required' => true])
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'email', 'label' => 'Email', 'required' => true])
-                <div class="form-group @if($errors->has('is_default')) has-error @endif">
-                    <label class="control-label p-b-10">По подразбиране:</label>
-                    <input type="checkbox" name="is_default" value="{{ old('is_default') ?? $company->is_default   }}" {{ (old('is_default') && old('is_default') === 1) || $company->is_default === 1 ? 'checked' : ''  }} autocomplete="off">
-                    @if($errors->has('is_default'))
-                        <span class="help-block">{{ trans($errors->first('is_default')) }}</span>
-                    @endif
+                <div class="form-group">
+                    <label class="control-label">По подразбиране:</label>
+                    <div class="">
+                        <label class="switch pull-left">
+                            <input type="checkbox" name="is_default" class="success" data-size="small" value="{{ old('is_default') ?? $company->is_default   }}" {{ (old('is_default') && old('is_default') === 1) || $company->is_default === 1 ? 'checked' : ''  }}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
 

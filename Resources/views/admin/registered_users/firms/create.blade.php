@@ -17,12 +17,14 @@
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'company_address', 'label' => 'Адрес на регистрация', 'required' => true])
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'phone', 'label' => 'Телефон', 'required' => true])
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'email', 'label' => 'Email', 'required' => true])
-                <div class="form-group @if($errors->has('is_default')) has-error @endif">
-                    <label class="control-label p-b-10">По подразбиране:</label>
-                    <input type="checkbox" name="is_default" value="{{ old('is_default') }}" autocomplete="off">
-                    @if($errors->has('is_default'))
-                        <span class="help-block">{{ trans($errors->first('is_default')) }}</span>
-                    @endif
+                <div class="form-group">
+                    <label class="control-label">По подразбиране:</label>
+                    <div class="">
+                        <label class="switch pull-left">
+                            <input type="checkbox" name="is_default" class="success" data-size="small" {{(old('is_default') ? 'checked' : 'active')}}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
