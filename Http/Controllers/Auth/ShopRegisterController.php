@@ -3,6 +3,7 @@
     namespace Modules\Shop\Http\Controllers\Auth;
 
     use App\Helpers\LanguageHelper;
+    use App\Models\LawPages\LawPageTranslation;
     use Illuminate\Auth\Events\Registered;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Hash;
@@ -13,7 +14,10 @@
     {
         public function showRegistrationForm()
         {
-            return view('shop::auth.register');
+            return view('shop::auth.register', [
+                'termsOfUse'    => LawPageTranslation::where('url', 'obshchi-usloviya')->with('parent', 'parent.translations')->first(),
+                'privacyPolicy' => LawPageTranslation::where('url', 'politiki-za-poveritelnost')->with('parent', 'parent.translations')->first(),
+            ]);
         }
 
         public function register(Request $request)
