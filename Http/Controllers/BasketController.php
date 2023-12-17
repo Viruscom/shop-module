@@ -2,6 +2,8 @@
 
     namespace Modules\Shop\Http\Controllers;
 
+    use App\Helpers\LanguageHelper;
+    use App\Helpers\SeoHelper;
     use App\Http\Controllers\Controller;
     use App\Models\LawPages\LawPageTranslation;
     use Auth;
@@ -90,6 +92,10 @@
         }
         public function createOrder()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Каса | ' . $currentLanguage->seo_title);
+            SeoHelper::setDescription('Тук можете да управлявате Вашите продукти, които желаете да закупите.');
+
             $country = Country::find(session()->get('country_id'));
             $city    = City::find(session()->get('city_id'));
 
@@ -118,6 +124,10 @@
         }
         public function index()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Количка | ' . $currentLanguage->seo_title);
+            SeoHelper::setDescription('Тук можете да управлявате Вашите продукти, които желаете да закупите.');
+
             //get countries and cities for selects
             $countries = Country::limit(50)->get();
             $cities    = City::limit(50)->get();

@@ -2,6 +2,8 @@
 
     namespace Modules\Shop\Http\Controllers\Front\RegisteredUser;
 
+    use App\Helpers\LanguageHelper;
+    use App\Helpers\SeoHelper;
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use Exception;
@@ -17,6 +19,9 @@
     {
         public function dashboard()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Моят профил | ' . $currentLanguage->seo_title);
+
             $registeredUser = Auth::guard('shop')->user();
             session()->put('regUser', $registeredUser);
 
@@ -30,10 +35,15 @@
 
         public function personalData()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Лични данни | ' . $currentLanguage->seo_title);
+
             return view('shop::front.registered_users.profile.personal_data', ['registeredUser' => Auth::guard('shop')->user()]);
         }
         public function getFavoriteProducts()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Любими | ' . $currentLanguage->seo_title);
             $registeredUser = Auth::guard('shop')->user();
 
             return view('shop::front.registered_users.profile.favorite_products', ['registeredUser' => $registeredUser, 'favoriteProducts' => $registeredUser->favoriteProducts()->with('product', 'product.translations', 'product.measureUnit')->get()]);
@@ -63,12 +73,18 @@
         }
         public function getOrders()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Поръчки | ' . $currentLanguage->seo_title);
+            
             $registeredUser = Auth::guard('shop')->user();
 
             return view('shop::front.registered_users.profile.orders.index', compact('registeredUser'));
         }
         public function showOrderDetails($languageSlug, $order_hash)
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Преглед на поръчка | ' . $currentLanguage->seo_title);
+
             $order = Order::where('id', decrypt($order_hash))->with('order_products', 'payment', 'delivery', 'documents', 'city')->first();
             WebsiteHelper::redirectBackIfNull($order);
 

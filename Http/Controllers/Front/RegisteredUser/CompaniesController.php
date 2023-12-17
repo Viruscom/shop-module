@@ -3,6 +3,7 @@
     namespace Modules\Shop\Http\Controllers\Front\RegisteredUser;
 
     use App\Helpers\LanguageHelper;
+    use App\Helpers\SeoHelper;
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
@@ -14,6 +15,9 @@
     {
         public function index()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Фирми | ' . $currentLanguage->seo_title);
+            
             return view('shop::front.registered_users.profile.companies.index', [
                 'registeredUser' => Auth::guard('shop')->user(),
                 'defaultCompany' => Company::isDefault(true)->isDeleted(false)->first(),

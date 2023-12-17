@@ -3,6 +3,7 @@
     namespace Modules\Shop\Http\Controllers\Front\RegisteredUser;
 
     use App\Helpers\LanguageHelper;
+    use App\Helpers\SeoHelper;
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,9 @@
     {
         public function index()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Адреси | ' . $currentLanguage->seo_title);
+
             $registeredUser = Auth::guard('shop')->user();
 
             return view('shop::front.registered_users.profile.addresses.shipment.index', [

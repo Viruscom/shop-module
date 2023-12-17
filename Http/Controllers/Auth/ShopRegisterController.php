@@ -3,6 +3,7 @@
     namespace Modules\Shop\Http\Controllers\Auth;
 
     use App\Helpers\LanguageHelper;
+    use App\Helpers\SeoHelper;
     use App\Models\LawPages\LawPageTranslation;
     use Illuminate\Auth\Events\Registered;
     use Illuminate\Http\Request;
@@ -14,6 +15,10 @@
     {
         public function showRegistrationForm()
         {
+            $currentLanguage = LanguageHelper::getCurrentLanguage();
+            SeoHelper::setTitle('Регистрация на портребител | ' . $currentLanguage->seo_title);
+            SeoHelper::setDescription('Тук можете да управлявате Вашите продукти, които желаете да закупите.');
+
             return view('shop::auth.register', [
                 'termsOfUse'    => LawPageTranslation::where('url', 'obshchi-usloviya')->with('parent', 'parent.translations')->first(),
                 'privacyPolicy' => LawPageTranslation::where('url', 'politiki-za-poveritelnost')->with('parent', 'parent.translations')->first(),
