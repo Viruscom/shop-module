@@ -5,7 +5,9 @@
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use App\Models\Settings\ShopSetting;
+    use Exception;
     use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Validator;
     use Modules\Shop\Entities\Orders\Order;
     use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
     use Modules\Shop\Entities\Settings\City;
@@ -253,5 +255,46 @@
             $order->update($data);
 
             return response()->json($data);
+        }
+
+        public function updateComment(Request $request, $id)
+        {
+            $messages = [
+                'comment.required' => 'The comment field is required.',
+                'comment.string'   => 'The comment must be a string.',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'comment' => 'required|string',
+            ],                           $messages);
+
+            if ($validator->fails()) {
+                return response()->json([
+                                            'success' => false,
+                                            'errors'  => $validator->errors()->all()
+                                        ]);
+            }
+
+            try {
+                $order = Order::where('id', $id)->first();
+                if (is_null($order)) {
+                    return response()->json([
+                                                'success' => false,
+                                                'errors'  => ['Order not found.']
+                                            ]);
+                }
+
+                $order->update(['comment' => $request->comment]);
+
+                return response()->json([
+                                            'success' => true,
+                                            'message' => 'Comment updated successfully.'
+                                        ]);
+            } catch (Exception $e) {
+                return response()->json([
+                                            'success' => false,
+                                            'errors'  => ['An unexpected error occurred. Please try again.']
+                                        ]);
+            }
         }
     }

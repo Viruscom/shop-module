@@ -84,6 +84,7 @@
             /* ID */
             Route::group(['prefix' => '{id}'], static function () {
                 Route::get('edit', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
+                Route::post('comment/update', [OrdersController::class, 'updateComment'])->name('admin.shop.orders.edit.comment_update');
                 Route::post('update', [OrdersController::class, 'update'])->name('admin.shop.orders.update');
                 Route::get('delete', [OrdersController::class, 'revoke'])->name('admin.shop.orders.revoke');
                 Route::get('show', [OrdersController::class, 'show'])->name('admin.shop.orders.show');

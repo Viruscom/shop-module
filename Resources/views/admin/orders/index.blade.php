@@ -28,8 +28,45 @@
                 dynamicSortToColumn: 9,
                 rowsPerPage: 50
             }
-            initDatatable('example', options);
+            initOrdersDatatable('example', options);
 
+            function initOrdersDatatable(tableId, options) {
+                if (options.withSortableRow) {
+                    $('#' + tableId + ' thead tr').clone(true).appendTo('#' + tableId + ' thead').css('background-color', '#ebecef');
+                    $('#' + tableId + ' thead tr:eq(1) th').each(function (i) {
+                        if (i >= options.sortableRowFromColumn && i < options.sortableRowToColumn) {
+                            var title = $(this).text();
+                            $(this).html('<input type="text" class="datatable-filter-input head-filter-' + i + '" placeholder="Сортирай по ' + title + '" />');
+                            $('input', this).on('keyup change', function () {
+                                if (table.column(i).search() !== this.value) {
+                                    table
+                                        .column(i)
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        } else {
+                            $(this).html('');
+                        }
+                    });
+                }
+
+                var table = $('#' + tableId).DataTable({
+                    iDisplayLength: 50,
+                    orderCellsTop: true,
+                    order: [[0, 'desc']],
+                    fixedHeader: true,
+                    stateSave: true,
+                    responsive: true,
+                    width: '10%',
+                    "language": $.parseJSON($('#dataTableLang').text()),
+                    "stateLoaded": function stateLoadedCallback(settings, state) {
+                        state.columns.forEach(function (column, index) {
+                            $('.head-filter-' + index).val(column.search.search);
+                        });
+                    }
+                });
+            }
         });
     </script>
 @endsection
@@ -50,9 +87,9 @@
             </div>
 
             <div class="action-mass-buttons pull-right">
-                {{--                <a href="{{ route('admin.shop.orders.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">--}}
-                {{--                    <i class="fas fa-plus"></i>--}}
-                {{--                </a>--}}
+                <a href="{{ route('admin.shop.orders.create') }}" role="button" class="btn btn-lg tooltips green" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Създай нов">
+                    <i class="fas fa-plus"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -96,9 +133,9 @@
                             <td>{{ $order->street .', '. $order->street_number }}</td>
                             <td>
                                 <div>
-                                    Общо: {{ $order->totalEndPriceProducts() }} лв.<br>
-                                    <span>Отстъпки: <strong class="text-purple">-{{ $order->discounts_amount }}</strong> лв.</span><br>
-                                    <span>Общо с отстъпки и ДДС: {{ $order->totalEndDiscountedPrice() }} лв.</span>
+                                    Общо: {{ $order->totalEndDiscountedPriceWithAdditivesAndCollection() }} лв.<br>
+                                    <span>Отстъпки: <strong class="text-purple">-{{ $order->totalDiscountsAmount() }}</strong> лв.</span><br>
+                                    <span>Общо с ДДС и доставка: {{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</span>
                                 </div>
                             </td>
                             <td>{{ $order->getReadablePaymentMethod() }}</td>

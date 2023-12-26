@@ -121,30 +121,36 @@
         public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
         {
             if (!is_null($request->ids[0])) {
-                $action->deleteMultiple($request, Product::class);
+                $ids = array_map('intval', explode(',', $request->ids[0]));
+                foreach ($ids as $id) {
+                    $model = Product::find($id);
+                    if (is_null($model)) {
+                        continue;
+                    }
+
+                    if ($model->existsFile($model->filename)) {
+                        $model->deleteFile($model->filename);
+                    }
+
+                    $modelsToUpdate = Product::where('category_id', $model->category_id)->where('position', '>', $model->position)->get();
+                    if (method_exists(get_class($model), 'seoFields')) {
+                        $model->seoFields()->delete();
+                    }
+
+                    $model->delete();
+                    foreach ($modelsToUpdate as $modelToUpdate) {
+                        $modelToUpdate->update(['position' => $modelToUpdate->position - 1]);
+                    }
+                }
+
+                Product::cacheUpdate();
 
                 return redirect()->back()->with('success-message', 'admin.common.successful_delete');
             }
 
             return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
         }
-        public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
-        {
-            $action->activeMultiple(Product::class, $request, $active);
-            Product::cacheUpdate();
-
-            return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-        }
-        public function active($id, $active): RedirectResponse
-        {
-            $product = Product::find($id);
-            MainHelper::goBackIfNull($product);
-
-            $product->update(['active' => $active]);
-            Product::cacheUpdate();
-
-            return redirect()->back()->with('success-message', 'admin.common.successful_edit');
-        }
+        
         public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
@@ -172,6 +178,23 @@
             Product::cacheUpdate();
 
             return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
+        }
+        public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
+        {
+            $action->activeMultiple(Product::class, $request, $active);
+            Product::cacheUpdate();
+
+            return redirect()->back()->with('success-message', 'admin.common.successful_edit');
+        }
+        public function active($id, $active): RedirectResponse
+        {
+            $product = Product::find($id);
+            MainHelper::goBackIfNull($product);
+
+            $product->update(['active' => $active]);
+            Product::cacheUpdate();
+
+            return redirect()->back()->with('success-message', 'admin.common.successful_edit');
         }
         public function create($category_id, ProductAction $action): Renderable
         {

@@ -65,6 +65,40 @@
                     }
                 });
             });
+
+            $('.update-order-comment').click(function () {
+                var orderId = $(this).attr('order_id');
+                var comment = $('textarea[name="comment"]').val();
+
+                $.ajax({
+                    url: '{{ route('admin.shop.orders.edit.comment_update', ['id' => $order->id]) }}',
+                    type: 'POST',
+                    data: {
+                        order_id: orderId,
+                        comment: comment,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                        } else {
+                            alert(response.errors.join("\n"));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        try {
+                            var resp = JSON.parse(xhr.responseText);
+                            if (resp.errors) {
+                                alert(resp.errors.join("\n"));
+                            } else {
+                                alert('Error updating comment');
+                            }
+                        } catch (e) {
+                            alert('Error updating comment');
+                        }
+                    }
+                });
+            });
         });
     </script>
     <script>
@@ -244,6 +278,26 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="text-purple">Коментар към поръчката</h3>
+            <div class="form-group description @if($errors->has('comment')) has-error @endif">
+                <label class="control-label p-b-10">Коментар</label>
+                <textarea name="comment" class="col-xs-12 form-control m-b-10" rows="4">{{ old('comment') ?: $order->comment }}</textarea>
+                @if($errors->has('comment'))
+                    <span class="help-block">{{ trans($errors->first('comment')) }}</span>
+                @endif
+            </div>
+            <div class="form-group text-right">
+                <div class="btn btn-primary update-order-comment" order_id="{{ $order->id }}">Обнови</div>
             </div>
         </div>
     </div>
