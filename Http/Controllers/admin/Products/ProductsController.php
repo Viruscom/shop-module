@@ -150,7 +150,7 @@
 
             return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
         }
-        
+
         public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
@@ -249,7 +249,11 @@
             $product = Product::whereId($id)->with('translations')->first();
             MainHelper::goBackIfNull($product);
 
-            $action->positionUp(Product::class, $product);
+            $previousModel = Product::where('category_id', $product->category_id)->where('position', $product->position - 1)->first();
+            if (!is_null($previousModel)) {
+                $previousModel->update(['position' => $previousModel->position + 1]);
+                $product->update(['position' => $product->position - 1]);
+            }
             Product::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
@@ -260,7 +264,11 @@
             $product = Product::whereId($id)->with('translations')->first();
             MainHelper::goBackIfNull($product);
 
-            $action->positionDown(Product::class, $product);
+            $nextModel = Product::where('category_id', $product->category_id)->where('position', $product->position + 1)->first();
+            if (!is_null($nextModel)) {
+                $nextModel->update(['position' => $nextModel->position - 1]);
+                $product->update(['position' => $product->position + 1]);
+            }
             Product::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
