@@ -1,4 +1,6 @@
-@php use Modules\Shop\Entities\Basket\Basket; @endphp<h3 class="title-main title-border">@lang('shop::front.basket.summary')</h3>
+@php use Modules\Shop\Entities\Basket\Basket;
+$deliveryPrice = $basket->total_free_delivery ? '0.00' : number_format((float)Order::FIXED_DELIVERY_PRICE, 2,'.','');
+@endphp<h3 class="title-main title-border">@lang('shop::front.basket.summary')</h3>
 
 <div class="col-inner">
     <div class="summary-boxes">
@@ -42,19 +44,19 @@
             <div class="box-row">
                 <span>@lang('shop::front.basket.products_prices')</span>
 
-                <strong>{{$basket->total_default}} лв.</strong>
+                <strong>{{ number_format($basket->total_default, 2, '.', '') }} лв.</strong>
             </div>
 
             <div class="box-row">
                 <span>{{ __('shop::front.basket.total_discounts') }}</span>
 
-                <strong>- {{$basket->total_default - $basket->total_discounted}} лв.</strong>
+                <strong>- {{number_format($basket->total_default - $basket->total_discounted, 2, '.', '')}} лв.</strong>
             </div>
 
             <div class="box-row">
                 <span>@lang('shop::front.basket.delivery')</span>
 
-                {{--                <strong>{{$basket_product->free_delivery ? trans('shop:front.basket.free_delivery') :'3.00  лв.'}}</strong>--}}
+                <strong>{{ $deliveryPrice }} лв.</strong>
             </div>
         </div>
 
@@ -62,7 +64,7 @@
             <div class="box-row box-row-big">
                 <span>{{ __('shop::front.basket.total_with_vat') }}</span>
 
-                <strong>{{ $basket->total_discounted }} лв.</strong>
+                <strong>{{ number_format($basket->total_discounted + $deliveryPrice, 2, '.', '') }} лв.</strong>
             </div>
 
             <div class="box-row">
