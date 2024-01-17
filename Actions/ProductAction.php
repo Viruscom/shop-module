@@ -101,7 +101,7 @@
                 ];
             }
             $data['type']     = AdBox::$WAITING_ACTION;
-            $data['position'] = AdBox::generatePosition($data, 0);
+            $data['position'] = AdBox::generatePositionForWaitingAdBox();
             $data['active']   = true;
 
             AdBox::create($data->all());
