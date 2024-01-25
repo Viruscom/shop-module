@@ -7,20 +7,23 @@
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use Illuminate\Support\Facades\Auth;
+    use Modules\Shop\Entities\RegisteredUser\Firms\Company;
     use Modules\Shop\Entities\RegisteredUser\ShipmentAddresses\ShopShipmentAddress;
+    use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
     use Modules\Shop\Entities\Settings\Main\CountrySale;
+    use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressStoreRequest;
+    use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressUpdateRequest;
+    use Modules\Shop\Http\Requests\Front\RegisteredUser\PersonalDataUpdateRequest;
     use Modules\Shop\Http\Requests\Front\RegisteredUser\ShipmentAddressStoreRequest;
     use Modules\Shop\Http\Requests\Front\RegisteredUser\ShipmentAddressUpdateRequest;
 
     class ShipmentAddressesController extends Controller
     {
-        public function index()
-        {
+        public function index(){
             $currentLanguage = LanguageHelper::getCurrentLanguage();
             SeoHelper::setTitle('Адреси | ' . $currentLanguage->seo_title);
 
             $registeredUser = Auth::guard('shop')->user();
-
             return view('shop::front.registered_users.profile.addresses.shipment.index', [
                 'registeredUser' => $registeredUser,
                 'defaultAddress' => $registeredUser->shipmentAddresses()->isDefault(true)->isDeleted(false)->first(),

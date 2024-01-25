@@ -65,15 +65,15 @@
 
                                 @include('shop::admin.products.additional_fields', ['language' => $language, 'maxFields' => 10, 'isCreate' => true])
 
-                                <div class="additional-textareas-wrapper">
-                                    <hr>
-                                    <h3>{{ __('admin.common.additional_texts') }}</h3>
-                                    <div class="panel-group" id="accordion-{{$language->id}}">
-                                        @for($i=1; $i<7; $i++)
-                                            @include('admin.partials.on_create.additional_titles_and_texts', ['language' => $language, 'i' => $i])
-                                        @endfor
-                                    </div>
-                                </div>
+                                {{--                                <div class="additional-textareas-wrapper">--}}
+                                {{--                                    <hr>--}}
+                                {{--                                    <h3>{{ __('admin.common.additional_texts') }}</h3>--}}
+                                {{--                                    <div class="panel-group" id="accordion-{{$language->id}}">--}}
+                                {{--                                        @for($i=1; $i<7; $i++)--}}
+                                {{--                                            @include('admin.partials.on_create.additional_titles_and_texts', ['language' => $language, 'i' => $i])--}}
+                                {{--                                        @endfor--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
 
                             </div>
                         @endforeach
@@ -86,10 +86,10 @@
                     @include('admin.partials.on_create.seo')
                     <div class="form form-horizontal">
                         <div class="form-body">
-                            <div class="row">
-                                @include('admin.partials.common.import_file')
-                                @include('admin.partials.common.import_catalog')
-                            </div>
+                            {{--                            <div class="row">--}}
+                            {{--                                @include('admin.partials.common.import_file')--}}
+                            {{--                                @include('admin.partials.common.import_catalog')--}}
+                            {{--                            </div>--}}
 
                             <div class="row">
                                 <hr>
@@ -110,15 +110,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>
-                                        <div class="col-md-6">
-                                            <label class="switch pull-left">
-                                                <input type="checkbox" name="is_promo" class="success" data-size="small" {{(old('is_promo') ? 'checked' : 'active')}}>
-                                                <span class="slider"></span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                    {{--                                    <div class="form-group">--}}
+                                    {{--                                        <label class="control-label col-md-3">{{ __('shop::admin.products.label_promo_product') }}:</label>--}}
+                                    {{--                                        <div class="col-md-6">--}}
+                                    {{--                                            <label class="switch pull-left">--}}
+                                    {{--                                                <input type="checkbox" name="is_promo" class="success" data-size="small" {{(old('is_promo') ? 'checked' : 'active')}}>--}}
+                                    {{--                                                <span class="slider"></span>--}}
+                                    {{--                                            </label>--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    </div>--}}
+
                                 </div>
                             </div>
 
@@ -131,19 +132,20 @@
                                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'measure_unit_value', 'label' => __('shop::admin.products.measure_unit_value'), 'required' => true])
                                 @include('admin.partials.on_create.form_fields.select', ['fieldName' => 'measure_unit_id', 'label' => trans('shop::admin.products.measure_unit'), 'models' => $measureUnits, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix'])
                                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'supplier_delivery_price', 'label' => trans('shop::admin.products.supplier_delivery_price'), 'required' => true, 'class' => 'width-p100'])
-                                @include('admin.partials.on_create.checkbox', ['fieldName' => 'catalog_from_price', 'label' => trans('shop::admin.products.from_price'), 'required' => false])
+                                {{--                                @include('admin.partials.on_create.checkbox', ['fieldName' => 'catalog_from_price', 'label' => trans('shop::admin.products.from_price'), 'required' => false])--}}
                                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'price', 'label' => trans('shop::admin.products.price'), 'required' => true, 'class' => 'width-p100'])
-                                @include('admin.partials.on_create.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: 1, 'min' => 1, 'max'=> 999999999999])
-                                {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'sku', 'label' => trans('shop::admin.products.sku_number'), 'required' => false])--}}
+
                                 {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'barcode', 'label' => trans('shop::admin.products.barcode'), 'required' => false])--}}
                             </div>
 
                             <div class="col-md-6">
+                                @include('admin.partials.on_create.form_fields.input_integer', ['fieldName' => 'units_in_stock', 'label' => trans('shop::admin.products.units_in_stock'), 'required' => true,'fieldNameValue' => old('units_in_stock') ?: 1, 'min' => 1, 'max'=> 999999999999])
+                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'sku', 'label' => trans('shop::admin.products.sku_number'), 'required' => false])
                                 @if(array_key_exists('YanakSoftApi', $activeModules))
                                     @include('yanaksoftapi::admin.partials.on_create_select', ['fieldName' => 'stk_idnumb', 'label' => trans('shop::admin.yanak_soft_api.choose_product'), 'models' => $yanakProducts, 'required' => true, 'labelClass' => 'select-label-fix', 'class' => 'select-fix', 'withPleaseSelect' => true])
                                 @endif
-                                @include('admin.partials.on_create.checkbox', ['fieldName' => 'catalog_from_discounted_price', 'label' => trans('shop::admin.products.from_price'), 'required' => false])
-                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'catalog_discounted_price', 'label' => trans('shop::admin.products.catalog_discounted_price'), 'required' => false, 'class' => 'width-p100'])
+                                {{--                                @include('admin.partials.on_create.checkbox', ['fieldName' => 'catalog_from_discounted_price', 'label' => trans('shop::admin.products.from_price'), 'required' => false])--}}
+                                {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'catalog_discounted_price', 'label' => trans('shop::admin.products.catalog_discounted_price'), 'required' => false, 'class' => 'width-p100'])--}}
                                 {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'weight', 'label' => trans('shop::admin.products.weight'), 'required' => false])--}}
                                 {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'width', 'label' => trans('shop::admin.products.width'), 'required' => false])--}}
                                 {{--                                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'height', 'label' => trans('shop::admin.products.height'), 'required' => false])--}}
@@ -155,14 +157,23 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12">
-                                    <h4>ДДС ставки</h4>
+                                    <h3 class="m-t-40 m-b-20"><i class="fas fa-tachometer-alt fa-2x"></i> <span>ДДС ставки</span></h3>
                                 </div>
-                                <div class="col-md-6 col-xs-12">
-                                    {{--                            TODO: VAT categories fields--}}
+                                <div class="col-md-12">
+                                    <div class="alert alert-warning"><strong>Внимание!</strong> ДДС ставките определят продукта в коя ддс категория ще попадне за всяка държава, в която продавате.</div>
                                 </div>
-                                <div class="col-md-6 col-xs-12">
-
-                                </div>
+                                @foreach($saleCountries as $saleCountry)
+                                    <div class="col-md-4 col-xs-6">
+                                        <h4>Държава: <strong>{{ $saleCountry->country->name }}</strong></h4>
+                                        <p>
+                                            <select class="form-control @error('saleCountries['.$saleCountry->country->id.'][vat_category]') is-invalid @enderror" name="saleCountries[{{$saleCountry->country->id}}][vat_category]" required>
+                                                @foreach($saleCountry->country->vat_categories as $category)
+                                                    <option value="{{$category->id}}" {{old('saleCountries['.$saleCountry->country->id.'][vat_category]')==$category->id ? 'selected':''}}>{{$category->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </p>
+                                    </div>
+                                @endforeach
                             </div>
 
                             <div class="row">

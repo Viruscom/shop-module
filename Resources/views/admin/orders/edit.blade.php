@@ -8,7 +8,7 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('admin/assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/shop/order.js') }}"></script>
+    {{--    <script src="{{ asset('admin/assets/js/shop/order.js') }}"></script>--}}
     <script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/foundation-datepicker/datepicker.js') }}"></script>
@@ -16,7 +16,6 @@
         $(".select2").select2({language: "bg"});
 
         $(document).ready(function () {
-
             var table = $('.example').DataTable({
                 orderCellsTop: true,
                 fixedHeader: true,
@@ -99,7 +98,42 @@
                     }
                 });
             });
+
+            $('.update-order-others').click(function () {
+                var orderId = $(this).attr('order_id');
+                var with_utensils = $('input[name="with_utensils"]').prop('checked');
+
+                $.ajax({
+                    url: '{{ route('admin.shop.orders.edit.others_update', ['id' => $order->id]) }}',
+                    type: 'POST',
+                    data: {
+                        order_id: orderId,
+                        with_utensils: with_utensils,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                        } else {
+                            alert(response.errors.join("\n"));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        try {
+                            var resp = JSON.parse(xhr.responseText);
+                            if (resp.errors) {
+                                alert(resp.errors.join("\n"));
+                            } else {
+                                alert('Error updating others info');
+                            }
+                        } catch (e) {
+                            alert('Error updating others info');
+                        }
+                    }
+                });
+            });
         });
+
     </script>
     <script>
         $(document).ready(function () {
@@ -115,9 +149,23 @@
 @section('content')
     @include('shop::admin.orders.breadcrumbs')
     @include('admin.notify')
+    @if(!is_null($order->sent_to_yanak_at))
+        <div class="myadmin-alert alert alert-warning notify-position-top d-flex" style="justify-content: space-between;">
+            <div>
+                <i class="fas fa-engine-warning"></i>
+                <strong>Внимание! </strong> Тази поръчка вече е изпращана към Янак на {{ $order->sent_to_yanak_at }}
+            </div>
+            <a href="#" class="closed"><i class="far fa-times-circle"></i></a>
+        </div>
+    @endif
     <div class="col-xs-12 p-0">
         <div class="bg-grey top-search-bar">
-            <div class="action-mass-buttons pull-right">
+            <div class="action-mass-buttons pull-right" style="display: flex;">
+                <form action="{{ route('admin.shop.yanak.post-order', ['id' => $order->id]) }}" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-lg btn-primary margin-bottom-10 m-r-5">Изпрати към Янак</button>
+
+                </form>
                 <a href="{{ route('admin.shop.orders') }}" role="button" class="btn btn-lg back-btn margin-bottom-10"><i class="fa fa-reply"></i></a>
             </div>
         </div>
@@ -190,16 +238,16 @@
                     <td>
                         <form action="{{ route('admin.shop.orders.shipment-status-update', ['id' => $order->id]) }}" method="post">
                             @csrf
-                            <div>
+                            <div style="display: flex;">
                                 <select name="status" class="select2 order_status_select" style="width: 100%;">
                                     <option value="{{ Order::SHIPMENT_WAITING }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_WAITING) }}</option>
-                                    <option value="{{ Order::SHIPMENT_PROCESSING }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_PROCESSING) }}</option>
+                                    {{--                                    <option value="{{ Order::SHIPMENT_PROCESSING }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_PROCESSING) }}</option>--}}
                                     <option value="{{ Order::SHIPMENT_SENT }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_SENT) }}</option>
                                     <option value="{{ Order::SHIPMENT_DELIVERED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_DELIVERED) }}</option>
                                     <option value="{{ Order::SHIPMENT_CANCELED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_CANCELED) }}</option>
                                     <option value="{{ Order::SHIPMENT_RETURNED }}">{{ trans('shop::admin.order_shipment_statuses.' . Order::SHIPMENT_RETURNED) }}</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary m-t-10 pull-right">Обнови статус</button>
+                                <button type="submit" class="btn save-btn m-l-5 pull-right"><i class="fas fa-save"></i></button>
                             </div>
                         </form>
                     </td>
@@ -209,7 +257,7 @@
                     <td>
                         <form action="{{ route('admin.shop.orders.payment-status-update', ['id' => $order->id]) }}" method="post">
                             @csrf
-                            <div>
+                            <div style="display: flex;">
                                 <select name="status" class="select2 order_status_select" style="width: 100%;">
                                     <option value="{{ Order::PAYMENT_PENDING }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PENDING) }}</option>
                                     <option value="{{ Order::PAYMENT_CANCELED }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_CANCELED) }}</option>
@@ -217,7 +265,7 @@
                                     <option value="{{ Order::PAYMENT_PARTIAL_COMPENSATION }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PARTIAL_COMPENSATION) }}</option>
                                     <option value="{{ Order::PAYMENT_PAID }}">{{ trans('shop::admin.order_payment_statuses.' . Order::PAYMENT_PAID) }}</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary m-t-10 pull-right">Обнови статус</button>
+                                <button type="submit" class="btn save-btn m-l-5 pull-right"><i class="fas fa-save"></i></button>
                             </div>
                         </form>
                     </td>
@@ -242,7 +290,7 @@
                 <div class="form-control">{{ $order->getReadablePaymentMethod() }}</div>
             </div>
             <div class="m-t-10">
-                <table class="table table-striped payment-addresses-table">
+                <table class="table table-striped payment-addresses-table hidden">
                     <thead>
                     <tr>
                         <th style="display: flex; justify-content: space-between;align-items: center; padding-right: 0;">
@@ -287,8 +335,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <h3 class="text-purple">Коментар към поръчката</h3>
+        <div class="col-md-6">
+            <div class="d-flex" style="align-items: flex-end;justify-content: space-between;">
+                <h3 class="text-purple">Коментар към поръчката</h3>
+                <div class="text-right">
+                    <div class="btn save-btn update-order-comment" order_id="{{ $order->id }}"><i class="fas fa-save"></i></div>
+                </div>
+            </div>
             <div class="form-group description @if($errors->has('comment')) has-error @endif">
                 <label class="control-label p-b-10">Коментар</label>
                 <textarea name="comment" class="col-xs-12 form-control m-b-10" rows="4">{{ old('comment') ?: $order->comment }}</textarea>
@@ -296,138 +349,26 @@
                     <span class="help-block">{{ trans($errors->first('comment')) }}</span>
                 @endif
             </div>
-            <div class="form-group text-right">
-                <div class="btn btn-primary update-order-comment" order_id="{{ $order->id }}">Обнови</div>
-            </div>
+
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <hr>
-        </div>
-    </div>
-    <div class="row m-t-40">
+
         <div class="col-md-6">
-            <h3 class="text-purple">{{ __('shop::admin.orders.payment_with_virtual_pos_terminal') }}</h3>
-            <form action="{{ route('admin.shop.orders.payment-update', ['id' => $order->id]) }}" method="POST">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th colspan="2" style="justify-content: space-between;align-items: center; padding-right: 0;">
-                            <h4>{{ __('shop::admin.orders.register_pos_payment') }}</h4>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if($order->payment_id == $myPosPayment->id)
-                        <tr>
-                            <td>{{ __('shop::admin.orders.pos_doc_number') }}</td>
-                            <td class="text-right"><span>{{ str_pad($vrNumber->value, 10, '0', STR_PAD_LEFT) }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ __('shop::admin.orders.pos_date_of_payment') }}</td>
-                            <td class="text-right"><input type="date" name="vr_date" value="{{ old('vr_date') ?? $order->vr_date }}"></td>
-                        </tr>
-                        <tr>
-                            <td>{{ __('shop::admin.orders.pos_transaction_id') }}</td>
-                            <td class="text-right"><input type="text" name="vr_transaction_number" class="text-right" value="{{ old('vr_transaction_number') ?? $order->vr_transaction_number }}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ __('shop::admin.orders.pos_payment_type') }}</td>
-                            <td class="text-right">{{ trans('administration_messages.order_payment_type_'.$order->payment_type_id) }}</td>
-                        </tr>
-                    @else
-                        <tr>
-                            <td colspan="2" class="no-table-rows">{{ __('shop::admin.orders.pos_no_records') }}
-                            </td>
-                        </tr>
-                    @endif
-                    </tbody>
-                </table>
-                @if($order->payment_id == $myPosPayment->id)
-                    <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10 pull-right">
-                        <i class="fas fa-save"></i> запиши
-                    </button>
-                @endif
-            </form>
-            @if($order->vr_date != '' && $order->vr_transaction_number != '' && $order->payment_id == $myPosPayment->id)
-                <div class="row" style="margin-top: 80px;">
-                    <div class="col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th colspan="2">{{ __('shop::admin.orders.pos_virtual_note') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td colspan="2">{{ __('shop::admin.orders.pos_virtual_note_save_in_documents') }}.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <form action="{{ route('orders.virtual-receipt-generate', ['id' => $order->id]) }}" method="POST" class="pull-right">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button type="submit" name="submit" value="submit" class="btn green margin-bottom-10 pull-right">{{ __('shop::admin.orders.generate_virtual_note') }}
-                            </button>
-                        </form>
-                    </div>
+            <div class="d-flex" style="align-items: flex-end;justify-content: space-between;">
+                <h3 class="text-purple">Други</h3>
+                <div class="text-right">
+                    <div class="btn save-btn update-order-others" order_id="{{ $order->id }}"><i class="fas fa-save"></i></div>
                 </div>
-            @endif
-        </div>
-        <div class="col-md-6">
-            <h3 class="text-purple">Връщане на поръчка / пари</h3>
-            <form action="{{ route('admin.shop.orders.return-update', ['id' => $order->id]) }}" method="POST">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th colspan="2" style="justify-content: space-between;align-items: center; padding-right: 0;">
-                            <h4>Регистрация на връщането</h4>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Върната сума</td>
-                        <td class="text-right"><input type="text" name="returned_amount" class="text-right" value="{{ old('returned_amount') ?? $order->returned_amount }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Дата на връщане на сумата</td>
-                        <td class="text-right"><input type="date" name="date_of_return" value="{{ old('date_of_return') ?? $order->date_of_return }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Начин на връщане на сумата</td>
-                        <td class="text-right">
-                            <select name="type_of_return">
-                                <option value="По платежна сметка" {{ $order->type_of_return == 'По платежна сметка' ? 'selected' : '' }}>
-                                    По платежна сметка
-                                </option>
-                                <option value="По карта" {{ $order->type_of_return == 'По карта' ? 'selected' : '' }}>По
-                                                                                                                      карта
-                                </option>
-                                <option value="В брой" {{ $order->type_of_return == 'В брой' ? 'selected' : '' }}>В
-                                                                                                                  брой
-                                </option>
-                                <option value="Друг" {{ $order->type_of_return == 'Друг' ? 'selected' : '' }}>Друг
-                                </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <label for="comment">Коментар за връщане на поръчка / пари</label><textarea name="return_comment" id="comment" rows="7" style="width: 100%">{{ $order->return_comment }}</textarea>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <button type="submit" name="submit" value="submit" class="btn save-btn margin-bottom-10 pull-right"><i class="fas fa-save"></i> запиши
-                </button>
-            </form>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Искам прибори</label>
+                <div class="">
+                    <label class="switch pull-left">
+                        <input type="checkbox" name="with_utensils" class="success" data-size="small" {{($order->with_utensils ? 'checked' : '')}}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -438,7 +379,7 @@
     <div class="row">
         <div class="col-md-12" style="display: flex;justify-content: space-between;align-items: center;">
             <h3 class="text-purple">Фирмени данни</h3>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCompanyModal"><i class="fas fa-pencil-alt"></i></button>
+            <button type="button" class="btn green" data-toggle="modal" data-target="#addCompanyModal"><i class="fas fa-pencil-alt"></i></button>
             @include('shop::admin.orders.add_firm_modal')
         </div>
         <div class="col-md-12 col-xs-12">
@@ -458,7 +399,7 @@
                         <td>{{ $order->company_name }}</td>
                         <td>{{ $order->company_mol }}</td>
                         <td>{{ $order->company_eik }}</td>
-                        <td>{{ ($order->company_vat_eik =='') ? 'Няма': '' }}</td>
+                        <td>{{ ($order->company_vat_eik =='') ? 'Няма': $order->company_vat_eik }}</td>
                         <td>{{ $order->company_address }}</td>
                     </tr>
                 @else
@@ -493,80 +434,193 @@
             </ul>
             <div class="tab-content">
                 <div id="orders" class="tab-pane fade in active" style="overflow: auto;">
-                    <table class="table table-striped products-table">
-                        <thead>
-                        <tr>
-                            <th>{{ __('shop::admin.orders.image') }}</th>
-                            <th>{{ __('shop::admin.orders.product') }}</th>
-                            <th>{{ __('shop::admin.orders.quantity') }}</th>
-                            <th>{{ __('shop::admin.orders.unit_price') }}</th>
-                            <th>{{ __('shop::admin.orders.vat') }}</th>
-                            <th>{{ __('shop::admin.orders.unit_price_-with_vat') }}</th>
-                            <th>{{ __('shop::admin.orders.total_with_vat') }}</th>
-                            <th>{{ __('shop::admin.orders.discounts_total') }}</th>
-                            <th>{{ __('shop::admin.orders.unit_price_with_vat_and_discounts') }}</th>
-                            <th>{{ __('shop::admin.orders.grand_total_with_vat_and_discounts') }}</th>
-                            <th>@lang('shop::admin.orders.free_delivery')</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($order->order_products as $orderProduct)
-                            <tr>
-                                <td><img src="{{ $orderProduct->product->getFileUrl() }}" width="45"></td>
-                                <td>{{ $orderProduct->product->title }}</td>
-                                <td>{{ $orderProduct->product_quantity }}</td>
-                                <td>{{ $orderProduct->price }}</td>
-                                <td>{{ $orderProduct->vat }}</td>
-                                <td>{{ $orderProduct->vat_applied_price }}</td>
-                                <td>{{ $orderProduct->end_price }}</td>
-                                <td>{{ $orderProduct->discounts_amount }}</td>
-                                <td>{{ $orderProduct->vat_applied_discounted_price }}</td>
-                                <td>{{ $orderProduct->end_discounted_price }}</td>
-                                <td>
-                                    @if($orderProduct->free_delivery)
-                                        <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_yes')</label>
-                                    @else
-                                        <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_no')</label>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                        <tfoot style="border-top: 2px dashed #c3c3c3;">
-                        <tr>
-                            <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_vat') }}:</th>
-                            <th class="price-without-discounts">{{ $order->totalVatProducts() }} лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_price_without_discounts') }}:</th>
-                            <th class="price-without-discounts">{{ $order->totalEndPriceProducts() }} лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.discounts_total') }}:</th>
-                            <th class="total-discounts" style="border: none;">{{ $order->totalDiscountsAmount() }} лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.total_price_after_discounts') }}:</th>
-                            <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPrice() }} лв.</th>
-                        </tr>
-                        <tr>
-                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.delivery') }}:</th>
-                            <th class="shipment-amount" style="border: none;"><span>3,00</span> лв.</th>
-                        </tr>
+                    @if(!isset($basket) || is_null($basket))
+                        <div class="col-xs-12 p-0">
+                            <div class="bg-grey top-search-bar">
+                                <div class="action-mass-buttons pull-right">
+                                    <a href="{{ route('admin.shop.orders.edit_products', ['id' => $order->id]) }}" class="btn btn-lg green tooltips" role="button"><i class="fas fa-pencil-alt"></i></a>
+                                </div>
+                            </div>
+                        </div>
 
-                        <tr>
-                            <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.grand_total_with_discounts_with_vat_and_delivery') }}:</th>
-                            <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">{{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <div class="hidden">
-                        <input type="text" name="total" class="price-without-discounts-input">
-                        <input type="text" name="total_discounts" class="discounts-on-products-input">
-                        <input type="text" name="vat" class="vat-input">
-                        <input type="text" name="total_with_vat" class="total-with-vat-input">
-                        <input type="text" name="shipment_amount" class="shipment-amount-input">
-                    </div>
+                        <table class="table table-striped products-table">
+                            <thead>
+                            <tr>
+                                <th>{{ __('shop::admin.orders.image') }}</th>
+                                <th>{{ __('shop::admin.orders.product') }}</th>
+                                <th>{{ __('shop::admin.orders.quantity') }}</th>
+                                <th>{{ __('shop::admin.orders.unit_price') }}</th>
+                                <th>{{ __('shop::admin.orders.vat') }}</th>
+                                <th>{{ __('shop::admin.orders.unit_price_-with_vat') }}</th>
+                                <th>{{ __('shop::admin.orders.total_with_vat') }}</th>
+                                <th>{{ __('shop::admin.orders.discounts_total') }}</th>
+                                <th>{{ __('shop::admin.orders.unit_price_with_vat_and_discounts') }}</th>
+                                <th>{{ __('shop::admin.orders.grand_total_with_vat_and_discounts') }}</th>
+                                <th>@lang('shop::admin.orders.free_delivery')</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($order->order_products as $orderProduct)
+                                <tr>
+                                    <td><img src="{{ $orderProduct->product->getFileUrl() }}" width="45"></td>
+                                    <td>{{ $orderProduct->product->title }}</td>
+                                    <td>{{ $orderProduct->product_quantity }}</td>
+                                    <td>{{ $orderProduct->price }}</td>
+                                    <td>{{ $orderProduct->vat }}</td>
+                                    <td>{{ $orderProduct->vat_applied_price }}</td>
+                                    <td>{{ $orderProduct->end_price }}</td>
+                                    <td>{{ $orderProduct->discounts_amount }}</td>
+                                    <td>{{ $orderProduct->vat_applied_discounted_price }}</td>
+                                    <td>{{ $orderProduct->end_discounted_price }}</td>
+                                    <td>
+                                        @if($orderProduct->free_delivery)
+                                            <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_yes')</label>
+                                        @else
+                                            <label class="label label-success">@lang('shop::admin.orders.free_delivery_label_no')</label>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @if($orderProduct->additives->isNotEmpty() || $orderProduct->additiveExcepts->isNotEmpty() || $orderProduct->productCollection->isNotEmpty())
+                                    <tr class="tr-extensions">
+                                        <td colspan="12">
+                                            <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around;align-items: flex-start;">
+                                                <div>
+                                                    <h5><strong>Добавки</strong></h5>
+                                                    <p>
+                                                    @if($orderProduct->additives->isNotEmpty())
+                                                        @php
+                                                            $additiveTotal = 0;
+                                                        @endphp
+                                                        <table class="table table-bordered table-extensions">
+                                                            <thead>
+                                                            <th>Добавка</th>
+                                                            <th>Количество</th>
+                                                            <th class="text-right">Цена</th>
+                                                            <th class="text-right">Общо</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($orderProduct->additives as $additive)
+                                                                <tr>
+                                                                    <td>{{ $additive->productAdditive->title }}</td>
+                                                                    <td>{{ $additive->quantity }}</td>
+                                                                    <td class="text-right">{{ $additive->price }}</td>
+                                                                    <td class="text-right">{{ $additive->total }}</td>
+                                                                </tr>
+                                                                @php
+                                                                    $additiveTotal+=$additive->total;
+                                                                @endphp
+                                                            @endforeach
+                                                            <tr>
+                                                                <td colspan="3" class="text-right">Общо с ДДС:</td>
+                                                                <td class="text-right">{{ number_format($additiveTotal, 2, '.', '') }}</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <div class="alert alert-warning">Няма избрани добавки</div>
+                                                        @endif</p>
+
+                                                </div>
+                                                <div>
+                                                    <h5><strong>Без</strong></h5>
+                                                    <p>
+                                                    @if($orderProduct->additiveExcepts->isNotEmpty())
+                                                        <table class="table table-bordered table-extensions">
+                                                            <thead>
+                                                            <th>Име</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($orderProduct->additiveExcepts as $additive)
+                                                                <tr>
+                                                                    <td>{{ $additive->productAdditive->title }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <div class="alert alert-warning">Няма избрани добавки за премахване</div>
+                                                        @endif</p>
+
+                                                </div>
+                                                <div>
+                                                    <h5><strong>Комбинирано с...</strong></h5>
+                                                    <p>
+                                                    @if($orderProduct->productCollection->isNotEmpty())
+                                                        @php
+                                                            $collectionTotal = 0;
+                                                        @endphp
+                                                        <table class="table table-bordered table-extensions">
+                                                            <thead>
+                                                            <th>Снимка</th>
+                                                            <th>Име</th>
+                                                            <th>Количество</th>
+                                                            <th class="text-right">Цена с ДДС</th>
+                                                            <th class="text-right">Общо</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($orderProduct->productCollection as $productCollection)
+                                                                <tr>
+                                                                    <td><img src="{{$productCollection->product->getFileUrl()}}" width="25"></td>
+                                                                    <td>{{ $productCollection->product->title }}</td>
+                                                                    <td>{{ number_format($productCollection->quantity, 2, '.', '') }}</td>
+                                                                    <td class="text-right">{{ $productCollection->price }}</td>
+                                                                    <td class="text-right">{{ $productCollection->total }}</td>
+                                                                </tr>
+                                                                @php
+                                                                    $collectionTotal+=$productCollection->total;
+                                                                @endphp
+                                                            @endforeach
+                                                            <tr>
+                                                                <td colspan="4" class="text-right">Общо с ДДС:</td>
+                                                                <td class="text-right">{{ number_format($collectionTotal, 2, '.', '') }}</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <div class="alert alert-warning">Няма избрани продукти за колекция</div>
+                                                        @endif</p>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                @endif
+                            @endforeach
+                            </tbody>
+                            <tfoot style="border-top: 2px dashed #c3c3c3;">
+                            <tr>
+                                <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_price_without_discounts') }}:</th>
+                                <th class="price-without-discounts">{{ $order->totalEndPriceProducts() }} лв.</th>
+                            </tr>
+                            <tr>
+                                <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.discounts_total') }}:</th>
+                                <th class="total-discounts" style="border: none;">{{ $order->totalDiscountsAmount() }} лв.</th>
+                            </tr>
+                            <tr>
+                                <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.total_price_after_discounts') }}:</th>
+                                <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPriceWithAdditivesAndCollection() }} лв.</th>
+                            </tr>
+                            <tr>
+                                <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.delivery') }}:</th>
+                                <th class="shipment-amount" style="border: none;"><span>{{ $order->getFixedDeliveryPrice() }}</span> лв.</th>
+                            </tr>
+
+                            <tr>
+                                <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.grand_total_with_discounts_with_vat_and_delivery') }}:</th>
+                                <th class="grand-total-with-vat-and-shipment-amount" style="border: none;">{{ $order->grandTotalWithDiscountsVatAndDelivery() }} лв.</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                        <div class="hidden">
+                            <input type="text" name="total" class="price-without-discounts-input">
+                            <input type="text" name="total_discounts" class="discounts-on-products-input">
+                            <input type="text" name="vat" class="vat-input">
+                            <input type="text" name="total_with_vat" class="total-with-vat-input">
+                            <input type="text" name="shipment_amount" class="shipment-amount-input">
+                        </div>
+                    @else
+                        @include('shop::admin.orders.edit_products')
+                    @endif
                 </div>
                 <div id="documents" class="tab-pane fade" style="overflow: auto;">
                     <div class="text-right"><a href="{{ route('admin.shop.orders.documents.create', ['order_id' =>$order->id]) }}" class="btn btn-success">{{ __('shop::admin.order_documents.add') }}</a></div>

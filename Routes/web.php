@@ -1,5 +1,8 @@
 <?php
 
+    use App\Http\Controllers\Shop\Frontend\Profile\AddressController;
+    use App\Http\Controllers\Shop\Frontend\Profile\BillingAddressController;
+    use App\Http\Controllers\Shop\Frontend\Profile\FavoriteProductController;
     use App\Http\Controllers\Shop\Frontend\Profile\FirmController;
     use App\Http\Controllers\Shop\Frontend\Profile\ProfileController;
     use Illuminate\Support\Facades\Route;
@@ -39,6 +42,7 @@
     use Modules\Shop\Http\Controllers\Auth\ShopResetPasswordController;
     use Modules\Shop\Http\Controllers\Auth\ShopVerificationController;
     use Modules\Shop\Http\Controllers\BasketController;
+    use Modules\Shop\Http\Controllers\CartController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\CompaniesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\PaymentAddressesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
@@ -56,12 +60,10 @@
     | contains the "web" middleware group. Now create something great!
     |
     */
-
     /*
      * ADMIN ROUTES
      */
     Route::group(['prefix' => 'admin/shop', 'middleware' => ['auth']], static function () {
-
         /* Common */
         Route::post('/getClientGroupById', [ShopAdminRegisteredUsersController::class, 'getClientGroupById']);
         /* Dashboard */
@@ -70,8 +72,21 @@
         /* Orders */
         Route::group(['prefix' => 'orders'], static function () {
             Route::get('/', [OrdersController::class, 'index'])->name('admin.shop.orders');
-            Route::get('/create', [OrdersController::class, 'create'])->name('admin.shop.orders.create');
-            Route::post('/store', [OrdersController::class, 'store'])->name('admin.shop.orders.store');
+            Route::group(['prefix' => 'create'], static function () {
+                Route::get('/', [OrdersController::class, 'create'])->name('admin.shop.orders.create');
+                Route::post('/step2', [OrdersController::class, 'createStepTwo'])->name('admin.shop.orders.create-step-two');
+                Route::post('/store-user-id', [OrdersController::class, 'storeUserId'])->name('admin.shop.orders.create.store-user-id');
+                Route::get('cancel', [OrdersController::class, 'cancel'])->name('admin.shop.orders.create.cancel');
+
+                Route::group(['prefix' => '{id}'], static function () {
+                    Route::get('step2', [OrdersController::class, 'getCreateStepTwo'])->name('admin.shop.orders.get-create-step-two');
+                    Route::post('save', [OrdersController::class, 'store'])->name('admin.shop.orders.create.save');
+                    Route::post('add/product', [OrdersController::class, 'onCreateAddProduct'])->name('admin.shop.orders.create.add_product');
+                    Route::post('remove/extension', [OrdersController::class, 'onCreateRemoveExtension'])->name('admin.shop.orders.create.remove_extension');
+                    Route::post('apply/promo/code', [OrdersController::class, 'onCreateApplyPromoCode'])->name('admin.shop.orders.create.apply_promo_code');
+                    Route::get('delete/promo/code', [OrdersController::class, 'onCreateDeletePromoCode'])->name('admin.shop.orders.create.delete_promo_code');
+                });
+            });
 
             Route::post('/changeOrderStatus', [OrdersController::class, 'changeOrderStatus'])->name('admin.shop.orders.change-status');
             Route::post('/getProductByIdForOrder', [OrdersController::class, 'getProductByIdForOrder']);
@@ -83,8 +98,24 @@
 
             /* ID */
             Route::group(['prefix' => '{id}'], static function () {
-                Route::get('edit', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
-                Route::post('comment/update', [OrdersController::class, 'updateComment'])->name('admin.shop.orders.edit.comment_update');
+
+                Route::group(['prefix' => 'edit'], static function () {
+                    Route::get('/', [OrdersController::class, 'edit'])->name('admin.shop.orders.edit');
+                    Route::post('comment/update', [OrdersController::class, 'updateComment'])->name('admin.shop.orders.edit.comment_update');
+                    Route::post('others/update', [OrdersController::class, 'updateOthers'])->name('admin.shop.orders.edit.others_update');
+
+                    Route::group(['prefix' => 'products'], static function () {
+                        Route::get('/', [OrdersController::class, 'editProducts'])->name('admin.shop.orders.edit_products');
+                        Route::get('cancel', [OrdersController::class, 'editProductsCancel'])->name('admin.shop.orders.edit_products_cancel');
+                        Route::post('save', [OrdersController::class, 'editProductsSave'])->name('admin.shop.orders.edit_products_save');
+
+                        Route::post('add/product', [OrdersController::class, 'addProduct'])->name('admin.shop.orders.edit_products_add_product');
+                        Route::post('remove/extension', [OrdersController::class, 'removeExtension'])->name('admin.shop.orders.edit_products_remove_extension');
+                        Route::post('apply/promo/code', [OrdersController::class, 'applyPromoCode'])->name('admin.shop.orders.edit_products_apply_promo_code');
+                        Route::get('delete/promo/code', [OrdersController::class, 'deletePromoCode'])->name('admin.shop.orders.edit_products_delete_promo_code');
+                    });
+                });
+
                 Route::post('update', [OrdersController::class, 'update'])->name('admin.shop.orders.update');
                 Route::get('delete', [OrdersController::class, 'revoke'])->name('admin.shop.orders.revoke');
                 Route::get('show', [OrdersController::class, 'show'])->name('admin.shop.orders.show');
@@ -586,19 +617,15 @@
     /*
      * FRONT ROUTES
      */
-    Route::get('email/preview', function () {
-        return view('shop::emails.orders.order_placed');
-    });
-
     Route::prefix('guest')->group(function () {
         Route::get('show-order/{orderUid}', [ShopHomeController::class, 'showGuestOrder'])->name('guest.show-order');
-        Route::post('show-order/{orderUid}', [ShopHomeController::class, 'showGuestOrderView'])->name('guest.show-order-verified-access');
     });
 
     Route::middleware(['web', 'set.sbuuid'])->group(function () {
         Route::prefix('basket')->group(function () {
             Route::get('/', [BasketController::class, 'index'])->name('basket.index');
             Route::post('add', [BasketController::class, 'addProduct'])->name('basket.products.add');
+            Route::post('remove-extension', [BasketController::class, 'removeExtension'])->name('basket.products.remove-extension');
 
             Route::post('apply-promo-code', [BasketController::class, 'applyPromoCode'])->name('basket.apply-promo-code');
             Route::get('delete-promo-code', [BasketController::class, 'deletePromoCode'])->name('basket.delete-promo-code');
@@ -609,6 +636,10 @@
                 Route::get('create', [BasketController::class, 'createOrder'])->name('basket.order.create');
                 Route::post('store', [BasketController::class, 'storeOrder'])->name('basket.order.store');
             });
+        });
+
+        Route::prefix('cart')->group(function () {
+            Route::get('/', [CartController::class, 'index'])->name('cart.index');
         });
 
         /* Shop Auth */
@@ -623,7 +654,6 @@
                     Route::post('/{id}/update', [RegisteredUserAccountController::class, 'update'])->name('shop.registered_user.account.personal-data.update');
                     Route::post('/subscribe', [RegisteredUserAccountController::class, 'subscribe'])->name('shop.registered_user.account.subscribe');
 
-                    //TODO: Favorite products - Ne e napraveno
                     /* Favorite products */
                     Route::group(['prefix' => 'favorites'], static function () {
                         Route::get('/', [RegisteredUserAccountController::class, 'getFavoriteProducts'])->name('shop.registered_user.account.favorites');
@@ -631,14 +661,12 @@
                         Route::post('{id}/delete', [RegisteredUserAccountController::class, 'favoriteProductDelete'])->name('shop.registered_user.account.favorites.delete');
                     });
 
-                    //TODO: Orders - Ne e napraveno
                     /* Orders */
                     Route::group(['prefix' => 'orders'], static function () {
                         Route::get('/', [RegisteredUserAccountController::class, 'getOrders'])->name('shop.registered_user.account.orders.get-orders');
                         Route::get('{order_hash}/show', [RegisteredUserAccountController::class, 'showOrderDetails'])->name('shop.registered_user.account.orders.show');
                     });
 
-                    //TODO: Orders - Ne e napraveno
                     /* Addresses */
                     Route::group(['prefix' => 'shipment-addresses'], static function () {
                         Route::get('/', [ShipmentAddressesController::class, 'index'])->name('shop.registered_user.account.addresses');
@@ -647,11 +675,13 @@
                         Route::get('/{id}/edit', [ShipmentAddressesController::class, 'edit'])->name('shop.registered_user.account.addresses.edit');
                         Route::post('/{id}/update', [ShipmentAddressesController::class, 'update'])->name('shop.registered_user.account.addresses.update');
                         Route::get('/{id}/delete', [ShipmentAddressesController::class, 'delete'])->name('shop.registered_user.account.addresses.delete');
+                        Route::get('{id}/set-as-default', [ShipmentAddressesController::class, 'setAsDefault'])->name('shop.registered_user.account.addresses.set-as-default');
                     });
 
                     //TODO: Orders - Ne e napraveno
                     /* Payment Addresses */
                     Route::group(['prefix' => 'payment-addresses'], static function () {
+                        Route::get('/', [PaymentAddressesController::class, 'index'])->name('shop.registered_user.account.addresses.billing');
                         Route::get('/create', [PaymentAddressesController::class, 'create'])->name('shop.registered_user.account.addresses.billing.create');
                         Route::post('/store', [PaymentAddressesController::class, 'store'])->name('shop.registered_user.account.addresses.billing.store');
                         Route::get('/{id}/edit', [PaymentAddressesController::class, 'edit'])->name('shop.registered_user.account.addresses.billing.edit');
@@ -667,6 +697,7 @@
                         Route::get('{id}/edit', [CompaniesController::class, 'edit'])->name('shop.registered_user.account.companies.edit');
                         Route::post('{id}/update', [CompaniesController::class, 'update'])->name('shop.registered_user.account.companies.update');
                         Route::get('{id}/delete', [CompaniesController::class, 'delete'])->name('shop.registered_user.account.companies.delete');
+                        Route::get('{id}/set-as-default', [CompaniesController::class, 'setAsDefault'])->name('shop.registered_user.account.companies.set-as-default');
                     });
                 });
             });

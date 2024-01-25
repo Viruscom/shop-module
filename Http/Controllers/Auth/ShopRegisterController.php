@@ -4,6 +4,7 @@
 
     use App\Helpers\LanguageHelper;
     use App\Helpers\SeoHelper;
+    use App\Models\LawPages\LawPage;
     use App\Models\LawPages\LawPageTranslation;
     use Illuminate\Auth\Events\Registered;
     use Illuminate\Http\Request;
@@ -28,7 +29,6 @@
         public function register(Request $request)
         {
             $request->validate($this->rules(), $this->validationErrorMessages());
-
             event(new Registered($user = $this->create($request->all())));
 
             $this->guard()->login($user);

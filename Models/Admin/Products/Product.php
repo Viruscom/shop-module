@@ -28,6 +28,8 @@
     use Modules\Shop\Entities\Settings\VatCategory;
     use Modules\Shop\Models\Admin\Brands\Brand;
     use Modules\Shop\Models\Admin\ProductCategory\Category;
+    use Modules\Shop\Models\Admin\ProductCollection\ProductCollection;
+    use Modules\Shop\Models\Admin\ProductCollection\ProductCollectionPivot;
     use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
     use Modules\ShopDiscounts\Entities\Discount;
 
@@ -128,7 +130,7 @@
             if ($request->has('is_promo')) {
                 $data['is_promo'] = filter_var($request->is_promo, FILTER_VALIDATE_BOOLEAN);
             }
-
+            
             if ($request->has('width')) {
                 $data['width'] = $request->width;
             }
@@ -334,10 +336,41 @@
         {
             return (boolean)$this->is_promo;
         }
+        public function isVeganProduct(): bool
+        {
+            return (boolean)$this->is_vegan;
+        }
+        public function isHotProduct(): bool
+        {
+            return (boolean)$this->is_hot;
+        }
         public function isInCollection(): bool
         {
-            //TODO: Make collection check
+            $productCollection = ProductCollectionPivot::where('main_product', $this->id)->first();
+            if (!is_null($productCollection)) {
+                return true;
+            }
+
             return false;
+        }
+        public function getGroupedByCategoryCollection($languageSlug)
+        {
+            $collection = $this->getCollection()->first();
+            if ($collection === null) {
+                return collect();
+            }
+
+            $products = $collection->products;
+
+            return $products->groupBy(function ($item) use ($languageSlug) {
+                $category = $item->product->category->translate($languageSlug);
+
+                return $category->title;
+            });
+        }
+        public function getCollection()
+        {
+            return $this->hasOne(ProductCollection::class, 'main_product_id', 'id')->active(true)->with('products', 'products.product.category');
         }
         public function scopeIsInStock($query)
         {
@@ -497,9 +530,6 @@
         {
             return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
         }
-        // END FREE DELIVERY DISCOUNT
-
-        // BEGIN FIXED DISCOUNTS
         private static function getDefaultVat($country, $city)
         {
             if ($city != null) {
@@ -513,6 +543,10 @@
 
             return $country->vat;
         }
+
+        // END FREE DELIVERY DISCOUNT
+
+        // BEGIN FIXED DISCOUNTS
         public function getFixedDiscountsRecords()
         {
             $product = $this;
@@ -560,6 +594,10 @@
             }
 
             return $discounts;
+        }
+        public function getAllVatCategories(): Collection
+        {
+            return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('product_vat_category.product_id', $this->id)->get();
         }
         // END FIXED DISCOUNTS
         public function hasDiscounts()

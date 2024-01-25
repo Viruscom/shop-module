@@ -2,6 +2,8 @@
 
 namespace Modules\Shop\Http\Controllers\Front;
 
+use App\Helpers\LanguageHelper;
+use App\Helpers\SeoHelper;
 use App\Helpers\WebsiteHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,20 +24,11 @@ class ShopHomeController extends Controller
 
     public function showGuestOrder($orderUid)
     {
-        $order = Order::where('uid', $orderUid)->first();
-        WebsiteHelper::abortIfNull($order);
+        $currentLanguage = LanguageHelper::getCurrentLanguage();
+        SeoHelper::setTitle('Преглед на поръчка | ' . $currentLanguage->seo_title);
 
-        return view('shop::front.guests.orders.verification_form');
-    }
-
-    public function showGuestOrderView($orderUid, Request $request)
-    {
-        $order = Order::where('uid', $orderUid)->first();
-        WebsiteHelper::abortIfNull($order);
-
-        if (!$order->showGuestOrderValidation($request)) {
-            WebsiteHelper::abortIfNull($order);
-        }
+        $order = Order::where('uid', $orderUid)->with('order_products', 'payment', 'delivery', 'documents', 'city')->first();
+        WebsiteHelper::redirectBackIfNull($order);
 
         return view('shop::front.guests.orders.show', compact('order'));
     }

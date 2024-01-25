@@ -17,6 +17,7 @@
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'company_address', 'label' => 'Адрес на регистрация', 'required' => true])
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'phone', 'label' => 'Телефон', 'required' => true])
                 @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'email', 'label' => 'Email', 'required' => true])
+
                 <div class="form-group">
                     <label class="control-label">По подразбиране:</label>
                     <div class="">
@@ -37,15 +38,17 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row hidden">
             <div class="col-md-12">
                 <h4>Адрес на доставка</h4>
             </div>
             <div class="col-md-6">
-                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'street', 'label' => 'Улица/Адрес', 'required' => true])
+                <input type="text" name="street" value="1">
+                <input type="text" name="street_number" value="1">
+{{--                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'street', 'label' => 'Улица/Адрес', 'required' => true])--}}
             </div>
             <div class="col-md-6">
-                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'street_number', 'label' => ' Улица №', 'required' => true])
+{{--                @include('admin.partials.on_create.form_fields.input_text', ['fieldName' => 'street_number', 'label' => ' Улица №', 'required' => true])--}}
             </div>
         </div>
         <div class="row">

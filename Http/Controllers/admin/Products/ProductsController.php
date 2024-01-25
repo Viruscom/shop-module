@@ -18,6 +18,7 @@
     use Modules\RetailObjectsRestourant\Models\ProductAdditive;
     use Modules\RetailObjectsRestourant\Models\ProductAdditivePivot;
     use Modules\Shop\Actions\ProductAction;
+    use Modules\Shop\Entities\Settings\Main\CountrySale;
     use Modules\Shop\Http\Requests\ProductStoreRequest;
     use Modules\Shop\Http\Requests\ProductUpdateRequest;
     use Modules\Shop\Interfaces\ShopProductInterface;
@@ -52,6 +53,7 @@
                 ProductAdditivePivot::updateAdditives($product, $selectedAdditives, $selectedAdditivesWithoutList);
             }
 
+            $productAction->storeVatCategoriesByCountry($product, $request->saleCountries);
             Product::cacheUpdate();
 
             if ($request->has('submitaddnew')) {
@@ -92,7 +94,8 @@
                 'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
                 'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
                 'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
-                'activeModules'     => $activeModules
+                'activeModules'     => $activeModules,
+                'saleCountries'     => CountrySale::with('country')->get(),
             ];
 
             if (array_key_exists('Catalogs', $activeModules)) {
@@ -150,7 +153,6 @@
 
             return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
         }
-
         public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
@@ -174,7 +176,7 @@
                 ProductAdditivePivot::where('product_id', $product->id)->delete();
                 ProductAdditivePivot::updateAdditives($product, $selectedAdditives, $selectedAdditivesWithoutList);
             }
-
+            $productAction->updateVatCategoriesByCountry($product, $request->saleCountries);
             Product::cacheUpdate();
 
             return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
@@ -219,7 +221,8 @@
                 'productCategories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN),
                 'brands'            => Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN),
                 'measureUnits'      => Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN),
-                'activeModules'     => $activeModules
+                'activeModules'     => $activeModules,
+                'saleCountries'     => CountrySale::with('country')->get()
             ];
 
             if (array_key_exists('Catalogs', $activeModules)) {

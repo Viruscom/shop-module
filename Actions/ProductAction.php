@@ -14,6 +14,7 @@
     use Modules\Shop\Models\Admin\Brands\Brand;
     use Modules\Shop\Models\Admin\ProductCategory\Category;
     use Modules\Shop\Models\Admin\Products\ProductAdditionalField;
+    use Modules\Shop\Models\Admin\Products\ProductVatCategory;
 
     class ProductAction
     {
@@ -106,5 +107,19 @@
 
             AdBox::create($data->all());
             AdBox::cacheUpdate();
+        }
+        public function updateVatCategoriesByCountry($product, $saleCountries)
+        {
+            ProductVatCategory::where('product_id', $product->id)->delete();
+            $this->storeVatCategoriesByCountry($product, $saleCountries);
+        }
+        public function storeVatCategoriesByCountry($product, $saleCountries)
+        {
+            foreach ($saleCountries as $countryId => $vatArray) {
+                ProductVatCategory::create([
+                                               'product_id'      => $product->id,
+                                               'vat_category_id' => $vatArray['vat_category'],
+                                           ]);
+            }
         }
     }

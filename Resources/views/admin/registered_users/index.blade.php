@@ -53,7 +53,7 @@
                     </td>
                     <td>{{ Carbon::parse($client->created_at)->format('d.m.Y') }}</td>
                     <td class="pull-right">
-                        <a href="{{ route('admin.shop.registered-users.orders.index', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-box"></i></a>
+{{--                        <a href="{{ route('admin.shop.registered-users.orders.index', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-box"></i></a>--}}
                         <a href="{{ route('admin.shop.registered-users.show', ['id' => $client->id]) }}" class="btn btn-primary" role="button"><i class="fas fa-binoculars"></i></a>
                         <a href="{{ route('admin.shop.registered-users.edit', ['id' => $client->id]) }}" class="btn green" role="button"><i class="fas fa-pencil-alt"></i></a>
                         @if(!$client->active)

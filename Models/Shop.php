@@ -4,8 +4,6 @@
 
     use App\Helpers\AdminHelper;
     use Illuminate\Database\Eloquent\Model;
-    use Modules\Shop\Entities\Settings\City;
-    use Modules\Shop\Entities\Settings\Country;
     use Modules\Shop\Models\Admin\Brands\Brand;
     use Modules\Shop\Models\Admin\ProductCategory\Category;
     use Modules\Shop\Models\Admin\Products\Product;
@@ -16,16 +14,13 @@
         {
             switch (class_basename($viewArray['currentModel']->parent)) {
                 case 'Product':
-                    //TODO: Remove form here
-                    $country = Country::find(1);
-                    $city    = City::find(1);
-
-                    //To here
-                    return view('shop::front.products.show', ['viewArray' => $viewArray, 'country' => $country, 'city' => $city]);
+                    return view('shop::front.products.show', ['viewArray' => $viewArray]);
                 case 'Brand':
                     return view('shop::front.brands.show', ['viewArray' => $viewArray]);
                 case 'Category':
-                    return view('shop::front.categories.show', ['viewArray' => $viewArray]);
+                    $categories = Category::where('active', true)->where('main_category', null)->with('translations', 'subCategories')->orderBy('position', 'asc')->get();
+
+                    return view('shop::front.categories.show', ['viewArray' => $viewArray, 'categories' => $categories]);
                 default:
                     abort(404);
             }

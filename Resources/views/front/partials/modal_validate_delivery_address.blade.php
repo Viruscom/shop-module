@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="form-col-small">
-                            <label class="form-label" for="streetNumber">номер</label>
+                            <label class="form-label" for="streetNumber">№/блок</label>
 
                             <div class="input-container">
                                 <input id="streetNumber" type="number" placeholder="" name="street_number" required>
@@ -59,12 +59,13 @@
 
                 @if(!is_null($basketRegisteredUser))
                     @if($basketRegisteredUser->shipmentAddresses->isNotEmpty())
-                        <div class="form-row">
+                        <div class="form-row" style="margin-top: 10px;">
                             <div class="form-cols-alt">
-                                <div class="form-col-big">ИЛИ</div>
+                                <div class="form-col-big">
+                                    <label class="form-label" for="3534535">или изберете друг Ваш адрес</label></div>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row" style="margin-top: 0px;">
                             <div class="form-cols-alt">
                                 <div class="form-col-big">
                                     <select name="shipment_address_id" id="" class="select-custom ru-bst-ch-sh-addr">
@@ -179,10 +180,16 @@
         background: transparent;
     }
 
-    .modal-address .chosen-container .chosen-results li {
+    .modal-address .chosen-container .chosen-results li.active-result.result-selected,{
+        font-size: 16px;
+    }
+
+    .modal-address .chosen-container .chosen-results li,
+    .modal-address .chosen-container .chosen-results li:hover{
         line-height: 1;
         padding:     11px 16px;
         font-weight: 400;
+        font-size: 16px !important;
     }
 
     .modal-address .chosen-container-single .chosen-single div b {

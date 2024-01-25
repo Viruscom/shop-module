@@ -1,6 +1,6 @@
 @php use Carbon\Carbon; @endphp
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -373,7 +373,7 @@
                                                 <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
-                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="100"></td>
+                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="200"></td>
                                                         </tr>
                                                         <tr>
                                                             <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Потвърждение на поръчката</h1></td>
@@ -734,6 +734,13 @@
                                                                 </table>
                                                             </td>
                                                         </tr>
+
+                                                        @if(!is_null($order->guest_validation_code))
+                                                            <tr>
+                                                                <td style="padding:0;Margin:0"><p>Вашата поръчка можете да видите <a href="{{ route('guest.show-order', ['orderUid' => $order->uid]) }}">ТУК</a></p></td>
+                                                            </tr>
+                                                        @endif
+
                                                         <tr>
                                                             <td style="padding:0;Margin:0">
                                                                 <table cellpadding="0" cellspacing="0" width="100%" class="es-menu" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">

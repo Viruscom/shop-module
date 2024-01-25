@@ -17,6 +17,7 @@
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'company_address', 'label' => 'Адрес на регистрация', 'required' => true])
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'phone', 'label' => 'Телефон', 'required' => true])
                 @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'email', 'label' => 'Email', 'required' => true])
+
                 <div class="form-group">
                     <label class="control-label">По подразбиране:</label>
                     <div class="">
@@ -37,17 +38,21 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <h4>Адрес на доставка</h4>
-            </div>
-            <div class="col-md-6">
-                @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'street', 'label' => 'Улица/Адрес', 'required' => true])
-            </div>
-            <div class="col-md-6">
-                @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'street_number', 'label' => ' Улица №', 'required' => true])
-            </div>
+        <div class="hidden">
+            <input type="text" name="street" value="1">
+            <input type="text" name="street_number" value="1">
         </div>
+{{--        <div class="row">--}}
+{{--            <div class="col-md-12">--}}
+{{--                <h4>Адрес на доставка</h4>--}}
+{{--            </div>--}}
+{{--            <div class="col-md-6">--}}
+{{--                @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'street', 'label' => 'Улица/Адрес', 'required' => true])--}}
+{{--            </div>--}}
+{{--            <div class="col-md-6">--}}
+{{--                @include('admin.partials.on_edit.form_fields.input_text_without_lang', ['model' => $company, 'fieldName' => 'street_number', 'label' => ' Улица №', 'required' => true])--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="form form-horizontal">

@@ -78,7 +78,7 @@
                     @php $i++ @endphp
                 @endforeach
 
-                @if($i<5)
+                @if($i<30)
                     @for($i; $i<30; $i++)
                         <div class="form-group @if($errors->has('main_product_id')) has-error @endif">
                             <label class="control-label col-md-3 col-xs-6">Допълнителен продукт</label>

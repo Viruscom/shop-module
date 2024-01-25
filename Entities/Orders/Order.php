@@ -10,8 +10,12 @@
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
     use Illuminate\Database\Eloquent\Relations\HasMany;
     use Illuminate\Support\Facades\Mail;
+    use Illuminate\Support\Str;
     use Modules\Shop\Emails\OrderPlacedToAdminMailable;
+    use Modules\Shop\Emails\OrderPlacedToClientFromAdminMailable;
     use Modules\Shop\Emails\OrderPlacedToClientMailable;
+    use Modules\Shop\Emails\OrderUpdatedToAdminMailable;
+    use Modules\Shop\Emails\OrderUpdatedToClientMailable;
     use Modules\Shop\Emails\PaymentStatusChangedMailable;
     use Modules\Shop\Emails\ShipmentStatusChangedMailable;
     use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
@@ -39,7 +43,17 @@
         const SHIPMENT_RETURNED    = 6;
         const FIXED_DELIVERY_PRICE = 3.99;
         public static string $FILES_PATH = 'shop/orders';
-        protected            $fillable   = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name', 'phone', 'street', 'street_number', 'country_id', 'city_id', 'zip_code', 'invoice_required', 'company_name', 'company_eik', 'company_vat_eik', 'company_mol', 'company_address', 'payment_id', 'delivery_id', 'discounts_to_apply', 'total', 'total_discounted', 'total_free_delivery', 'paid_at', 'shipment_status', 'payment_status', 'payment_address', 'returned_amount', 'date_of_return', 'type_of_return', 'return_comment', 'vr_number', 'vr_trans_number', 'vr_date', 'total_default', 'promo_code', 'guest_validation_code'];
+        protected            $fillable   = ['user_id', 'uid', 'key', 'email', 'first_name', 'last_name',
+                                            'phone', 'street', 'street_number', 'country_id', 'city_id',
+                                            'zip_code', 'invoice_required', 'company_name', 'company_eik',
+                                            'company_vat_eik', 'company_mol', 'company_address', 'payment_id',
+                                            'delivery_id', 'discounts_to_apply', 'total', 'total_discounted',
+                                            'total_free_delivery', 'paid_at', 'shipment_status', 'payment_status',
+                                            'payment_address', 'returned_amount', 'date_of_return',
+                                            'type_of_return', 'return_comment', 'vr_number', 'vr_trans_number',
+                                            'vr_date', 'total_default', 'promo_code', 'guest_validation_code',
+                                            'with_utensils', 'comment', 'entrance', 'floor', 'apartment',
+                                            'bell_name', 'parent_order_id', 'sent_to_yanak_at'];
 
         public function getReadableShipmentStatus()
         {
@@ -132,11 +146,21 @@
             return $this->hasMany(OrderProduct::class);
         }
 
+        public function parent_order(): BelongsTo
+        {
+            return $this->belongsTo(Order::class, 'parent_order_id');
+        }
+
+
+        public function child_orders(): HasMany
+        {
+            return $this->hasMany(Order::class, 'parent_order_id', 'id')->orderBy('created_at', 'desc');
+        }
         public function totalVatProducts()
         {
             $totalVat = 0;
             foreach ($this->order_products as $orderProduct) {
-                $totalVat += $orderProduct->vat;
+                $totalVat += $orderProduct->product_quantity * ($orderProduct->vat_applied_price - $orderProduct->price);
             }
 
             return CurrencyService::formatPrice($totalVat);
@@ -146,34 +170,31 @@
             $totalEndPrice = 0;
 
             foreach ($this->order_products as $orderProduct) {
-                $totalEndPrice += $orderProduct->end_price;
+                $totalEndPrice += $orderProduct->end_price + $orderProduct->collectionTotal() + $orderProduct->additivesTotal();
             }
 
             return CurrencyService::formatPrice($totalEndPrice);
         }
-
         public function totalDiscountsAmount()
         {
             $totalDiscountsAmount = 0;
 
-            foreach ($this->order_products as $orderProduct) {
-                $totalDiscountsAmount += $orderProduct->discounts_amount;
-            }
+            $totalDiscountsAmount = $this->total_default - $this->total_discounted;
 
             return CurrencyService::formatPrice($totalDiscountsAmount);
         }
         public function grandTotalWithDiscountsVatAndDelivery()
         {
-            $totalEndDiscountedPrice = 0;
-
-            foreach ($this->order_products as $orderProduct) {
-                $totalEndDiscountedPrice += $orderProduct->end_discounted_price + $orderProduct->collectionTotal() + $orderProduct->additivesTotal();
-            }
-
             $deliveryPrice = $this->total_free_delivery ? 0 : (float)self::FIXED_DELIVERY_PRICE;
-            $grandTotal    = $totalEndDiscountedPrice + $deliveryPrice;
+            $grandTotal    = $this->total_discounted + $deliveryPrice;
 
             return CurrencyService::formatPrice($grandTotal);
+        }
+        public function getFixedDeliveryPrice()
+        {
+            $deliveryPrice = $this->total_free_delivery ? 0 : (float)self::FIXED_DELIVERY_PRICE;
+
+            return CurrencyService::formatPrice($deliveryPrice);
         }
         public function totalEndDiscountedPrice()
         {
@@ -185,7 +206,10 @@
 
             return CurrencyService::formatPrice($totalEndDiscountedPrice);
         }
-
+        public function totalEndDiscountedPriceWithAdditivesAndCollection(): string
+        {
+            return CurrencyService::formatPrice($this->total_discounted);
+        }
         public function documents(): HasMany
         {
             return $this->hasMany(OrderDocument::class)->orderByDesc('created_at');
@@ -202,30 +226,30 @@
 
             return $this->hasMany(OrderReturn::class);
         }
-
         public function strPadOrderId(): string
         {
             return str_pad($this->id, 10, '0', STR_PAD_LEFT);
         }
-
         public function sendMailPaymentStatusChanged()
         {
             $email = new PaymentStatusChangedMailable($this);
             Mail::to($this->email)->send($email);
         }
-
         public function sendMailShipmentStatusChanged()
         {
             $email = new ShipmentStatusChangedMailable($this);
             Mail::to($this->email)->send($email);
         }
-
         public function sendMailOrderPlacedToClient()
         {
             $email = new OrderPlacedToClientMailable($this);
             Mail::to($this->email)->send($email);
         }
-
+        public function sendMailOrderUpdatedToClient()
+        {
+            $email = new OrderUpdatedToClientMailable($this);
+            Mail::to($this->email)->send($email);
+        }
         public function sendMailOrderPlacedToAdmin()
         {
             $postSetting = Post::first();
@@ -234,8 +258,14 @@
                 Mail::to($postSetting->shop_orders_email)->send($email);
             }
         }
-
-
+        public function sendMailOrderUpdatedToAdmin()
+        {
+            $postSetting = Post::first();
+            if (!is_null($postSetting) && !empty($postSetting->shop_orders_email)) {
+                $email = new OrderUpdatedToAdminMailable($this);
+                Mail::to($postSetting->shop_orders_email)->send($email);
+            }
+        }
         public function generateVirtualReceipt($filename, $vrNumber): void
         {
             if (is_null($vrNumber)) {
@@ -251,13 +281,84 @@
 
             $vrNumber->update(['value' => $vrNumber->value + 1]);
         }
-
-        public function showGuestOrderValidation($request): bool
+        public function replicateWithRelations(array $relations = [])
         {
-            if (is_null($request) || !isset($request->guest_validation_code) || $this->guest_validation_code != $request->guest_validation_code) {
-                return false;
+            $instance      = $this->replicate();
+            $instance->uid = $instance->uid . "_child" . Str::random(8);
+            if (!is_null($instance->key)) {
+                $instance->key = $instance->key . "_child" . Str::random(8);
+            }
+            $instance->parent_order_id = $this->id;
+            $instance->save();
+
+            $this->loadMissing($relations);
+
+            foreach ($relations as $relation) {
+                $related = $this->{$relation};
+
+                foreach ($related as $relatedModel) {
+                    $instance->{$relation}()->save($relatedModel->replicate());
+                }
             }
 
-            return true;
+            return $instance;
+        }
+        public function decrementUnitsInStock()
+        {
+            foreach ($this->order_products as $orderProduct) {
+                $orderProduct->product->decrement('units_in_stock', $orderProduct->product_quantity);
+            }
+            //TODO: Foreach collections
+        }
+
+        //call when order is created
+        public function incrementUnitsInStock()
+        {
+            foreach ($this->order_products as $orderProduct) {
+                $orderProduct->product->increment('units_in_stock', $orderProduct->product_quantity);
+            }
+            //TODO: Foreach collections
+        }
+
+        //call when order status is set to SHIPMENT_RETURNED
+        public function updateUnitsInStock()
+        {
+            $orderState = $this->latest_child_order();
+
+            foreach ($orderState->order_products as $stateOrderProduct) {
+                $orderProduct = $this->order_products->where('product_id', $stateOrderProduct->product_id)->first();
+                if (is_null($orderProduct)) {
+                    $stateOrderProduct->product->increment('units_in_stock', $stateOrderProduct->product_quantity);
+                }
+            }
+
+            $orderProduct      = null;
+            $stateOrderProduct = null;
+
+            foreach ($this->order_products as $orderProduct) {
+                $oldQuantity = 0;
+
+                $stateOrderProduct = $orderState->order_products->where('product_id', $orderProduct->product_id)->first();
+                if (!is_null($stateOrderProduct)) {
+                    $oldQuantity = $stateOrderProduct->product_quantity;
+                }
+
+                if ($orderProduct->product_quantity > $oldQuantity) {
+                    $orderProduct->product->decrement('units_in_stock', $orderProduct->product_quantity - $oldQuantity);
+                } else if ($orderProduct->product_quantity < $oldQuantity) {
+                    $orderProduct->product->increment('units_in_stock', $oldQuantity - $orderProduct->product_quantity);
+                }
+            }
+        }
+
+        //call on order products edit
+        public function latest_child_order()
+        {
+            return $this->child_orders->first();
+        }
+        public function sendMailOrderPlacedToClientFromAdmin($payment)
+        {
+            $email = new OrderPlacedToClientFromAdminMailable($this, $payment);
+            Mail::to($this->email)->send($email);
         }
     }

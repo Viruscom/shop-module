@@ -38,7 +38,7 @@
                         <div class="status status-tooltip status-discount">
                             <span>{{ __('front.products.status_promo') }}</span>
 
-                            <div class="status-text">-{{ $product->getPercentDiscountsLabel($country, $city) }}%</div>
+                            <div class="status-text">-{{ $adBox->product->getPercentDiscountsLabel($country, $city) }}%</div>
                         </div>
                     @endif
                 </div>

@@ -22,9 +22,9 @@
                             <h4>{{$product->title}} / {{ $product->measure_unit_value }} {{ $product->measureUnit->title }}</h4>
 
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" name="selectedCollectionPivotProduct[]" class="combination-input" value="{{ $pivotProduct->additional_product_id }}" price="{{ $pivotProduct->price_with_discount }}">
+                                <input type="checkbox" name="selectedCollectionPivotProduct[]" class="combination-input" value="{{ $pivotProduct->additional_product_id }}" price="{{ $pivotProduct->getVatPrice($country, $city) }}">
                                 <span class="checkmark"></span>
-                                <span class="check-text">{{ number_format($pivotProduct->price_with_discount, 2, '.', '') }} {{ __('front.currency') }}</span>
+                                <span class="check-text">{{ $pivotProduct->getVatPrice($country, $city) }} {{ __('front.currency') }}</span>
                             </label>
                         </div>
                     @endforeach

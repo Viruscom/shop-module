@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="form-col-small">
-                            <label class="form-label" for="streetNumber">номер</label>
+                            <label class="form-label" for="streetNumber">№/блок</label>
 
                             <div class="input-container">
                                 <input id="streetNumber" type="number" placeholder="" name="street_number" required>

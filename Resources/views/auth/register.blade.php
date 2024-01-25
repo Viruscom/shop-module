@@ -1,4 +1,4 @@
-@extends('layouts.front.app')
+@extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 
 @section('content')
     <div class="page-wrapper" style="display: flex;align-items: center;justify-content: center;">
@@ -25,7 +25,6 @@
                             @enderror
                         </div>
                     </div>
-
                     <div class="form-row">
                         <label class="form-label" for="last_name">
                             {{ __('shop::front.login.last_name') }}

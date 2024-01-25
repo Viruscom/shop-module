@@ -118,6 +118,27 @@
                     <td>@lang('shop::admin.orders.payment_status')</td>
                     <td style="background: {{ $order->getPaymentStatusClass($order->payment_status) }}; color: #000000;">{{ $order->getReadablePaymentStatus() }}</td>
                 </tr>
+                <tr>
+                    <td>Искам прибори</td>
+                    <td>
+                        @if($order->with_utensils)
+                            <span class="label label-success">ДА</span>
+                        @else
+                            <span class="label label-danger">НЕ</span>
+                        @endif
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td colspan="2">Коментар към поръчката</td>
+                </tr>
+                <tr>
+                    <td colspan="2">{{ $order->comment }}</td>
+
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -164,7 +185,22 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ $order->street . ', № ' . $order->street_number }}</td>
+                        <td>
+                            <p>{{ $order->street . ', № ' . $order->street_number }}</p>
+                            <p>
+                                @if(!is_null($order->entrance))
+                                    {{ 'Вход: '.$order->entrance . ' ' }}
+                                @endif
+                                @if(!is_null($order->floor))
+                                    {{ 'Етаж: '.$order->floor . ' ' }}
+                                @endif
+                                @if(!is_null($order->apartment))
+                                    {{ 'Ап.: '.$order->apartment . ' ' }}
+                                @endif
+                                @if(!is_null($order->bell_name))
+                                    {{ 'Надпис на звънец:: '.$order->bell_name . ' ' }}
+                                @endif
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -270,13 +306,114 @@
                                     @endif
                                 </td>
                             </tr>
+                            @if($orderProduct->additives->isNotEmpty() || $orderProduct->additiveExcepts->isNotEmpty() || $orderProduct->productCollection->isNotEmpty())
+                                <tr class="tr-extensions">
+                                    <td colspan="12">
+                                        <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around;align-items: flex-start;">
+                                            <div>
+                                                <h5><strong>Добавки</strong></h5>
+                                                <p>
+                                                @if($orderProduct->additives->isNotEmpty())
+                                                    @php
+                                                        $additiveTotal = 0;
+                                                    @endphp
+                                                    <table class="table table-bordered table-extensions">
+                                                        <thead>
+                                                        <th>Добавка</th>
+                                                        <th>Количество</th>
+                                                        <th class="text-right">Цена</th>
+                                                        <th class="text-right">Общо</th>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($orderProduct->additives as $additive)
+                                                            <tr>
+                                                                <td>{{ $additive->productAdditive->title }}</td>
+                                                                <td>{{ $additive->quantity }}</td>
+                                                                <td class="text-right">{{ $additive->price }}</td>
+                                                                <td class="text-right">{{ $additive->total }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $additiveTotal+=$additive->total;
+                                                            @endphp
+                                                        @endforeach
+                                                        <tr>
+                                                            <td colspan="3" class="text-right">Общо с ДДС:</td>
+                                                            <td class="text-right">{{ number_format($additiveTotal, 2, '.', '') }}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <div class="alert alert-warning">Няма избрани добавки</div>
+                                                    @endif</p>
+
+                                            </div>
+                                            <div>
+                                                <h5><strong>Без</strong></h5>
+                                                <p>
+                                                @if($orderProduct->additiveExcepts->isNotEmpty())
+                                                    <table class="table table-bordered table-extensions">
+                                                        <thead>
+                                                        <th>Име</th>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($orderProduct->additiveExcepts as $additive)
+                                                            <tr>
+                                                                <td>{{ $additive->productAdditive->title }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <div class="alert alert-warning">Няма избрани добавки за премахване</div>
+                                                    @endif</p>
+
+                                            </div>
+                                            <div>
+                                                <h5><strong>Комбинирано с...</strong></h5>
+                                                <p>
+                                                @if($orderProduct->productCollection->isNotEmpty())
+                                                    @php
+                                                        $collectionTotal = 0;
+                                                    @endphp
+                                                    <table class="table table-bordered table-extensions">
+                                                        <thead>
+                                                        <th>Снимка</th>
+                                                        <th>Име</th>
+                                                        <th>Количество</th>
+                                                        <th class="text-right">Цена</th>
+                                                        <th class="text-right">Общо</th>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($orderProduct->productCollection as $productCollection)
+                                                            <tr>
+                                                                <td><img src="{{$productCollection->product->getFileUrl()}}" width="25"></td>
+                                                                <td>{{ $productCollection->product->title }}</td>
+                                                                <td>{{ number_format($productCollection->quantity, 2, '.', '') }}</td>
+                                                                <td class="text-right">{{ $productCollection->price }}</td>
+                                                                <td class="text-right">{{ $productCollection->total }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $collectionTotal+=$productCollection->total;
+                                                            @endphp
+                                                        @endforeach
+                                                        <tr>
+                                                            <td colspan="4" class="text-right">Общо с ДДС:</td>
+                                                            <td class="text-right">{{ number_format($collectionTotal, 2, '.', '') }}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                @else
+                                                    <div class="alert alert-warning">Няма избрани продукти за колекция</div>
+                                                    @endif</p>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            @endif
                         @endforeach
                         </tbody>
                         <tfoot style="border-top: 2px dashed #c3c3c3;">
-                        <tr>
-                            <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_vat') }}:</th>
-                            <th class="price-without-discounts">{{ $order->totalVatProducts() }} лв.</th>
-                        </tr>
                         <tr>
                             <th colspan="10" class="text-right">{{ __('shop::admin.orders.total_price_without_discounts') }}:</th>
                             <th class="price-without-discounts">{{ $order->totalEndPriceProducts() }} лв.</th>
@@ -287,11 +424,11 @@
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.total_price_after_discounts') }}:</th>
-                            <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPrice() }} лв.</th>
+                            <th class="total-with-discounts" style="border: none;">{{ $order->totalEndDiscountedPriceWithAdditivesAndCollection() }} лв.</th>
                         </tr>
                         <tr>
                             <th colspan="10" class="text-right" style="border: none;">{{ __('shop::admin.orders.delivery') }}:</th>
-                            <th class="shipment-amount" style="border: none;"><span>3,00</span> лв.</th>
+                            <th class="shipment-amount" style="border: none;"><span>{{ $order->getFixedDeliveryPrice() }}</span> лв.</th>
                         </tr>
 
                         <tr>
