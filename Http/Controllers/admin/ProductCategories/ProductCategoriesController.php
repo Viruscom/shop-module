@@ -29,6 +29,7 @@
         }
         public function store(ProductCategoryStoreRequest $request, CommonControllerAction $action): RedirectResponse
         {
+            $action->validateImage($request, 'Shop', 2);
             $productCategory = $action->doSimpleCreate(Category::class, $request);
             $action->updateUrlCache($productCategory, CategoryTranslation::class);
             $action->storeSeo($request, $productCategory, 'Category');
@@ -146,13 +147,13 @@
             $productCategory = Category::whereId($id)->with('translations')->first();
             MainHelper::goBackIfNull($productCategory);
 
+            $action->validateImage($request, 'Shop', 2);
             $request['main_category'] = $productCategory->main_category;
             $action->doSimpleUpdate(Category::class, CategoryTranslation::class, $productCategory, $request);
             $action->updateUrlCache($productCategory, CategoryTranslation::class);
             $action->updateSeo($request, $productCategory, 'Category');
 
             if ($request->has('image')) {
-                $request->validate(['image' => Category::getFileRules()], [Category::getUserInfoMessage()]);
                 $productCategory->saveFile($request->image);
             }
 
