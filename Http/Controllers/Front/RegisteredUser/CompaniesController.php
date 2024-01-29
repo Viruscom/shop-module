@@ -9,10 +9,7 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Auth;
     use Modules\Shop\Entities\RegisteredUser\Firms\Company;
-    use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
-    use Modules\Shop\Entities\Settings\City;
     use Modules\Shop\Entities\Settings\Main\CountrySale;
-    use Modules\Shop\Http\Requests\Admin\RegisteredUser\Companies\AdminRegUserCompanyStoreRequest;
 
     class CompaniesController extends Controller
     {
@@ -20,19 +17,12 @@
         {
             $currentLanguage = LanguageHelper::getCurrentLanguage();
             SeoHelper::setTitle('Фирми | ' . $currentLanguage->seo_title);
+            $registeredUser = Auth::guard('shop')->user();
 
             return view('shop::front.registered_users.profile.companies.index', [
-                'registeredUser' => Auth::guard('shop')->user(),
-                'defaultCompany' => Company::isDefault(true)->isDeleted(false)->first(),
-                'otherCompanies' => Company::isDefault(false)->isDeleted(false)->get(),
-            ]);
-        }
-
-        public function create()
-        {
-            return view('shop::front.registered_users.profile.companies.create', [
-                'registeredUser' => Auth::guard('shop')->user(),
-                'countriesSale'  => CountrySale::with('country', 'country.cities')->get()
+                'registeredUser' => $registeredUser,
+                'defaultCompany' => Company::where('user_id', $registeredUser->id)->isDefault(true)->isDeleted(false)->first(),
+                'otherCompanies' => Company::where('user_id', $registeredUser->id)->isDefault(false)->isDeleted(false)->get(),
             ]);
         }
         public function store(Request $request)
@@ -55,21 +45,13 @@
 
             return redirect()->route('shop.registered_user.account.companies', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_create'));
         }
-        public function edit($languageSlug, $id)
+        public function create()
         {
-            $registeredUser = Auth::guard('shop')->user();
-            WebsiteHelper::redirectBackIfNull($registeredUser);
-
-            $company = Company::find($id);
-            WebsiteHelper::redirectBackIfNull($company);
-
-            return view('shop::front.registered_users.profile.companies.edit', [
-                'registeredUser' => $registeredUser,
-                'company'        => $company,
+            return view('shop::front.registered_users.profile.companies.create', [
+                'registeredUser' => Auth::guard('shop')->user(),
                 'countriesSale'  => CountrySale::with('country', 'country.cities')->get()
             ]);
         }
-
         public function update($languageSlug, $id, Request $request)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -87,7 +69,20 @@
 
             return redirect()->route('shop.registered_user.account.companies', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_edit'));
         }
+        public function edit($languageSlug, $id)
+        {
+            $registeredUser = Auth::guard('shop')->user();
+            WebsiteHelper::redirectBackIfNull($registeredUser);
 
+            $company = Company::find($id);
+            WebsiteHelper::redirectBackIfNull($company);
+
+            return view('shop::front.registered_users.profile.companies.edit', [
+                'registeredUser' => $registeredUser,
+                'company'        => $company,
+                'countriesSale'  => CountrySale::with('country', 'country.cities')->get()
+            ]);
+        }
         public function delete($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();
