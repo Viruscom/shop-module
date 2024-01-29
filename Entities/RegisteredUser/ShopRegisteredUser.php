@@ -18,7 +18,7 @@
         public static int $DEFAULT_CLIENT_GROUP_ID = 1;
 
         protected $table    = 'shop_registered_users';
-        protected $fillable = ['group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password', 'active', 'newsletter_subscribed'];
+        protected $fillable = ['client_group_id', 'first_name', 'last_name', 'phone', 'birthday', 'email', 'email_verified_at', 'password', 'active', 'newsletter_subscribed'];
 
         public static function getClientGroups(): array
         {

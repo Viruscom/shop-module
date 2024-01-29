@@ -51,15 +51,10 @@
                 <div class="padding-20 bg-f5">
                     <div class="form-group @if($errors->has('client_group_id')) has-error @endif">
                         <label class="control-label p-b-10">Клиентска група:</label>
-                        <select class="form-control select2" name="group_id">
-                            <option value="1" selected="selected">@lang('administration_messages.client_group_1')</option>
-                            <option value="2">@lang('administration_messages.client_group_2')</option>
-                            {{--                            <option value="3">@lang('administration_messages.client_group_3')</option>--}}
-                            {{--                            <option value="4">@lang('administration_messages.client_group_4')</option>--}}
-                            {{--                            <option value="5">@lang('administration_messages.client_group_5')</option>--}}
-                            {{--                            <option value="6">@lang('administration_messages.client_group_6')</option>--}}
-                            {{--                            <option value="7">@lang('administration_messages.client_group_7')</option>--}}
-                            {{--                            <option value="8">@lang('administration_messages.client_group_8')</option>--}}
+                        <select class="form-control select2" name="client_group_id">
+                            @foreach($clientGroups as $clientGroup)
+                                <option value="{{$clientGroup}}" {{old('client_group_id')==$clientGroup ? 'selected':''}}>{{__('shop::admin.discounts.client_group_'.$clientGroup)}}</option>
+                            @endforeach
                         </select>
                         @if($errors->has('client_group_id'))
                             <span class="help-block">{{ trans($errors->first('client_group_id')) }}</span>

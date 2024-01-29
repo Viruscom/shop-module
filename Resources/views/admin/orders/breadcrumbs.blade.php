@@ -10,12 +10,12 @@
         @if(url()->current() === route('admin.shop.orders.create'))
             <li>
                 <i class="fa fa-angle-right"></i>
-                <a href="{{ route('admin.shop.orders.create') }}" class="text-purple">@lang('admin.shop.create')</a>
+                <a href="{{ route('admin.shop.orders.create') }}" class="text-purple">@lang('shop::admin.orders.create')</a>
             </li>
         @elseif(url()->current() === route('admin.shop.orders.edit', ['id' => Request::segment(3)]))
             <li>
                 <i class="fa fa-angle-right"></i>
-                <a href="{{ route('admin.shop.orders.edit', ['id' => Request::segment(3)]) }}" class="text-purple">@lang('admin.shop.edit')</a>
+                <a href="{{ route('admin.shop.orders.edit', ['id' => Request::segment(3)]) }}" class="text-purple">@lang('shop::admin.orders.edit')</a>
             </li>
         @endif
     </ul>

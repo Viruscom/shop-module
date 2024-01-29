@@ -9,43 +9,55 @@
     <script src="{{ asset('admin/assets/js/dataTables.fixedHeader.min.js') }}"></script>
     <script>
         $(document).ready(function () {
-            var table = $('#example').DataTable({
-                collectionCellsTop: true,
-                fixedHeader: true,
-                language: {
-                    "sProcessing": "Обработка на резултатите...",
-                    "sLengthMenu": "Показване на _MENU_ резултата",
-                    "sZeroRecords": "Няма намерени резултати",
-                    "sInfo": "Показване на резултати от _START_ до _END_ от общо _TOTAL_",
-                    "sInfoEmpty": "Показване на резултати от 0 до 0 от общо 0",
-                    "sInfoFiltered": "(филтрирани от общо _MAX_ резултата)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Търсене:",
-                    "sUrl": "",
-                    "oPaginate": {
-                        "sFirst": "Първа",
-                        "sPrevious": "Предишна",
-                        "sNext": "Следваща",
-                        "sLast": "Последна"
-                    }
+
+            var options = {
+                withSortableRow: true,
+                sortableRowFromColumn: 0,
+                sortableRowToColumn: 3,
+                withDynamicSort: true,
+                dynamicSortFromColumn: 0,
+                dynamicSortToColumn: 3,
+                rowsPerPage: 50
+            }
+            initOrdersDatatable('example', options);
+
+            function initOrdersDatatable(tableId, options) {
+                if (options.withSortableRow) {
+                    $('#' + tableId + ' thead tr').clone(true).appendTo('#' + tableId + ' thead').css('background-color', '#ebecef');
+                    $('#' + tableId + ' thead tr:eq(1) th').each(function (i) {
+                        if (i >= options.sortableRowFromColumn && i < options.sortableRowToColumn) {
+                            var title = $(this).text();
+                            $(this).html('<input type="text" class="datatable-filter-input head-filter-' + i + '" placeholder="Сортирай по ' + title + '" />');
+                            $('input', this).on('keyup change', function () {
+                                if (table.column(i).search() !== this.value) {
+                                    table
+                                        .column(i)
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        } else {
+                            $(this).html('');
+                        }
+                    });
                 }
-            });
 
-            // Setup - add a text input to each footer cell
-            $('#example thead tr').clone(true).appendTo('#example thead');
-            $('#example thead tr:eq(1) th').each(function (i) {
-                var title = $(this).text();
-                $(this).html('<input type="text" class="datatable-filter-input" placeholder="филтрирай по ' + title + '" style="width:100%;" />');
-
-                $('input', this).on('keyup change', function () {
-                    if (table.column(i).search() !== this.value) {
-                        table
-                            .column(i)
-                            .search(this.value)
-                            .draw();
+                var table = $('#' + tableId).DataTable({
+                    iDisplayLength: 50,
+                    orderCellsTop: true,
+                    order: [[0, 'desc']],
+                    fixedHeader: true,
+                    stateSave: true,
+                    responsive: true,
+                    width: '10%',
+                    "language": $.parseJSON($('#dataTableLang').text()),
+                    "stateLoaded": function stateLoadedCallback(settings, state) {
+                        state.columns.forEach(function (column, index) {
+                            $('.head-filter-' + index).val(column.search.search);
+                        });
                     }
                 });
-            });
+            }
         });
     </script>
 @endsection

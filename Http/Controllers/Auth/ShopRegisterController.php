@@ -4,7 +4,6 @@
 
     use App\Helpers\LanguageHelper;
     use App\Helpers\SeoHelper;
-    use App\Models\LawPages\LawPage;
     use App\Models\LawPages\LawPageTranslation;
     use Illuminate\Auth\Events\Registered;
     use Illuminate\Http\Request;
@@ -62,13 +61,13 @@
         protected function create(array $data)
         {
             return ShopRegisteredUser::create([
-                                                  'first_name' => $data['first_name'],
-                                                  'last_name'  => $data['last_name'],
-                                                  'phone'      => $data['phone'],
-                                                  'email'      => $data['email'],
-                                                  'password'   => Hash::make($data['password']),
-                                                  'active'     => 1,
-                                                  'group_id'   => ShopRegisteredUser::$DEFAULT_CLIENT_GROUP_ID
+                                                  'first_name'      => $data['first_name'],
+                                                  'last_name'       => $data['last_name'],
+                                                  'phone'           => $data['phone'],
+                                                  'email'           => $data['email'],
+                                                  'password'        => Hash::make($data['password']),
+                                                  'active'          => 1,
+                                                  'client_group_id' => ShopRegisteredUser::$DEFAULT_CLIENT_GROUP_ID
                                               ]);
         }
     }

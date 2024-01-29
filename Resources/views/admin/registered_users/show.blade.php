@@ -38,7 +38,7 @@
             <div class="padding-20 bg-f5">
                 <div class="form-group">
                     <label class="control-label p-b-10">@lang('shop::admin.registered_users.client_group'):</label>
-                    <p><strong>{{ trans('administration_messages.client_group_'.$registeredUser->group_id) }}</strong></p>
+                    <p><strong>{{ trans('administration_messages.client_group_'.$registeredUser->client_group_id) }}</strong></p>
                 </div>
                 <div class="form-group @if($errors->has('phone')) has-error @endif">
                     <label class="control-label p-b-10">@lang('shop::admin.registered_users.phone'):</label>

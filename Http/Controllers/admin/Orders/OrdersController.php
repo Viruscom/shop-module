@@ -114,10 +114,10 @@
             //            $action->decrementProductsQuantities($request, $basket);
             $basket->delete();
             $order->delete();
-            //            $clientOrder->sendMailOrderPlacedToAdmin();
+            $clientOrder->sendMailOrderPlacedToAdmin();
             $payment = Payment::where('id', $request->payment_id)->where('active', 1)->get()->first();
 
-            //            $clientOrder->sendMailOrderPlacedToClientFromAdmin($payment);
+            $clientOrder->sendMailOrderPlacedToClientFromAdmin($payment);
 
             return redirect(route('admin.shop.orders'))->with('success-message', __('Successful create'));
         }
@@ -807,9 +807,8 @@
 
             $basket->delete();
 
-            //TODO: Uncomment send emails
-            //            $order->sendMailOrderUpdatedToClient();
-            //            $order->sendMailOrderUpdatedToAdmin();
+            $order->sendMailOrderUpdatedToClient();
+            $order->sendMailOrderUpdatedToAdmin();
 
             return redirect()->route('admin.shop.orders.edit', ['id' => $order->id])->with('success-message', 'admin.common.successful_edit');
         }
