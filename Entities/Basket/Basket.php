@@ -208,7 +208,7 @@
                 $basketProduct->vat = $basketProduct->product->getVat($country, $city);
 
                 //tova e cenata na produkta bez nikakvi na4isleni otstupki samo s adnato dds
-                $basketProduct->vat_applied_default_price = $basketProduct->default_price + ($basketProduct->default_price * ($basketProduct->vat / 100));
+                $basketProduct->vat_applied_default_price = $this->formatPrice($basketProduct->default_price + ($basketProduct->default_price * ($basketProduct->vat / 100)));
 
                 // cenata zalojena ot admina  + quantity discaount na product v koli4kata + na4islen vat
                 $basketProduct->vat_applied_price = $basketProduct->price + ($basketProduct->price * ($basketProduct->vat / 100));
@@ -250,9 +250,9 @@
                 }
 
                 // tova pazi cenata koqto e s nalojeno dds ot po-gore kato ot neq e izvadena stojnostta na fiksiranite diskaunti bilo te levovi ili procentovi
-                $basketProduct->vat_applied_discounted_price = $basketProduct->vat_applied_price - $basketProduct->discounts_amount;
+                $basketProduct->vat_applied_discounted_price = $this->formatPrice($basketProduct->vat_applied_price - $basketProduct->discounts_amount);
                 //tova pazi gorniq red umnoven po brojkata na produkti v koli4kata
-                $basketProduct->end_discounted_price                   = $basketProduct->product_quantity * $basketProduct->vat_applied_discounted_price;
+                $basketProduct->end_discounted_price                   = $basketProduct->product_quantity * $this->formatPrice($basketProduct->vat_applied_discounted_price);
                 $basketProduct->end_discounted_price_with_add_and_coll = $basketProduct->end_discounted_price + $basketProduct->additives_total + $basketProduct->collection_total;
 
                 array_push($this->calculated_basket_products, $basketProduct);
@@ -297,6 +297,10 @@
 
             $this->discounts_to_apply[$key][$productId][$discount->id] = $discount;
         }
+        private function formatPrice($price): float
+        {
+            return floatval(number_format($price, 2, '.', ''));
+        }
         public function addDiscounts($key, $productId, $discounts)
         {
             if (!array_key_exists($key, $this->discounts_to_apply)) {
@@ -336,27 +340,6 @@
                 !is_null($this->discounts_to_apply['global']['delivery']);
         }
 
-        function isCurrentPromoCodeValid()
-        {
-            foreach ($this->discounts_to_apply as $key => $appliedDiscountsByType) {
-                foreach ($appliedDiscountsByType as $key2 => $appliedDiscountByType) {
-                    if (is_array($appliedDiscountByType)) {
-                        foreach ($appliedDiscountByType as $key3 => $discount) {
-                            if (isset($discount->promo_code) && $discount->promo_code == $this->promo_code) {
-                                return true;
-                            }
-                        }
-                    } else {
-                        if (isset($appliedDiscountByType->promo_code) && $appliedDiscountByType->promo_code == $this->promo_code) {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
         //ako ipash kolonata pravish edin metod za parsirate
         //    public function parseGuestData()
         //    {
@@ -385,4 +368,24 @@
 
         //     return $this->city;
         // }
+        function isCurrentPromoCodeValid()
+        {
+            foreach ($this->discounts_to_apply as $key => $appliedDiscountsByType) {
+                foreach ($appliedDiscountsByType as $key2 => $appliedDiscountByType) {
+                    if (is_array($appliedDiscountByType)) {
+                        foreach ($appliedDiscountByType as $key3 => $discount) {
+                            if (isset($discount->promo_code) && $discount->promo_code == $this->promo_code) {
+                                return true;
+                            }
+                        }
+                    } else {
+                        if (isset($appliedDiscountByType->promo_code) && $appliedDiscountByType->promo_code == $this->promo_code) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
     }
