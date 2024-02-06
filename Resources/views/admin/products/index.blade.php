@@ -95,7 +95,7 @@
                             </tr>
                             <tr class="t-row-details row-{{$product->id}}-details hidden">
                                 <td colspan="2"></td>
-                                <td colspan="1">
+                                <td colspan="2">
                                     @include('admin.partials.index.table_details', ['model' => $product, 'moduleName' => 'Product'])
                                 </td>
                                 <td class="width-220">
@@ -105,11 +105,11 @@
                                 <?php $i++; ?>
                         @endforeach
                         <tr style="display: none;">
-                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
+                            <td colspan="5" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="4" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
+                            <td colspan="5" class="no-table-rows">{{ trans('shop::admin.products.no_records') }}</td>
                         </tr>
                     @endif
                     </tbody>

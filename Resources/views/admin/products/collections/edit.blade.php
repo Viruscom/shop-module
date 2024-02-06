@@ -45,7 +45,7 @@
                     <div class="col-md-4 col-xs-6">
                         <select name="main_product_id" id="main_product_select" class="form-control select2">
                             @foreach($products as $product)
-                                <option value="{{ $product->id }}" {{($collection->main_product_id==$product->id || ($product->id==old('main_product_id'))) ? 'selected': ''}}>{{ $product->title }}</option>
+                                <option value="{{ $product->id }}" {{($collection->main_product_id==$product->id || ($product->id==old('main_product_id'))) ? 'selected': ''}}>{{ $product->title }} - sku:{{ $product->sku }}</option>
                             @endforeach
                         </select>
                         @if($errors->has('main_product_id'))
@@ -64,7 +64,7 @@
                                     <option value="">--- Моля, изберете ---</option>
                                 @endif
                                 @foreach($products as $product)
-                                    <option value="{{ $product->id }}" {{ ($product->id == $collectionProduct->additional_product_id) ? 'selected' : ''}}>{{ $product->title }}</option>
+                                    <option value="{{ $product->id }}" {{ ($product->id == $collectionProduct->additional_product_id) ? 'selected' : ''}}>{{ $product->title }} - sku:{{ $product->sku }}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('main_product_id'))
