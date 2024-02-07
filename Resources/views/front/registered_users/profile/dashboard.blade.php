@@ -4,6 +4,7 @@
     @include('shop::front.partials.registered_user_head')
     <div class="page-wrapper">
         {{--        @include('shop::front.registered_users.profile.breadcrumbs')--}}
+        @include('front.notify')
         <section class="settings-page">
             <div class="shell">
                 @include('shop::front.registered_users.profile.partials.menu')
