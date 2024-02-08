@@ -146,7 +146,7 @@
                                     <label for="public_key" class="control-label col-md-3">{{ __('Public key') }}*</label>
 
                                     <div class="col-md-6">
-                                        <input id="public_key" type="text" class="form-control @error('public_key') is-invalid @enderror" name="public_key" value="{{ $payment->data->public_key }}" required autocomplete="public_key" autofocus>
+                                        <textarea id="public_key" rows="15" class="form-control @error('public_key') is-invalid @enderror" name="public_key" required autocomplete="public_key" autofocus>{{ $payment->data->public_key }}</textarea>
 
                                         @error('public_key')
                                         <span class="invalid-feedback" role="alert">
@@ -160,7 +160,7 @@
                                     <label for="private_key" class="control-label col-md-3">{{ __('Private key') }}*</label>
 
                                     <div class="col-md-6">
-                                        <input id="private_key" type="text" class="form-control @error('private_key') is-invalid @enderror" name="private_key" value="{{ $payment->data->private_key }}" required autocomplete="private_key" autofocus>
+                                        <textarea id="private_key" rows="15" class="form-control @error('private_key') is-invalid @enderror" name="private_key" required autocomplete="private_key" autofocus>{{ $payment->data->private_key }}</textarea>
 
                                         @error('private_key')
                                         <span class="invalid-feedback" role="alert">
@@ -174,6 +174,5 @@
                     </div>
                 </div>
             </div>
-        </div>
     </form>
 @endsection
