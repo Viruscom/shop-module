@@ -121,7 +121,7 @@
                                                             <table border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
                                                                 <tr>
                                                                     <td width="100" align="left">
-                                                                        <img align="left" width="260" style="display:block;width:100%;max-width:260px;" alt="img" src="{{ asset('common/email_logo.svg') }}">
+                                                                        <img align="left" width="260" style="display:block;width:100%;max-width:260px;" alt="img" src="{{ asset('common/email_logo.png') }}">
                                                                     </td>
                                                                     <td width="30">&nbsp;</td>
                                                                     <td align="right" style="font-family:'Open Sans', Arial, Helvetica, sans-serif;font-size: 14px;color: #282828;"></td>

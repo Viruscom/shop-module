@@ -373,7 +373,7 @@
                                                 <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
                                                     <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                         <tr>
-                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.svg') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+                                                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="{{ asset('common/email_logo.png') }}" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
                                                         </tr>
                                                         <tr>
                                                             <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Промяна на статуса на доставка</h1></td>
@@ -704,32 +704,32 @@
                                                                     <tr>
                                                                         @if(!empty($socialLinks->facebook_url))
                                                                             <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
-                                                                                <a href="{{ $socialLinks->facebook_url }}" target="_blank"><img title="Facebook" src="{{ asset('common/email_social_icons/facebook.svg') }}" alt="Fb" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
+                                                                                <a href="{{ $socialLinks->facebook_url }}" target="_blank"><img title="Facebook" src="{{ asset('common/email_social_icons/facebook.png') }}" alt="Fb" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
                                                                             </td>
                                                                         @endif
                                                                         @if(!empty($socialLinks->instagram_url))
                                                                             <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
-                                                                                <a href="{{ url($socialLinks->instagram_url) }}" target="_blank"><img title="Instagram" src="{{ asset('common/email_social_icons/instagram.svg') }}" alt="Inst" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
+                                                                                <a href="{{ url($socialLinks->instagram_url) }}" target="_blank"><img title="Instagram" src="{{ asset('common/email_social_icons/instagram.png') }}" alt="Inst" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a>
                                                                             </td>
                                                                         @endif
                                                                         @if(!empty($socialLinks->linkedin_url))
                                                                             <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
                                                                                 <a href="{{ url($socialLinks->linkedin_url) }}" target="_blank">
-                                                                                    <img title="LinkedIn" src="{{ asset('common/email_social_icons/linkedin.svg') }}" alt="Ln" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                    <img title="LinkedIn" src="{{ asset('common/email_social_icons/linkedin.png') }}" alt="Ln" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                 </a>
                                                                             </td>
                                                                         @endif
                                                                         @if(!empty($socialLinks->pinterest_url))
                                                                             <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
                                                                                 <a href="{{ url($socialLinks->pinterest_url) }}" target="_blank">
-                                                                                    <img title="Pinterest" src="{{ asset('common/email_social_icons/pinterest.svg') }}" alt="Pt" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                    <img title="Pinterest" src="{{ asset('common/email_social_icons/pinterest.png') }}" alt="Pt" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                 </a>
                                                                             </td>
                                                                         @endif
                                                                         @if(!empty($socialLinks->tweeter_url))
                                                                             <td align="center" valign="top" style="padding:0;Margin:0;padding-right:40px">
                                                                                 <a href="{{ url($socialLinks->tweeter_url) }}" target="_blank">
-                                                                                    <img title="Twitter" src="{{ asset('common/email_social_icons/twitter.svg') }}" alt="Tw" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
+                                                                                    <img title="Twitter" src="{{ asset('common/email_social_icons/twitter.png') }}" alt="Tw" height="25" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                 </a>
                                                                             </td>
                                                                         @endif
