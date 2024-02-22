@@ -26,8 +26,9 @@
                     $('#' + tableId + ' thead tr').clone(true).appendTo('#' + tableId + ' thead').css('background-color', '#ebecef');
                     $('#' + tableId + ' thead tr:eq(1) th').each(function (i) {
                         if (i >= options.sortableRowFromColumn && i < options.sortableRowToColumn) {
-                            var title = $(this).text();
-                            $(this).html('<input type="text" class="datatable-filter-input head-filter-' + i + '" placeholder="Сортирай по ' + title + '" />');
+                            var title  = $(this).text();
+                            var sortBy = "{{ trans('admin.common.sort_by') }}";
+                            $(this).html('<input type="text" class="datatable-filter-input head-filter-' + i + '" placeholder="' + sortBy + ' ' + title + '" />');
                             $('input', this).on('keyup change', function () {
                                 if (table.column(i).search() !== this.value) {
                                     table

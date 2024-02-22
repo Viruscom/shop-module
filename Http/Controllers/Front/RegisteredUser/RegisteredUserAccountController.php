@@ -97,11 +97,21 @@
             $registeredUser    = Auth::guard('shop')->user();
 
             $client = new Client([
-                                                 'base_uri' => 'https://' . $mailChimpSettings->MAILCHIMP_API_SERVER . '.api.mailchimp.com/3.0/',
-                                                 'verify'   => false,
-                                             ]);
+                                     'base_uri' => 'https://' . $mailChimpSettings->MAILCHIMP_API_SERVER . '.api.mailchimp.com/3.0/',
+                                     'verify'   => false,
+                                 ]);
 
             $subscriberHash = md5(strtolower($registeredUser->email));
+
+            $payload = [
+                'email_address' => $registeredUser->email,
+                'status'        => 'subscribed',
+                'merge_fields'  => [
+                    'FNAME'    => $registeredUser->first_name ?? '', // Assuming these fields exist
+                    'LNAME'    => $registeredUser->last_name ?? '',
+                    'BIRTHDAY' => $registeredUser->birthday ? $registeredUser->birthday->format('m/d') : '',
+                ],
+            ];
 
             try {
                 $response = $client->request('GET', 'lists/' . $mailChimpSettings->MAILCHIMP_LIST_ID . '/members/' . $subscriberHash, [
@@ -112,7 +122,7 @@
                 if ($body['status'] === 'subscribed') {
                     $client->request('PATCH', 'lists/' . $mailChimpSettings->MAILCHIMP_LIST_ID . '/members/' . $subscriberHash, [
                         'auth' => ['anystring', $mailChimpSettings->MAILCHIMP_API_KEY],
-                        'json' => ['status' => 'unsubscribed'],
+                        'json' => array_merge($payload, ['status' => 'unsubscribed']),
                     ]);
 
                     $registeredUser->update(['newsletter_subscribed' => false]);
@@ -121,7 +131,7 @@
                 } elseif ($body['status'] === 'unsubscribed') {
                     $client->request('PATCH', 'lists/' . $mailChimpSettings->MAILCHIMP_LIST_ID . '/members/' . $subscriberHash, [
                         'auth' => ['anystring', $mailChimpSettings->MAILCHIMP_API_KEY],
-                        'json' => ['status' => 'subscribed'],
+                        'json' => $payload,
                     ]);
 
                     $registeredUser->update(['newsletter_subscribed' => true]);
@@ -135,10 +145,7 @@
                     try {
                         $client->request('POST', 'lists/' . $mailChimpSettings->MAILCHIMP_LIST_ID . '/members', [
                             'auth' => ['anystring', $mailChimpSettings->MAILCHIMP_API_KEY],
-                            'json' => [
-                                'email_address' => $registeredUser->email,
-                                'status'        => 'subscribed',
-                            ],
+                            'json' => $payload,
                         ]);
 
                         $registeredUser->update(['newsletter_subscribed' => true]);
