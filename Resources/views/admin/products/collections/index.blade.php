@@ -64,6 +64,7 @@
 @endsection
 
 @section('content')
+    @include('admin.partials.modals.delete_confirm')
     @include('shop::admin.products.collections.breadcrumbs')
     @include('admin.notify')
     <div class="col-xs-12 p-0">
@@ -108,6 +109,7 @@
                         @else
                             <a href="{{ route('admin.product-collections.changeActiveStatus', ['id' => $collection->id, 'active' => 0]) }}" role="button" class="btn grey-eye visibility-unactive"><i class="far fa-eye"></i></a>
                         @endif
+                        <a href="{{ route('admin.product-collections.delete', ['id' => $collection->id]) }}" class="btn red btn-delete-confirm tooltips" data-toggle="tooltip" data-placement="auto" title="" data-original-title="{{ __('admin.delete') }}"><i class="fas fa-trash-alt"></i></a>
                     </td>
                 </tr>
             @endforeach
