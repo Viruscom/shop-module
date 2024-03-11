@@ -1,0 +1,44 @@
+@extends('layouts.admin.app')
+
+@section('content')
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Cities VATS Categories for {{$city->name}}({{$city->state->name}}, {{$city->state->country->name}})
+                        <a class="btn btn-success" href="{{route('vats.countries.states.cities.categories.create',['id'=>$city->id])}}">Create</a>
+                    </div>
+
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <td>Category</td>
+                                <td>VAT</td>
+                                <td>ACTION</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($city->vat_categories as $category)
+                                <tr>
+                                    <td>{{$category->vat_category->name}}</td>
+                                    <td>{{$category->vat}}</td>
+                                    <td>
+                                        <a class="btn btn-warning" href="{{route('vats.countries.states.cities.categories.edit',['id'=>$category->id])}}">edit</a>
+                                        <a class="btn btn-danger" href="{{route('vats.countries.states.cities.categories.delete',['id'=>$category->id])}}">delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
