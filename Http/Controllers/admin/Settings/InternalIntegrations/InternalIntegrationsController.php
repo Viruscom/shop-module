@@ -57,13 +57,13 @@
         public function facebookConversationApiEdit()
         {
             $facebookConversationApi = InternalIntegration::where('key', 'facebookConversationApi')->first();
-            if (is_null($facebookConversationApi)) {
-                $facebookConversationApi = InternalIntegration::create(['key' => 'facebookConversationApi', 'data' => json_encode(['ACCESS_TOKEN' => ''])]);
-            }
-
-            $applicationSettings = Application::first();
+            $applicationSettings     = Application::first();
             if (is_null($applicationSettings)) {
                 $applicationSettings = Application::storeEmptyRow();
+            }
+
+            if (is_null($facebookConversationApi)) {
+                $facebookConversationApi = InternalIntegration::create(['key' => 'facebookConversationApi', 'data' => json_encode(['ACCESS_TOKEN' => '', 'PIXEL_ID' => $applicationSettings->facebook_pixel_id])]);
             }
 
             $facebookConversationApi = json_decode($facebookConversationApi->data);
