@@ -523,6 +523,13 @@
             array(
                 'settings' => 'Exchange Rate Настройки',
             ),
+        'facebook_conversation_api'              =>
+            array(
+                'settings'             => 'Facebook Conversation API Настройки',
+                'pixel_id_info'        => '<strong>Внимание! </strong>Ако полето е празно, моля, въведете PIXEL ID от Настройки > Приложения > PIXEL ID',
+                'pixel_id_placeholder' => 'Въведете PIXEL ID',
+                'pixel_id_error'       => 'Моля попълнете полето PIXEL ID в Настройки > Приложения > PIXEL ID',
+            ),
         'email_template_payment_status_changed'  => array(
             'status_changed_subject' => 'Статусът на плащане беше променен на '
         ),

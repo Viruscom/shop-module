@@ -75,8 +75,8 @@
         {
             $facebookConversationApi = InternalIntegration::where('key', 'facebookConversationApi')->first();
             $applicationSettings     = Application::first();
-            if ($applicationSettings->facebook_pixel_id == '') {
-                return redirect()->back()->withInput()->withErrors(['Ако полето за PIXEL ID е празно, моля попълнете го в Настройки > Приложения > PIXEL ID']);
+            if (is_null($applicationSettings) || $applicationSettings->facebook_pixel_id == '') {
+                return redirect()->back()->withInput()->withErrors(['shop::admin.facebook_conversation_api.pixel_id_error']);
             }
 
             $facebookConversationApi->update(['data' => json_encode(['ACCESS_TOKEN' => $request->EXCHANGE_RATE_API_KEY])]);

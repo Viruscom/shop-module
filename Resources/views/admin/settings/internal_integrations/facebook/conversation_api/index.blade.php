@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    @include('shop::admin.settings.internal_integrations.mail_chimp.breadcrumbs')
+    @include('shop::admin.settings.internal_integrations.facebook.conversation_api.breadcrumbs')
     @include('admin.notify')
 
     <form action="{{ route('admin.shop.settings.internal-integrations.mail-chimp.update') }}" method="POST">
@@ -26,13 +26,13 @@
                         <div class="portlet light bordered">
                             <div class="portlet-title">
                                 <div class="caption">
-                                    <span>{{ __('shop::admin.mail_chimp.settings') }}</span>
+                                    <span>{{ __('shop::admin.facebook_conversation_api.settings') }}</span>
                                 </div>
                             </div>
                             <div class="portlet-body">
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-3">API KEY:</label>
+                                    <label class="control-label col-md-3">ACCESS TOKEN:</label>
                                     <div class="col-md-6">
                                         <input type="text" name="ACCESS_TOKEN" value="{{ old('ACCESS_TOKEN') ?? $facebookConversationApi->ACCESS_TOKEN }}" class="form-control" required>
                                     </div>
@@ -41,7 +41,8 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3">PIXEL ID:</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="PIXEL_ID" value="{{ old('PIXEL_ID') ?? $facebookConversationApi->PIXEL_ID }}" class="form-control" required>
+                                        <div class="alert alert-warning">{!! __('shop::admin.facebook_conversation_api.pixel_id_info') !!}</div>
+                                        <input type="text" name="PIXEL_ID" value="{{ old('PIXEL_ID') ?? $facebookConversationApi->PIXEL_ID }}" class="form-control" required disabled placeholder="{{ __('shop::admin.facebook_conversation_api.pixel_id_placeholder') }}">
                                     </div>
                                 </div>
 
