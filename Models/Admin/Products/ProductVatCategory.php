@@ -10,6 +10,7 @@
     class ProductVatCategory extends Model
     {
         protected $table = 'product_vat_category';
+        protected $fillable = ['product_id','vat_category_id'];
         public function product(): BelongsTo
         {
             return $this->belongsTo(Product::class);
