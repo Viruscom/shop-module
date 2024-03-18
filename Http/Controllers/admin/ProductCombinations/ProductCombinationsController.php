@@ -9,32 +9,35 @@ use Illuminate\Http\Request;
 use Modules\Shop\Models\Admin\ProductAttribute\ProductAttribute;
 use Modules\Shop\Models\Admin\ProductAttribute\ProductAttributePivot;
 use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
-use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
+// use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
 use Modules\Shop\Models\Admin\Products\Product;
+use Carbon\Carbon;
 
 class ProductCombinationsController extends Controller
 {
     public function index()
     {
         return view('shop::admin.product_combinations.index', [
-            'products'               => Product::with('translations', 'category')->get(),
-            'productCombinations'    => ProductCombination::get(),
+            'products'               => Product::with('translations')->with(['category' => function ($q) {
+                $q->orderBy('position', 'asc');
+            }])->whereDoesntHave('mainProduct')->get()->sortBy(['category', 'id']),
+            'productCombinations'    => Product::whereHas('mainProduct')->get(),
             'productAttributes'      => ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get(),
             'productAttributeValues' => ProductAttributeValue::with('translations')->get(),
             'languages'              => LanguageHelper::getActiveLanguages()
-        ]);
+        ]); 
     }
     public function updateMultiple(Request $request)
     {
         if (is_array($request->combos)) {
             foreach ($request->combos as $key => $combo) {
-                $productCombination = ProductCombination::find($combo['comboId']);
+                $productCombination = Product::where('id',$combo['comboId'])->whereHas('mainProduct')->first();
                 if (!is_null($productCombination)) {
                     $price = str_replace(',', '.', $combo['price']);
                     $productCombination->update([
-                                                    'price' => number_format((float)$price, 2, '.', ''),
-                                                    'sku'   => $combo['sku'],
-                                                ]);
+                        'price' => number_format((float)$price, 2, '.', ''),
+                        'sku'   => $combo['sku'],
+                    ]);
                 }
             }
 
@@ -45,15 +48,15 @@ class ProductCombinationsController extends Controller
     }
     public function update($id, Request $request): RedirectResponse
     {
-        $productCombination = ProductCombination::find($id);
+        $productCombination = Product::where('id',$id)->whereHas('mainProduct')->first();
         if (is_null($productCombination)) {
             return redirect()->back()->withErrors(['administration_messages.no_product_combination_found']);
         }
         $price = str_replace(',', '.', $request->price);
         $productCombination->update([
-                                        'price' => number_format((float)$price, 2, '.', ''),
-                                        'sku'   => $request->sku,
-                                    ]);
+            'price' => number_format((float)$price, 2, '.', ''),
+            'sku'   => $request->sku,
+        ]);
 
         return redirect()->back()->with('success-message', 'admin.common.successful_edit');
     }
@@ -62,7 +65,7 @@ class ProductCombinationsController extends Controller
         if (!is_null($request->ids[0])) {
             $ids = array_map('intval', explode(',', $request->ids[0]));
             foreach ($ids as $id) {
-                $productCombination = ProductCombination::find($id);
+                $productCombination = Product::where('id', $id)->whereHas('mainProduct')->first();
                 if (!is_null($productCombination)) {
                     $productCombination->delete();
                 }
@@ -75,7 +78,7 @@ class ProductCombinationsController extends Controller
     }
     public function delete($id): RedirectResponse
     {
-        $productCombination = ProductCombination::find($id);
+        $productCombination = Product::where('id', $id)->whereHas('mainProduct')->first();
         if (is_null($productCombination)) {
             return redirect()->back()->withErrors(['administration_messages.no_product_combination_found']);
         }
@@ -121,22 +124,8 @@ class ProductCombinationsController extends Controller
 
             $collection          = collect($mainProduct->id);
             $combinations        = $collection->crossJoin(...$request->attribute);
-            $productCombinations = ProductCombination::all();
-
-            if ($productCombinations->isEmpty()) {
-                foreach ($combinations as $combination) {
-                    ProductCombination::create(ProductCombination::getRequestData($request, $combination));
-                }
-            } else {
-                foreach ($combinations as $combination) {
-                    $d = [];
-                    foreach ($productCombinations as $productCombination) {
-                        $d[] = $combination == $productCombination->combination;
-                    }
-                    if (!in_array(true, $d, true)) {
-                        ProductCombination::create(ProductCombination::getRequestData($request, $combination));
-                    }
-                }
+            foreach ($combinations as $combination) {
+                $productCombination = Product::createCombination($request, $mainProduct, $combination);
             }
 
             return redirect()->back()->with('success-message', 'admin.common.successful_create');
@@ -152,18 +141,11 @@ class ProductCombinationsController extends Controller
             return redirect()->back()->withErrors(['administration_messages.no_product_found']);
         }
 
-        $productCombinations = ProductCombination::all();
-        $productCombinations = $productCombinations->filter(function ($item) use ($mainProduct) {
-            if ($item->product_id == $mainProduct->id) {
-                return $item;
-            }
-        });
-
         return view('shop::admin.product_combinations.index', [
             'products'               => Product::with('translations')->with(['category' => function ($q) {
                 $q->orderBy('position', 'asc');
-            }])->get()->sortBy(['category', 'id']),
-            'productCombinations'    => $productCombinations,
+            }])->whereDoesntHave('mainProduct')->get()->sortBy(['category', 'id']),
+            'productCombinations'    => $mainProduct->combinations,
             'productAttributes'      => ProductAttribute::with('translations', 'values', 'values.translations')->orderBy('position')->get(),
             'productAttributeValues' => ProductAttributeValue::with('translations')->get(),
             'languages'              => LanguageHelper::getActiveLanguages()

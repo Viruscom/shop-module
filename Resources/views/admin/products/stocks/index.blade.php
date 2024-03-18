@@ -100,7 +100,7 @@
                                 <a href="#" class="btn tooltips btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Виж всички движения за продукта"><i class="fas fa-history"></i></a>
                             </td>
                         </tr>
-                        @if(!is_null($product->combinations) && $product->combinations->isNotEmpty())
+                        @if(!is_null($product->combinations) && $product->[combinations->isNotEmpty())
                             <tr class="t-row-details row-{{$product->id}}-details hidden">
                                 <td colspan="6" class="p-0">
                                     <div style="padding: 0px 2%;border-top: 1px solid #c8286440;">
@@ -110,8 +110,8 @@
                                         <tbody>
                                         @foreach($product->combinations as $combo)
                                                 <?php
-                                                $combinationProduct = $combo->product;
-                                                $productCategory    = $combo->product->category;
+                                                $combinationProduct = $combo;
+                                                $productCategory    = $combo->category;
                                                 ?>
                                             <tr class="product-combos-tr">
                                                 <td class="width-2-percent"></td>
@@ -119,7 +119,7 @@
                                                 <td>
                                                     <div>{{ $product->title }}</div>
                                                     <div class="combination-details">
-                                                        @foreach ($combo->combination as $comboProductAttributeId => $attributeValueId)
+                                                        @foreach ($combo->filter_combo as $comboProductAttributeId => $attributeValueId)
                                                             @php
                                                                 $attributeValue = $productAttributeValues->firstWhere('id', $attributeValueId);
                                                             @endphp

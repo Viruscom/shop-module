@@ -276,8 +276,8 @@
                         @endphp
                         @foreach($productCombinations as $combination)
                                 <?php
-                                $combinationProduct = $combination->product;
-                                $productCategory    = $combination->product->category;
+                                $combinationProduct = $combination;
+                                $productCategory    = $combination->category;
                                 ?>
 
                             <tr class="t-row row-{{$i}}">
@@ -312,12 +312,6 @@
                                 <td>{{ $productCategory->title }}</td>
                                 <form id="form-{{$combination->id}}" action="{{ route('admin.product-combinations.update', ['id'=> $combination->id]) }}" method="POST">
                                     @csrf
-                                    {{--                                    <td class="text-center">--}}
-                                    {{--                                        <p class="m-b-0">Количество: {{ $combination->quantity }}</p>--}}
-                                    {{--                                        <label>--}}
-                                    {{--                                            <input type="number" name="quantity" class="decimal text-center quantity-{{$combination->id}}" value="{{ old('quantity') ?? $combination->quantity }}">--}}
-                                    {{--                                        </label>--}}
-                                    {{--                                    </td>--}}
                                     <td class="text-right">
                                         <p class="m-b-0">Ед.цена: {{ $combination->price }}</p>
                                         <label>
