@@ -60,7 +60,7 @@
                     @if(array_key_exists('YanakSoftApi', $activeModules))
                         <th class="width-2-percent">Янак</th>
                     @endif
-                    <th class="width-220">{{ __('admin.actions') }}</th>
+                    <th class="width-220 text-right">{{ __('admin.actions') }}</th>
                     </thead>
                     <tbody>
                     @if(!is_null($products) && $products->isNotEmpty())
@@ -81,8 +81,6 @@
                                 </td>
                                 @if(array_key_exists('YanakSoftApi', $activeModules) && !is_null($product->stk_idnumb))
                                     <td class="text-center"><i class="fas fa-link" style="color: #c82864;"></i></td>
-                                @else
-                                    <td></td>
                                 @endif
                                 <td class="pull-right">
                                     <a href="{{ route('admin.products.send-to-adboxes', ['id' => $product->id]) }}" class="btn btn-info tooltips" role="button" data-toggle="tooltip" data-placement="auto" title="" data-original-title="@lang('shop::admin.products.make_adbox')"><i class="fas fa-ad"></i></a>
@@ -94,7 +92,12 @@
                                 </td>
                             </tr>
                             <tr class="t-row-details row-{{$product->id}}-details hidden">
-                                <td colspan="2"></td>
+                                @if(array_key_exists('YanakSoftApi', $activeModules))
+                                    <td colspan="2"></td>
+                                @else
+                                    <td></td>
+                                @endif
+
                                 <td colspan="2">
                                     @include('admin.partials.index.table_details', ['model' => $product, 'moduleName' => 'Product'])
                                 </td>
