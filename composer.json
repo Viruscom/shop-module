@@ -1,0 +1,30 @@
+{
+    "name": "iwish/shop-module",
+    "description": "",
+    "authors": [
+        {
+            "name": "test",
+            "email": "test@test.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Shop\\": ""
+        }
+    },
+    "require": {
+        "mailchimp/marketing": "*",
+        "iwish/shopdiscounts-module": "dev-main",
+        "iwish/mypospayment-module": "dev-main",
+        "escapeboy/nra-audit-generator": "^1.1",
+        "simplesoftwareio/simple-qrcode": "^4.2"
+    },
+    "type": "laravel-module"
+}
