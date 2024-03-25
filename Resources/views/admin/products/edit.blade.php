@@ -23,6 +23,7 @@
 @section('content')
     @include('shop::admin.products.breadcrumbs')
     @include('admin.notify')
+    @include('admin.partials.common.importers')
     <form class="my-form" action="{{ route('admin.products.update', ['id' => $product->id]) }}" method="POST" data-form-type="update" enctype="multipart/form-data">
         <div class="col-xs-12 p-0">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -85,11 +86,6 @@
                 @include('admin.partials.on_edit.seo', ['model' => $product->seoFields])
                 <div class="form form-horizontal">
                     <div class="form-body">
-                        {{--                        <div class="row">--}}
-                        {{--                            @include('admin.partials.common.import_file')--}}
-                        {{--                            @include('admin.partials.common.import_catalog')--}}
-                        {{--                        </div>--}}
-
                         <div class="row">
                             <hr>
                             <div class="col-md-6">
@@ -118,7 +114,7 @@
                                 {{--                                        </label>--}}
                                 {{--                                    </div>--}}
                                 {{--                                </div>--}}
-                                
+
                             </div>
                         </div>
 

@@ -23,6 +23,7 @@
 @section('content')
     @include('shop::admin.products.breadcrumbs')
     @include('admin.notify')
+    @include('admin.partials.common.importers')
     @if($productCategories->isEmpty() || $brands->isEmpty())
         <div class="alert alert-warning">{!! __('shop::admin.products.create_not_allowed_add_product_category') !!}</div>
     @else
@@ -86,11 +87,6 @@
                     @include('admin.partials.on_create.seo')
                     <div class="form form-horizontal">
                         <div class="form-body">
-                            {{--                            <div class="row">--}}
-                            {{--                                @include('admin.partials.common.import_file')--}}
-                            {{--                                @include('admin.partials.common.import_catalog')--}}
-                            {{--                            </div>--}}
-
                             <div class="row">
                                 <hr>
                                 <div class="col-md-6">
