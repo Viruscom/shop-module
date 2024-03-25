@@ -16,6 +16,7 @@
         {
             Model::unguard();
 
+            $this->call(ShopSettingSeeder::class);
             $this->call(BankTransferPaymentSeeder::class);
             $this->call(CashOnDeliveryPaymentSeeder::class);
             $this->call(MyPosPaymentSeeder::class);
