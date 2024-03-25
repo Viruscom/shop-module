@@ -227,7 +227,7 @@
             $productCombination->units_in_stock = ($request->filled('quantity') ? str_replace(',', '.', $request->quantity) : 0);
             $productCombination->price = ($request->filled('price') ? str_replace(',', '.', $request->price) : $mainProduct->price);
             
-            $maxPosition = Product::where('category_id', $mainProduct->category_id)->max('position');
+            $maxPosition = Product::where('main_product_id', $mainProduct->id)->max('position');
             if (is_null($maxPosition)) {
                 $maxPosition = 0;
             }

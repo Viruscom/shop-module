@@ -66,8 +66,15 @@ class ProductCombinationsController extends Controller
             $ids = array_map('intval', explode(',', $request->ids[0]));
             foreach ($ids as $id) {
                 $productCombination = Product::where('id', $id)->whereHas('mainProduct')->first();
+                $mainProductId = $productCombination->main_product_id;
+                $deletedPosition = $productCombination->position;
                 if (!is_null($productCombination)) {
                     $productCombination->delete();
+                }
+
+                $combinations = Product::find($mainProductId)->combinations()->where('position', '>', $deletedPosition)->get();
+                foreach ($combinations as $combination) {
+                    $combination->update(['position' => $combination->position - 1]);
                 }
             }
 
@@ -77,13 +84,19 @@ class ProductCombinationsController extends Controller
         return redirect()->back()->withErrors(['administration_messages.no_checked_checkboxes']);
     }
     public function delete($id): RedirectResponse
-    {
+    {   
         $productCombination = Product::where('id', $id)->whereHas('mainProduct')->first();
         if (is_null($productCombination)) {
             return redirect()->back()->withErrors(['administration_messages.no_product_combination_found']);
         }
+        $mainProductId = $productCombination->main_product_id;
+        $deletedPosition = $productCombination->position;
 
         $productCombination->delete();
+        $combinations = Product::find($mainProductId)->combinations()->where('position', '>', $deletedPosition)->get();
+        foreach ($combinations as $combination) {
+            $combination->update(['position' => $combination->position - 1]);
+        }
 
         return redirect()->back()->with('success-message', 'admin.common.successful_delete');
     }
