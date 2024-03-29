@@ -16,7 +16,7 @@
 
         <h3 class="title" data-aos="fade-up" data-aos-delay="100">{{ $viewArray['currentModel']->title }}</h3>
 
-        @include('shop::front.categories.category_picker')
+        <x-shop::front.productcategories.categorypricker :categories="$categories" language-slug="$languageSlug"/>
 
         @if(!is_null($viewArray['currentModel']->parent->main_category))
             <div class="top-nav-pages hover-images">
