@@ -2,12 +2,11 @@
 
     namespace Modules\Shop\Models\Admin\Products;
 
-    use App\Helpers\UrlHelper;
-    use App\Helpers\ModuleHelper;
     use App\Helpers\AdminHelper;
     use App\Helpers\CacheKeysHelper;
     use App\Helpers\FileDimensionHelper;
     use App\Helpers\SeoHelper;
+    use App\Helpers\UrlHelper;
     use App\Interfaces\Models\ImageModelInterface;
     use App\Models\Seo;
     use App\Traits\CommonActions;
@@ -29,13 +28,13 @@
     use Modules\Shop\Entities\Settings\MeasureUnit;
     use Modules\Shop\Entities\Settings\VatCategory;
     use Modules\Shop\Models\Admin\Brands\Brand;
+    use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
     use Modules\Shop\Models\Admin\ProductCategory\Category;
     use Modules\Shop\Models\Admin\ProductCollection\ProductCollection;
     use Modules\Shop\Models\Admin\ProductCollection\ProductCollectionPivot;
-    // use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
     use Modules\ShopDiscounts\Entities\Discount;
-    use Modules\Shop\Models\Admin\ProductAttribute\Values\ProductAttributeValue;
 
+    // use Modules\Shop\Models\Admin\ProductCombination\ProductCombination;
 
     class Product extends Model implements TranslatableContract, ImageModelInterface
     {
@@ -57,17 +56,20 @@
         protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active', 'category_id', 'brand_id',
                                               'supplier_delivery_price', 'price', 'barcode', 'ean_code', 'measure_unit_id', 'is_new', 'is_promo', 'width', 'height', 'length', 'weight', 'sku', 'units_in_stock', 'measure_unit_value', 'catalog_from_price', 'catalog_discounted_price', 'catalog_from_discounted_price', 'stk_idnumb', 'filter_combo', 'main_product_id'];
         protected    $table                = 'products';
-        protected        $casts                       = [
+        protected    $casts                = [
             'filter_combo' => 'array',
         ];
+
         public static function getFileRules(): string
         {
             return FileDimensionHelper::getRules('Shop', 3);
         }
+
         public static function getUserInfoMessage(): string
         {
             return FileDimensionHelper::getUserInfoMessage('Shop', 3);
         }
+
         public static function cacheUpdate(): void
         {
             cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ADMIN);
@@ -80,6 +82,7 @@
                 return self::with('category', 'category.translations')->with('brand', 'measureUnit')->active(true)->orderBy('position')->with('translations')->get();
             });
         }
+
         public static function getRequestData($request): array
         {
             $data = [
@@ -136,7 +139,7 @@
             if ($request->has('is_promo')) {
                 $data['is_promo'] = filter_var($request->is_promo, FILTER_VALIDATE_BOOLEAN);
             }
-            
+
             if ($request->has('width')) {
                 $data['width'] = $request->width;
             }
@@ -181,6 +184,7 @@
 
             return $data;
         }
+
         public static function getLangArraysOnStore($data, $request, $languages, $modelId, $isUpdate)
         {
             foreach ($languages as $language) {
@@ -189,6 +193,7 @@
 
             return $data;
         }
+
         public static function generatePosition($request)
         {
             $models = self::where('category_id', $request->category_id)->orderBy('position', 'desc')->get();
@@ -210,23 +215,24 @@
             return $request['position'];
         }
 
-        public static function createCombination($request, $mainProduct, $combination){
+        public static function createCombination($request, $mainProduct, $combination)
+        {
             $filterCombo = self::generateFilterCombinationArray($combination);
             //ako veche q ima q vrushtame napravo bez da q pipame
-            $filterCombo = self::generateFilterCombinationArray($combination);
+            $filterCombo        = self::generateFilterCombinationArray($combination);
             $productCombination = $mainProduct->combinations->where('filter_combo', $filterCombo)->first();
-            if(!is_null($productCombination)){
+            if (!is_null($productCombination)) {
                 return $productCombination;
             }
 
             //product replication
-            $productCombination = $mainProduct->replicate();
+            $productCombination               = $mainProduct->replicate();
             $productCombination->filter_combo = $filterCombo;
-           
+
             $productCombination->main_product_id = $mainProduct->id;
-            $productCombination->units_in_stock = ($request->filled('quantity') ? str_replace(',', '.', $request->quantity) : 0);
-            $productCombination->price = ($request->filled('price') ? str_replace(',', '.', $request->price) : $mainProduct->price);
-            
+            $productCombination->units_in_stock  = ($request->filled('quantity') ? str_replace(',', '.', $request->quantity) : 0);
+            $productCombination->price           = ($request->filled('price') ? str_replace(',', '.', $request->price) : $mainProduct->price);
+
             $maxPosition = Product::where('main_product_id', $mainProduct->id)->max('position');
             if (is_null($maxPosition)) {
                 $maxPosition = 0;
@@ -237,54 +243,54 @@
             $productCombination->save();
 
             $sku = ($request->filled('sku') ? $request->sku : $mainProduct->sku);
-            if(!empty($sku)){
-                $sku .="-".$productCombination->id;
+            if (!empty($sku)) {
+                $sku .= "-" . $productCombination->id;
             }
             $productCombination->sku = $sku;
             $productCombination->save();
 
             //add translateions
             foreach ($mainProduct->translations as $pTrans) {
-                $cTrans = $pTrans->replicate();
+                $cTrans             = $pTrans->replicate();
                 $cTrans->product_id = $productCombination->id;
-                $attrTitle = [];
-                foreach ($filterCombo as $comboProductAttributeId => $attributeValueId){
-                        $attributeValue = ProductAttributeValue::with('translations')->where('id', $attributeValueId)->first();
-                    if($attributeValue){
+                $attrTitle          = [];
+                foreach ($filterCombo as $comboProductAttributeId => $attributeValueId) {
+                    $attributeValue = ProductAttributeValue::with('translations')->where('id', $attributeValueId)->first();
+                    if ($attributeValue) {
                         $av = $attributeValue->parent->translate($pTrans->locale);
-                        $a = $attributeValue->translate($pTrans->locale);
-                        if($av && $a){
-                            array_push($attrTitle, $av->title.": ".$a->title);
+                        $a  = $attributeValue->translate($pTrans->locale);
+                        if ($av && $a) {
+                            array_push($attrTitle, $av->title . ": " . $a->title);
                         }
                     }
                 }
-                if(count($attrTitle)>0){
-                    $cTrans->title = $pTrans->title.", ".implode(", ", $attrTitle);
+                if (count($attrTitle) > 0) {
+                    $cTrans->title = $pTrans->title . ", " . implode(", ", $attrTitle);
                 }
                 $cTrans->seo_title = $cTrans->title;
-                $cTrans->url = $cTrans->url."-". $cTrans->product_id;
+                $cTrans->url       = $cTrans->url . "-" . $cTrans->product_id;
                 $cTrans->save();
             }
 
             //add seo records
             $seo = $mainProduct->seoFields;
-            if(!is_null($seo)){
-                $duplicatedSeo = $seo->replicate();
+            if (!is_null($seo)) {
+                $duplicatedSeo           = $seo->replicate();
                 $duplicatedSeo->model_id = $productCombination->id;
                 $duplicatedSeo->save();
 
                 // If the SEO record has translations
                 foreach ($seo->translations as $translation) {
-                    $duplicatedTranslation = $translation->replicate();
+                    $duplicatedTranslation         = $translation->replicate();
                     $duplicatedTranslation->seo_id = $duplicatedSeo->id;
                     $duplicatedTranslation->save();
                 }
             }
 
             //add vat categories
-            $pVatCats = ProductVatCategory::where('product_id',$mainProduct->id)->get();
+            $pVatCats = ProductVatCategory::where('product_id', $mainProduct->id)->get();
             foreach ($pVatCats as $pVatCat) {
-                $cVatCat = $pVatCat->replicate();
+                $cVatCat             = $pVatCat->replicate();
                 $cVatCat->product_id = $productCombination->id;
                 $cVatCat->save();
             }
@@ -299,7 +305,7 @@
             //         $duplicatedAdditive->save();
             //     }
             // }
-            
+
             //update caches
             foreach ($productCombination->translations as $translation) {
                 UrlHelper::generate($translation->title, ProductTranslation::class, $translation->id, true, $translation);
@@ -356,10 +362,12 @@
 
             return $request['position'];
         }
+
         public function discounts(): HasMany
         {
             return $this->hasMany(Discount::class);
         }
+
         /**
          * @return BelongsTo
          */
@@ -375,10 +383,12 @@
         {
             return $this->belongsto(Product::class, 'main_product_id', 'id');
         }
+
         public function combinations(): HasMany
         {
             return $this->hasMany(Product::class, 'main_product_id', 'id');
         }
+
         /**
          * @return BelongsTo
          */
@@ -386,70 +396,87 @@
         {
             return $this->belongsTo(Brand::class);
         }
+
         public function getFilepath($filename): string
         {
             return $this->getFilesPath() . $filename;
         }
+
         public function getFilesPath(): string
         {
             return self::FILES_PATH . '/' . $this->id . '/';
         }
+
         public function getSystemImage(): string
         {
             return AdminHelper::getSystemImage(self::$PRODUCT_SYSTEM_IMAGE);
         }
+
         public function setKeys($array): array
         {
             //        Go to Shop Model
         }
+
         public function getAnnounce(): string
         {
             return Str::limit($this->announce, 255, ' ...');
         }
+
         public function getPrice()
         {
             return number_format($this->price, 2, '.', '');
         }
+
         public function getEncryptedPath($moduleName): string
         {
             return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
         }
+
         public function headerGallery()
         {
             return $this->getHeaderGalleryRelation(get_class($this));
         }
+
         public function mainGallery()
         {
             return $this->getMainGalleryRelation(get_class($this));
         }
+
         public function additionalGalleryOne()
         {
             return $this->getAdditionalGalleryOneRelation(get_class($this));
         }
+
         public function additionalGalleryTwo()
         {
             return $this->getAdditionalGalleryTwoRelation(get_class($this));
         }
+
         public function additionalGalleryThree()
         {
             return $this->getAdditionalGalleryThreeRelation(get_class($this));
         }
+
         public function additionalGalleryFour()
         {
             return $this->getAdditionalGalleryFourRelation(get_class($this));
         }
+
         public function additionalGalleryFive()
         {
             return $this->getAdditionalGalleryFiveRelation(get_class($this));
         }
+
         public function additionalGallerySix()
         {
             return $this->getAdditionalGallerySixRelation(get_class($this));
         }
+
         public function seoFields()
         {
             return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
         }
+
         public function seo($languageSlug)
         {
             $seo = $this->seoFields;
@@ -458,22 +485,27 @@
             }
             SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
         }
+
         public function isNewProduct(): bool
         {
             return (boolean)$this->is_new;
         }
+
         public function isPromoProduct(): bool
         {
             return (boolean)$this->is_promo;
         }
+
         public function isVeganProduct(): bool
         {
             return (boolean)$this->is_vegan;
         }
+
         public function isHotProduct(): bool
         {
             return (boolean)$this->is_hot;
         }
+
         public function isInCollection(): bool
         {
             $productCollection = ProductCollectionPivot::where('main_product', $this->id)->first();
@@ -483,6 +515,7 @@
 
             return false;
         }
+
         public function getGroupedByCategoryCollection($languageSlug)
         {
             $collection = $this->getCollection()->first();
@@ -498,26 +531,32 @@
                 return $category->title;
             });
         }
+
         public function getCollection()
         {
             return $this->hasOne(ProductCollection::class, 'main_product_id', 'id')->active(true)->with('products', 'products.product.category');
         }
+
         public function scopeIsInStock($query)
         {
             return $query->where('units_in_stock', '>', 0);
         }
+
         public function updateUnitsInStock($newQuantity): void
         {
             $this->update(['units_in_stock' => $newQuantity]);
         }
+
         public function additionalFields(): HasMany
         {
             return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id');
         }
+
         public function getAdditionalFields($languageSlug)
         {
             return $this->hasMany(ProductAdditionalField::class, 'product_id', 'id')->where('locale', $languageSlug)->whereNotNull(['name', 'text'])->get();
         }
+
         public function getPreviousProductUrl($languageSlug)
         {
             if ($this->position == 1) {
@@ -530,10 +569,12 @@
 
             return $previousProduct->getUrl($languageSlug);
         }
+
         public function getUrl($languageSlug)
         {
             return url($languageSlug . '/' . $this->url);
         }
+
         public function getNextProductUrl($languageSlug)
         {
             $query       = $this->category->products();
@@ -549,6 +590,7 @@
 
             return $nextProduct->getUrl($languageSlug);
         }
+
         public function measureUnit(): HasOne
         {
             return $this->hasOne(MeasureUnit::class, 'id', 'measure_unit_id')->with('translations');
@@ -578,11 +620,13 @@
 
             return $html;
         }
+
         public function getQuantityDiscountRecord()
         {
             return Discount::getBaseQuery()->where('type_id', Discount::$QUANTITY_TYPE_ID)
                 ->where('product_id', $this->id)->orderBy('created_at', 'desc')->first();
         }
+
         public function getFreeDeliveryDiscountHtml()
         {
             //ako ne iskash da si generirash taka html prostro v html si vikash $product->getFreeDeliveryDiscountRecord(); i shte poluchis tozi zapis koito proverqvam dali ne e null
@@ -609,6 +653,7 @@
                     });
                 })->get()->first();
         }
+
         public function getFixedDiscountsHtml($country, $city)
         {
             //ako ne iskash da go polzvash taka mojesh da si gi polzvash po otderlo
@@ -656,10 +701,12 @@
 
             return self::getDefaultVat($country, $city);
         }
+
         public function getVatCategory($countryId)
         {
             return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('vat_categories.country_id', $countryId)->first();
         }
+
         private static function getDefaultVat($country, $city)
         {
             if ($city != null) {
@@ -725,10 +772,12 @@
 
             return $discounts;
         }
+
         public function getAllVatCategories(): Collection
         {
             return $this->hasManyThrough(VatCategory::class, ProductVatCategory::class, 'product_id', 'id', 'id', 'vat_category_id')->where('product_vat_category.product_id', $this->id)->get();
         }
+
         // END FIXED DISCOUNTS
         public function hasDiscounts()
         {
@@ -736,12 +785,14 @@
 
             return !is_null($discounts) && count($discounts) > 0;
         }
+
         public function getPercentDiscountsLabel($country, $city): string
         {
             $label = (($this->getVatPrice($country, $city) - $this->getVatDiscountedPrice($country, $city)) / $this->getVatPrice($country, $city)) * 100;
 
             return number_format($label, 2, '.', '');
         }
+
         public function getVatPrice($country, $city)
         {
             $vat             = $this->getVat($country, $city);
@@ -749,6 +800,7 @@
 
             return number_format($vatAppliedPrice, 2, '.', '');
         }
+
         public function getVatDiscountedPrice($country, $city)
         {
             $vat                       = $this->getVat($country, $city);

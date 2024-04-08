@@ -6,42 +6,6 @@
 
 <div class="col-inner">
     <div class="summary-boxes">
-        {{--        <div class="box box-accordion">--}}
-        {{--            <div class="box-top">--}}
-        {{--                <h3 class="box-title title-accordion">@lang('shop::front.basket.products') ({{ Basket::productsCount() }})</h3>--}}
-        {{--            </div>--}}
-
-        {{--            <div class="box-content">--}}
-        {{--                <div class="product-boxes product-boxes-alt">--}}
-        {{--                    @foreach($basket->basket_products as $basketProduct)--}}
-        {{--                        <div class="product-box">--}}
-        {{--                            <div class="prod-content">--}}
-        {{--                                <div class="prod-image">--}}
-        {{--                                    <a href="{{ $basketProduct->product->getUrl($languageSlug) }}"></a>--}}
-        {{--                                    <img src="{{ $basketProduct->product->getFileUrl() }}" alt="">--}}
-        {{--                                </div>--}}
-
-        {{--                                <div class="prod-inner">--}}
-        {{--                                    <h3><a href="{{ $basketProduct->product->getUrl($languageSlug) }}">{{ $basketProduct->product->title }}</a></h3>--}}
-
-        {{--                                    <div class="prod-info">--}}
-        {{--                                        <div class="prod-qty">--}}
-        {{--                                            @lang('shop::front.basket.count') <strong>{{ $basketProduct->product_quantity }}</strong>--}}
-        {{--                                        </div>--}}
-
-        {{--                                        <div class="prod-prices">--}}
-        {{--                                            <p class="main-price">--}}
-        {{--                                                <b>{{ $basketProduct->product->getPrice() }}</b> лв. </p>--}}
-        {{--                                        </div>--}}
-        {{--                                    </div>--}}
-        {{--                                </div>--}}
-        {{--                            </div>--}}
-        {{--                        </div>--}}
-        {{--                    @endforeach--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
-
         <div class="box">
             <div class="box-row">
                 <span>@lang('shop::front.basket.products_prices')</span>
@@ -102,9 +66,9 @@
         </div>
 
         <div class="box-actions">
-            <button type="submit" class="submit-button" value="Поръчай">@lang('shop::front.basket.order')</button>
+            <button type="submit" class="submit-button" value="@lang('shop::front.basket.order')">@lang('shop::front.basket.order')</button>
 
-            <a href="{{ url()->previous() }}" class="btn btn-outline">Назад</a>
+            <a href="{{ url()->previous() }}" class="btn btn-outline">{{ __('admin.back') }}</a>
         </div>
     </div>
 </div>

@@ -10,6 +10,10 @@
 
     class Shop extends Model
     {
+        public const CURRENCY_DECIMALS            = 2;
+        public const CURRENCY_SEPARATOR           = ',';
+        public const CURRENCY_THOUSANDS_SEPARATOR = '';
+
         public static function allocateModule($viewArray)
         {
             switch (class_basename($viewArray['currentModel']->parent)) {
@@ -28,12 +32,14 @@
                     abort(404);
             }
         }
+
         public static function getDashboardInfo(): array
         {
             $data = [];
 
             return $data;
         }
+
         public static function getShopBrandsSpecialPage($viewArray)
         {
             return view('shop::front.shop_special_page', [
@@ -41,6 +47,12 @@
                 'brands'    => Brand::where('active', true)->orderBy('position', 'asc')->get()
             ]);
         }
+
+        public static function formatPrice($price)
+        {
+            return number_format($price, self::CURRENCY_DECIMALS, self::CURRENCY_SEPARATOR, self::CURRENCY_THOUSANDS_SEPARATOR);
+        }
+
         public function setKeys($array): array
         {
             $array[1]['sys_image_name'] = trans('shop::admin.product_brands.index');
