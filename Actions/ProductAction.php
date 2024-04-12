@@ -24,18 +24,21 @@
                 File::updateCache();
             }
         }
+
         public function checkForProductCategoriesAdminCache(): void
         {
             if (is_null(Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN))) {
                 Category::cacheUpdate();
             }
         }
+
         public function checkForBrandsCache(): void
         {
             if (is_null(Cache::get(CacheKeysHelper::$SHOP_BRAND_ADMIN))) {
                 Brand::cacheUpdate();
             }
         }
+
         public function checkForMeasureUnitsCache(): void
         {
             if (is_null(Cache::get(CacheKeysHelper::$SHOP_MEASURE_UNITS_ADMIN))) {
@@ -47,6 +50,7 @@
         {
             return (bool)AdBoxProduct::where('product_id', $productId)->first();
         }
+
         public function sendToProductAdbox($productId): void
         {
             $languages = LanguageHelper::getActiveLanguages();
@@ -65,6 +69,7 @@
             AdBoxProduct::create($data->all());
             AdBoxProduct::cacheUpdate();
         }
+
         public function createOrUpdateAdditionalFields(Request $request, $product)
         {
             $languages = LanguageHelper::getActiveLanguages();
@@ -108,11 +113,13 @@
             AdBox::create($data->all());
             AdBox::cacheUpdate();
         }
+
         public function updateVatCategoriesByCountry($product, $saleCountries)
         {
             ProductVatCategory::where('product_id', $product->id)->delete();
             $this->storeVatCategoriesByCountry($product, $saleCountries);
         }
+
         public function storeVatCategoriesByCountry($product, $saleCountries)
         {
             foreach ($saleCountries as $countryId => $vatArray) {
@@ -120,6 +127,24 @@
                                                'product_id'      => $product->id,
                                                'vat_category_id' => $vatArray['vat_category'],
                                            ]);
+            }
+        }
+
+        public function positionUp($modelClass, $model)
+        {
+            $previousModel = $modelClass::where('category_id', $model->category_id)->where('position', $model->position - 1)->first();
+            if (!is_null($previousModel)) {
+                $previousModel->update(['position' => $previousModel->position + 1]);
+                $model->update(['position' => $model->position - 1]);
+            }
+        }
+
+        public function positionDown($modelClass, $model)
+        {
+            $nextModel = $modelClass::where('category_id', $model->category_id)->where('position', $model->position + 1)->first();
+            if (!is_null($nextModel)) {
+                $nextModel->update(['position' => $nextModel->position - 1]);
+                $model->update(['position' => $model->position + 1]);
             }
         }
     }

@@ -57,6 +57,6 @@
             </div>
         </article>
 
-        <x-inner-gallery/>
+        <x-inner-gallery :current-model="$viewArray['currentModel']"/>
     </section>
 @endsection

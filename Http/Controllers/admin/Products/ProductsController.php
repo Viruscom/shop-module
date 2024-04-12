@@ -8,7 +8,6 @@
     use App\Helpers\MainHelper;
     use App\Helpers\ModuleHelper;
     use App\Http\Controllers\Controller;
-    use App\Interfaces\PositionInterface;
     use App\Models\Files\File;
     use Cache;
     use Illuminate\Contracts\Support\Renderable;
@@ -27,7 +26,7 @@
     use Modules\Shop\Models\Admin\Products\ProductTranslation;
     use Modules\YanakSoftApi\Entities\YanakProduct;
 
-    class ProductsController extends Controller implements ShopProductInterface, PositionInterface
+    class ProductsController extends Controller implements ShopProductInterface
     {
         public function index()
         {
@@ -37,6 +36,7 @@
 
             return view('shop::admin.products.categories', ['categories' => Cache::get(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN)]);
         }
+
         public function store(ProductStoreRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
         {
             $action->validateImage($request, 'Shop', 3);
@@ -63,6 +63,7 @@
 
             return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', trans('admin.common.successful_create'));
         }
+
         public function delete($id, CommonControllerAction $action): RedirectResponse
         {
             $product = Product::find($id);
@@ -73,6 +74,7 @@
 
             return redirect()->back()->with('success-message', 'admin.common.successful_delete');
         }
+
         public function edit($id, ProductAction $action)
         {
             $action->checkForFilesCache();
@@ -122,6 +124,7 @@
 
             return view('shop::admin.products.edit', $data);
         }
+
         public function deleteMultiple(Request $request, CommonControllerAction $action): RedirectResponse
         {
             if (!is_null($request->ids[0])) {
@@ -154,6 +157,7 @@
 
             return redirect()->back()->withErrors(['admin.common.no_checked_checkboxes']);
         }
+
         public function update($id, ProductUpdateRequest $request, CommonControllerAction $action, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
@@ -183,6 +187,7 @@
 
             return redirect()->route('admin.products.index_by_category', ['category_id' => $product->category->id])->with('success-message', 'admin.common.successful_edit');
         }
+
         public function activeMultiple($active, Request $request, CommonControllerAction $action): RedirectResponse
         {
             $action->activeMultiple(Product::class, $request, $active);
@@ -190,6 +195,7 @@
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
         }
+
         public function active($id, $active): RedirectResponse
         {
             $product = Product::find($id);
@@ -200,6 +206,7 @@
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
         }
+
         public function create($category_id, ProductAction $action): Renderable
         {
             $productCategory = Category::where('id', $category_id)->with(['products' => function ($query) {
@@ -249,31 +256,24 @@
 
             return view('shop::admin.products.create', $data);
         }
-        public function positionUp($id, CommonControllerAction $action): RedirectResponse
+
+        public function positionUp($id, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
             MainHelper::goBackIfNull($product);
 
-            $previousModel = Product::where('category_id', $product->category_id)->where('position', $product->position - 1)->first();
-            if (!is_null($previousModel)) {
-                $previousModel->update(['position' => $previousModel->position + 1]);
-                $product->update(['position' => $product->position - 1]);
-            }
+            $productAction->positionUp(Product::class, $product);
             Product::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
         }
 
-        public function positionDown($id, CommonControllerAction $action): RedirectResponse
+        public function positionDown($id, ProductAction $productAction): RedirectResponse
         {
             $product = Product::whereId($id)->with('translations')->first();
             MainHelper::goBackIfNull($product);
 
-            $nextModel = Product::where('category_id', $product->category_id)->where('position', $product->position + 1)->first();
-            if (!is_null($nextModel)) {
-                $nextModel->update(['position' => $nextModel->position - 1]);
-                $product->update(['position' => $product->position + 1]);
-            }
+            $productAction->positionDown(Product::class, $product);
             Product::cacheUpdate();
 
             return redirect()->back()->with('success-message', 'admin.common.successful_edit');
