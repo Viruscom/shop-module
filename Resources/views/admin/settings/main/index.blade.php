@@ -1,7 +1,22 @@
 @extends('layouts.admin.app')
 
 @section('styles')
-    <link href="{{ asset('admin/assets/css/shop.css') }}" rel="stylesheet"/>
+    <style>
+        .sale-background {
+            color:            #ffffff;
+            background-color: #2d8f3c !important;
+        }
+
+        .sale-check-wrapper {
+            display:         flex;
+            align-items:     center;
+            justify-content: flex-end;
+        }
+
+        .sale-check-wrapper > i {
+            margin-right: 10px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -18,7 +33,6 @@
         }
 
         function checkboxChecked() {
-            console.log(selectedCountries);
             for (var i = 0; i < selectedCountries.length; i++) {
                 var checkbox     = document.querySelector('.checkbox-row[value="' + selectedCountries[i] + '"]');
                 checkbox.checked = true;
