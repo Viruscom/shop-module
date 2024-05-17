@@ -1,42 +1,49 @@
 <?php
 
-namespace App\Listeners;
+    namespace Modules\Shop\Listeners;
 
-use Auth;
-use App\Models\Basket;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+    use App\Helpers\ModuleHelper;
+    use Auth;
+    use Modules\Shop\Entities\Basket\Basket;
 
-class SuccessfulLoginListener
-{
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
+    class SuccessfulLoginListener
     {
-        //
-    }
-
-    /**
-     * Handle the event.
-     *
-     * @param  object  $event
-     * @return void
-     */
-    public function handle($event)
-    {
-        $basket = Basket::where('key',  $_COOKIE['sbuuid'])->first();
-        if(is_null($basket)){
-           return;
+        /**
+         * Create the event listener.
+         *
+         * @return void
+         */
+        public function __construct()
+        {
+            //
         }
 
-        $currentBasket = Basket::where('user_id', Auth::user()->id)->first();
-        if(is_null($currentBasket)){
-            $currentBasket = Basket::create(['user_id' => Auth::user()->id, 'key' => null]);
-        }
+        /**
+         * Handle the event.
+         *
+         * @param object $event
+         *
+         * @return void
+         */
+        public function handle($event)
+        {
+            $user          = Auth::guard('shop')->user();
+            $activeModules = ModuleHelper::getActiveModules();
 
-        $currentBasket->merge($basket);
+            if (!$user || !array_key_exists('Shop', $activeModules)) {
+                return;
+            }
+
+            $basket = Basket::where('key', $_COOKIE['sbuuid'])->first();
+            if (is_null($basket)) {
+                return;
+            }
+
+            $currentBasket = Basket::where('user_id', $user->id)->first();
+            if (is_null($currentBasket)) {
+                $currentBasket = Basket::create(['user_id' => $user->id, 'key' => null]);
+            }
+
+            $currentBasket->merge($basket);
+        }
     }
-}
