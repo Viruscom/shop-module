@@ -12,6 +12,7 @@
         public $totalDefaultFormatted;
         public $totalDiscountedFormatted;
         public $totalDiscountsFormatted;
+        public $promoCode;
 
         /**
          * Create a new component instance.
@@ -24,6 +25,7 @@
             $this->totalDefaultFormatted    = $this->formatPrice($basket->total_default);
             $this->totalDiscountedFormatted = $this->formatPrice($basket->total_discounted);
             $this->totalDiscountsFormatted  = $this->formatPrice($basket->total_default - $basket->total_discounted);
+            $this->promoCode = $this->basket->promo_code;
         }
 
         private function formatPrice($price)
@@ -31,13 +33,13 @@
             return Shop::formatPrice($price);
         }
 
-        /**
-         * Get the view / contents that represent the component.
-         *
-         * @return View|string
-         */
         public function render()
         {
-            return view('shop::components.front\basket\step_one\basket_summary');
+            return view('shop::components.front.basket.step_one.basket_summary', [
+                'basket'                   => $this->basket,
+                'totalDefaultFormatted'    => $this->totalDefaultFormatted,
+                'totalDiscountedFormatted' => $this->totalDiscountedFormatted,
+                'totalDiscounts'           => $this->totalDiscountsFormatted,
+            ]);
         }
     }

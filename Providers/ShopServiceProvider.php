@@ -4,9 +4,16 @@
 
     use Config;
     use Illuminate\Database\Eloquent\Factory;
+    use Illuminate\Support\Facades\Blade;
     use Illuminate\Support\ServiceProvider;
+    use Modules\Shop\Console\RequestStrickerProducts;
     use Modules\Shop\Console\UpdateCurrencyRates;
     use Modules\Shop\Http\Middleware\SetCookieMiddleware;
+    use Modules\Shop\View\Components\Front\Basket\BasketSummary;
+    use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneFavIcon;
+    use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneProductAmount;
+    use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneQuantity;
+    use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneUnitPrice;
 
     class ShopServiceProvider extends ServiceProvider
     {
@@ -27,6 +34,11 @@
          */
         public function boot()
         {
+            Blade::component('shop::front.basket.step_one.basket_step_one_favicon', BasketStepOneFavIcon::class);
+            Blade::component('shop::front.basket.step_one.basket_step_one_unit_price', BasketStepOneUnitPrice::class);
+            Blade::component('shop::front.basket.step_one.basket_summary', BasketSummary::class);
+            Blade::component('shop::front.basket.step_one.basket_step_one_quantity', BasketStepOneQuantity::class);
+            Blade::component('shop::front.basket.step_one.basket_step_one_product_amount', BasketStepOneProductAmount::class);
             $this->commands([UpdateCurrencyRates::class]);
             $this->registerTranslations();
             $this->registerConfig();
@@ -34,6 +46,7 @@
             $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
             $this->app['router']->aliasMiddleware('set.sbuuid', SetCookieMiddleware::class);
         }
+
         /**
          * Register translations.
          *
@@ -49,6 +62,7 @@
                 $this->loadTranslationsFrom(module_path($this->moduleName, 'Resources/lang'), $this->moduleNameLower);
             }
         }
+
         /**
          * Register config.
          *
@@ -81,6 +95,7 @@
 
             $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
         }
+
         private function getPublishableViewPaths(): array
         {
             $paths = [];
@@ -92,6 +107,7 @@
 
             return $paths;
         }
+
         /**
          * Register the service provider.
          *
@@ -101,6 +117,7 @@
         {
             $this->app->register(RouteServiceProvider::class);
         }
+
         /**
          * Get the services provided by the provider.
          *

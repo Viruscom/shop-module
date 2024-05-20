@@ -1,3 +1,4 @@
+@php use App\Helpers\WebsiteHelper; @endphp
 <div class="col col-1of3">
     <h3 class="title-main title-border">{{ __('shop::front.basket.summary') }}</h3>
 
@@ -11,9 +12,9 @@
                 </div>
 
                 <div class="box-row box-row-promo">
-                    @if($basket->promo_code)
+                    @if($promoCode)
                         <div class="promo-info">
-                            {{ __('shop::front.basket.you_use_promo_code') }}: {{ $basket->promo_code }}
+                            {{ __('shop::front.basket.you_use_promo_code') }}: {{ $promoCode }}
                         </div>
                         <br>
                         <div class="delete-promo-code">
@@ -53,9 +54,9 @@
                     <strong>{{ $totalDiscountedFormatted }} {{ __('front.currency') }}</strong>
                 </div>
 
-                {{--                                        <p class="shoping-info-discount">Остават ви 85.00 лв до безплатна доставка.</p>--}}
+{{--                <p class="shoping-info-discount">Остават ви 85.00 лв до безплатна доставка.</p>--}}
 
-                {{--                                        <p class="shoping-info-discount shoping-info-discount-alt">{{ __('shop::front.basket.shipping_ang_taxes_calc_on_checkout') }}</p>--}}
+{{--                <p class="shoping-info-discount shoping-info-discount-alt">{{ __('shop::front.basket.shipping_ang_taxes_calc_on_checkout') }}</p>--}}
             </div>
 
             <div class="box-actions">
@@ -66,3 +67,10 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
