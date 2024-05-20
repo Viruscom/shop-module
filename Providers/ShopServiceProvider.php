@@ -9,11 +9,11 @@
     use Modules\Shop\Console\RequestStrickerProducts;
     use Modules\Shop\Console\UpdateCurrencyRates;
     use Modules\Shop\Http\Middleware\SetCookieMiddleware;
-    use Modules\Shop\View\Components\Front\Basket\BasketSummary;
     use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneFavIcon;
     use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneProductAmount;
     use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneQuantity;
     use Modules\Shop\View\Components\Front\Basket\StepOne\BasketStepOneUnitPrice;
+    use Modules\Shop\View\Components\Front\Basket\StepOne\BasketSummary;
 
     class ShopServiceProvider extends ServiceProvider
     {

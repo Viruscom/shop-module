@@ -1,9 +1,8 @@
 <?php
 
-    namespace Modules\Shop\View\Components\Front\Basket;
+    namespace Modules\Shop\View\Components\Front\Basket\StepOne;
 
     use Illuminate\View\Component;
-    use Illuminate\View\View;
     use Modules\Shop\Models\Shop;
 
     class BasketSummary extends Component
@@ -25,7 +24,7 @@
             $this->totalDefaultFormatted    = $this->formatPrice($basket->total_default);
             $this->totalDiscountedFormatted = $this->formatPrice($basket->total_discounted);
             $this->totalDiscountsFormatted  = $this->formatPrice($basket->total_default - $basket->total_discounted);
-            $this->promoCode = $this->basket->promo_code;
+            $this->promoCode                = $this->basket->promo_code;
         }
 
         private function formatPrice($price)
