@@ -1,9 +1,9 @@
 @extends('layouts.front.app', ['headerShrink' => 'header-alt shrink'])
 
 @section('content')
-        @include('shop::front.partials.registered_user_head')
+    @include('shop::front.partials.registered_user_head')
     <div class="page-wrapper">
-{{--        @include('shop::front.registered_users.profile.breadcrumbs')--}}
+        {{--        @include('shop::front.registered_users.profile.breadcrumbs')--}}
 
         <section class="settings-page">
             <div class="shell">
@@ -42,13 +42,26 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <label class="form-label" for="email">
-                                        {{ __('shop::front.login.email') }}
-                                        <span class="asterisk">*</span>
-                                    </label>
+                                    <div class="form-col form-col-1of2">
+                                        <label class="form-label" for="email">
+                                            {{ __('shop::front.login.email') }}
+                                            <span class="asterisk">*</span>
+                                        </label>
 
-                                    <div class="input-container">
-                                        <input id="email" type="email" name="email" value="{{ old('email') ?: $registeredUser->email }}" required>
+                                        <div class="input-container">
+                                            <input id="email" type="email" name="email" value="{{ old('email') ?: $registeredUser->email }}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-col form-col-1of2">
+                                        <label class="form-label" for="phone">
+                                            {{ __('shop::admin.registered_users.phone') }}
+                                            <span class="asterisk">*</span>
+                                        </label>
+
+                                        <div class="input-container">
+                                            <input id="phone" type="number" name="phone" value="{{ old('phone') ?: $registeredUser->phone }}" required>
+                                        </div>
                                     </div>
                                 </div>
 
