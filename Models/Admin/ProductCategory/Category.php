@@ -45,22 +45,40 @@
         {
             return FileDimensionHelper::getRules('Shop', 2);
         }
+
         public static function getUserInfoMessage(): string
         {
             return FileDimensionHelper::getUserInfoMessage('Shop', 2);
         }
+
         public static function cacheUpdate(): void
         {
             cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN);
             cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT);
+            cache()->forget(CacheKeysHelper::$HEADER_CATEGORIES_FRONT);
             cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_ADMIN, function () {
                 return self::whereNull('main_category')->with('translations', 'mainCategory', 'subCategories')->orderBy('position')->get();
             });
 
             cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_CATEGORY_FRONT, function () {
-                return self::active(true)->with('translations', 'mainCategory', 'subCategories')->orderBy('position')->get();
+                return self::active(true)->with('translations', 'mainCategory')
+                    ->with(['subCategories' => function ($q) {
+                        return $q->where('active', true)->with('translations')->with(['subCategories' => function ($qq) {
+                            return $qq->where('active', true)->with('translations')->orderBy('position');
+                        }])->orderBy('position');
+                    }])->orderBy('position')->get();
+            });
+
+            cache()->rememberForever(CacheKeysHelper::$HEADER_CATEGORIES_FRONT, function () {
+                return self::whereNull('main_category')->active(true)->with('translations', 'mainCategory')
+                    ->with(['subCategories' => function ($q) {
+                        return $q->where('active', true)->with('translations')->with(['subCategories' => function ($qq) {
+                            return $qq->where('active', true)->with('translations')->orderBy('position');
+                        }])->orderBy('position');
+                    }])->orderBy('position')->get();
             });
         }
+
         public static function getRequestData($request): array
         {
             $data = [
@@ -93,6 +111,7 @@
 
             return $data;
         }
+
         public static function generatePosition($request)
         {
             if (!isset($request->main_category)) {
@@ -116,34 +135,42 @@
 
             return $request['position'];
         }
+
         public function setKeys($array): array
         {
             //        Go to Shop Model
         }
+
         public function getFilepath($filename): string
         {
             return $this->getFilesPath() . $filename;
         }
+
         public function getFilesPath(): string
         {
             return self::FILES_PATH . '/' . $this->id . '/';
         }
+
         public function getSystemImage(): string
         {
             return AdminHelper::getSystemImage(self::$PRODUCT_CATEGORY_SYSTEM_IMAGE);
         }
+
         public function getEncryptedPath($moduleName): string
         {
             return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
         }
+
         public function headerGallery()
         {
             return $this->getHeaderGalleryRelation(get_class($this));
         }
+
         public function seoFields()
         {
             return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
         }
+
         public function seo($languageSlug)
         {
             $seo = $this->seoFields;
@@ -152,26 +179,32 @@
             }
             SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
         }
+
         public function getActiveProducts(): HasMany
         {
             return $this->hasMany(Product::class, 'category_id', 'id')->where('active', true)->orderBy('position');
         }
+
         public function products(): HasMany
         {
             return $this->hasMany(Product::class, 'category_id', 'id');
         }
+
         public function mainCategory(): BelongsTo
         {
             return $this->belongsTo(Category::class, 'main_category', 'id');
         }
+
         public function subCategories(): HasMany
         {
             return $this->hasMany(Category::class, 'main_category');
         }
+
         public function getUrl($languageSlug)
         {
             return url($languageSlug . '/' . $this->translate($languageSlug)->url);
         }
+
         public function productAttributes(): HasManyThrough
         {
             return $this->hasManyThrough(
@@ -183,6 +216,7 @@
                 'pattr_id'
             )->orderBy('position')->with('translations');
         }
+
         public function updatedPosition($request)
         {
             if (!$request->has('position') || is_null($request->position) || $request->position == $this->position) {
