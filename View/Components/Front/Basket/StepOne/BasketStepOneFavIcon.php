@@ -20,11 +20,10 @@
          */
         public function __construct($languageSlug, $basketProduct)
         {
-            $this->isGuest              = Auth::guard('shop')->guest();
-            $this->languageSlug         = $languageSlug;
-            $this->basketProduct        = $basketProduct;
-            $this->basketProductId      = $basketProduct->product->id;
-            $this->isInFavoriteProducts = $basketProduct->product->isInFavoriteProducts();
+            $this->isGuest         = Auth::guard('shop')->guest();
+            $this->languageSlug    = $languageSlug;
+            $this->basketProduct   = $basketProduct;
+            $this->basketProductId = $basketProduct->product->id;
         }
 
         public function render()
@@ -32,6 +31,8 @@
             if ($this->isGuest) {
                 return null;
             }
+
+            $this->isInFavoriteProducts = $this->basketProduct->product->isInFavoriteProducts();
 
             return view('shop::components.front.basket.step_one.basket_step_one_favicon', [
                 'isInFavoriteProducts' => $this->isInFavoriteProducts,
