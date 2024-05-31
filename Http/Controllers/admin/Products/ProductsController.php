@@ -144,6 +144,7 @@
                         $model->seoFields()->delete();
                     }
 
+                    $action->deleteFromUrlCache($model);
                     $model->delete();
                     foreach ($modelsToUpdate as $modelToUpdate) {
                         $modelToUpdate->update(['position' => $modelToUpdate->position - 1]);
