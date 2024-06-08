@@ -34,7 +34,7 @@
         <section class="section-text">
             <div class="shell">
                 <div class="section-content" data-aos="fade-up" data-aos-delay="150">
-                    <p>{!! $viewArray['currentModel']->description !!}</p>
+                    <p>{!! $viewArray['currentModel']->parent->translate($languageSlug)->description !!}</p>
                 </div>
             </div>
         </section>
