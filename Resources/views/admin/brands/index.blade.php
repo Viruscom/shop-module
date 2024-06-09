@@ -50,13 +50,7 @@
                             <tr class="t-row-details row-{{$brand->id}}-details hidden">
                                 <td colspan="2"></td>
                                 <td colspan="1">
-                                    <table class="table-details">
-                                        <tbody>
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    @include('admin.partials.index.table_details', ['model' => $brand, 'moduleName' => 'CategoryPage', 'hasChildrens' => false, 'childrensLabel' => trans('shop::admin.products.index'), 'childrensRoute' => route('admin.products.index_by_category', ['category_id' => $brand->id])])
                                 </td>
                                 <td class="width-220">
                                     <img class="thumbnail img-responsive" src="{{ $brand->getFileUrl() }}"/>
