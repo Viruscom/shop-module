@@ -35,14 +35,17 @@
         public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url'];
         protected    $fillable             = ['active', 'position', 'filename', 'creator_user_id', 'logo_filename', 'logo_active'];
         protected    $table                = 'product_brands';
+
         public static function getFileRules(): string
         {
             return FileDimensionHelper::getRules('Shop', 1);
         }
+
         public static function getUserInfoMessage(): string
         {
             return FileDimensionHelper::getUserInfoMessage('Shop', 1);
         }
+
         public static function cacheUpdate(): void
         {
             cache()->forget(CacheKeysHelper::$SHOP_BRAND_ADMIN);
@@ -55,6 +58,7 @@
                 return self::active(true)->orderBy('position')->with('translations')->get();
             });
         }
+
         public static function getRequestData($request): array
         {
             $data = [
@@ -99,10 +103,12 @@
 
             return $data;
         }
+
         public function setKeys($array): array
         {
             //        Go to Shop Model
         }
+
         public function getLogoUrl(): string
         {
             if (!is_null($this->logo_filename) && Storage::disk('public')->exists($this->getFilepath($this->logo_filename))) {
@@ -111,26 +117,67 @@
 
             return url($this->getSystemImage());
         }
+
         public function getFilepath($filename): string
         {
             return $this->getFilesPath() . $filename;
         }
+
         public function getFilesPath(): string
         {
             return self::FILES_PATH . '/' . $this->id . '/';
         }
+
         public function getSystemImage(): string
         {
             return AdminHelper::getSystemImage(self::$BRAND_SYSTEM_IMAGE);
         }
+
         public function getEncryptedPath($moduleName): string
         {
             return encrypt($moduleName . '-' . get_class($this) . '-' . $this->id);
         }
+
         public function headerGallery()
         {
             return $this->getHeaderGalleryRelation(get_class($this));
         }
+
+        public function mainGallery()
+        {
+            return $this->getMainGalleryRelation(get_class($this));
+        }
+
+        public function additionalGalleryOne()
+        {
+            return $this->getAdditionalGalleryOneRelation(get_class($this));
+        }
+
+        public function additionalGalleryTwo()
+        {
+            return $this->getAdditionalGalleryTwoRelation(get_class($this));
+        }
+
+        public function additionalGalleryThree()
+        {
+            return $this->getAdditionalGalleryThreeRelation(get_class($this));
+        }
+
+        public function additionalGalleryFour()
+        {
+            return $this->getAdditionalGalleryFourRelation(get_class($this));
+        }
+
+        public function additionalGalleryFive()
+        {
+            return $this->getAdditionalGalleryFiveRelation(get_class($this));
+        }
+
+        public function additionalGallerySix()
+        {
+            return $this->getAdditionalGallerySixRelation(get_class($this));
+        }
+
         public function seoFields()
         {
             return $this->hasOne(Seo::class, 'model_id')->where('model', get_class($this));
@@ -144,6 +191,7 @@
             }
             SeoHelper::setSeoFields($this, $seo->translate($languageSlug));
         }
+
         public function getUrl()
         {
             if (!is_null($this->url)) {
