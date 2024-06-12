@@ -21,7 +21,7 @@
         {
             $this->basketProduct      = $basketProduct;
             $this->basketProductId    = $basketProduct->product->id;
-            $this->endDiscountedPrice = $basketProduct->end_discounted_price;
+            $this->endDiscountedPrice = $this->formatPrice($basketProduct->end_discounted_price);
             $this->productPrint       = is_null($basketProduct->product_print) ? '' : $basketProduct->product_print;
         }
 
