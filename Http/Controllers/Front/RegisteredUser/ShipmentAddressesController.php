@@ -7,29 +7,27 @@
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use Illuminate\Support\Facades\Auth;
-    use Modules\Shop\Entities\RegisteredUser\Firms\Company;
     use Modules\Shop\Entities\RegisteredUser\ShipmentAddresses\ShopShipmentAddress;
-    use Modules\Shop\Entities\RegisteredUser\ShopRegisteredUser;
     use Modules\Shop\Entities\Settings\Main\CountrySale;
-    use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressStoreRequest;
-    use Modules\Shop\Http\Requests\Admin\RegisteredUser\ShipmentAddresses\AdminRegUserShipmentAddressUpdateRequest;
-    use Modules\Shop\Http\Requests\Front\RegisteredUser\PersonalDataUpdateRequest;
     use Modules\Shop\Http\Requests\Front\RegisteredUser\ShipmentAddressStoreRequest;
     use Modules\Shop\Http\Requests\Front\RegisteredUser\ShipmentAddressUpdateRequest;
 
     class ShipmentAddressesController extends Controller
     {
-        public function index(){
+        public function index()
+        {
             $currentLanguage = LanguageHelper::getCurrentLanguage();
             SeoHelper::setTitle('Адреси | ' . $currentLanguage->seo_title);
 
             $registeredUser = Auth::guard('shop')->user();
+
             return view('shop::front.registered_users.profile.addresses.shipment.index', [
                 'registeredUser' => $registeredUser,
                 'defaultAddress' => $registeredUser->shipmentAddresses()->isDefault(true)->isDeleted(false)->first(),
                 'otherAddresses' => $registeredUser->shipmentAddresses()->isDefault(false)->isDeleted(false)->get(),
             ]);
         }
+
         public function store($languageSlug, ShipmentAddressStoreRequest $request)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -47,6 +45,7 @@
 
             return redirect()->route('shop.registered_user.account.addresses', ['languageSlug' => $languageSlug, 'id' => $registeredUser->id])->with('success-message', 'admin.common.successful_create');
         }
+
         public function update($id, $address_id, ShipmentAddressUpdateRequest $request)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -64,15 +63,17 @@
 
             return redirect()->route('shop.registered_user.account.addresses', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_edit'));
         }
+
         public function create($id)
         {
             $registeredUser = Auth::guard('shop')->user();
             WebsiteHelper::redirectBackIfNull($registeredUser);
 
-            $saleCountries = CountrySale::with('country')->get();
+            $saleCountries = CountrySale::with('country', 'country.states', 'country.cities')->get();
 
             return view('shop::front.registered_users.profile.addresses.shipment.create', compact('registeredUser', 'saleCountries'));
         }
+
         public function edit($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -83,10 +84,11 @@
                 return redirect()->back()->withInput()->withErrors(['admin.common.record_not_found']);
             }
 
-            $saleCountries = CountrySale::with('country')->get();
+            $saleCountries = CountrySale::with('country', 'country.states', 'country.cities')->get();
 
             return view('shop::front.registered_users.profile.addresses.shipment.edit', compact('registeredUser', 'address', 'saleCountries'));
         }
+
         public function setAsDefault($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -104,6 +106,7 @@
 
             return back()->with('success-message', 'admin.common.successful_edit');
         }
+
         public function delete($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();

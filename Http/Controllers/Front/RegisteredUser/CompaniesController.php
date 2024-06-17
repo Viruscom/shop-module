@@ -25,6 +25,7 @@
                 'otherCompanies' => Company::where('user_id', $registeredUser->id)->isDefault(false)->isDeleted(false)->get(),
             ]);
         }
+
         public function store(Request $request)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -45,13 +46,15 @@
 
             return redirect()->route('shop.registered_user.account.companies', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_create'));
         }
+
         public function create()
         {
             return view('shop::front.registered_users.profile.companies.create', [
                 'registeredUser' => Auth::guard('shop')->user(),
-                'countriesSale'  => CountrySale::with('country', 'country.cities')->get()
+                'saleCountries'  => CountrySale::with('country', 'country.states', 'country.cities')->get(),
             ]);
         }
+
         public function update($languageSlug, $id, Request $request)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -69,6 +72,7 @@
 
             return redirect()->route('shop.registered_user.account.companies', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_edit'));
         }
+
         public function edit($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -80,9 +84,10 @@
             return view('shop::front.registered_users.profile.companies.edit', [
                 'registeredUser' => $registeredUser,
                 'company'        => $company,
-                'countriesSale'  => CountrySale::with('country', 'country.cities')->get()
+                'saleCountries'  => CountrySale::with('country', 'country.states', 'country.cities')->get(),
             ]);
         }
+
         public function delete($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();
@@ -100,6 +105,7 @@
 
             return redirect()->route('shop.registered_user.account.companies', ['languageSlug' => LanguageHelper::getCurrentLanguage()->code])->with('success', trans('admin.common.successful_delete'));
         }
+
         public function setAsDefault($languageSlug, $id)
         {
             $registeredUser = Auth::guard('shop')->user();

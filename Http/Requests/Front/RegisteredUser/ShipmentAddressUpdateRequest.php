@@ -2,6 +2,7 @@
 
     namespace Modules\Shop\Http\Requests\Front\RegisteredUser;
 
+    use Auth;
     use Illuminate\Foundation\Http\FormRequest;
     use Illuminate\Validation\Rule;
 
@@ -24,7 +25,8 @@
          */
         public function rules()
         {
-            $userId = \Auth::guard('shop')->user()->id;
+            $userId = Auth::guard('shop')->user()->id;
+
             return [
                 'name'          => [
                     'required',
@@ -37,6 +39,7 @@
                 'street'        => 'required',
                 'street_number' => 'required',
                 'country_id'    => ['required', Rule::exists('countries', 'id')],
+                'state_id'      => ['required', Rule::exists('states', 'id')],
                 'city_id'       => ['required', Rule::exists('cities', 'id')],
                 'zip_code'      => 'required',
                 'is_default'    => 'boolean',
@@ -60,8 +63,9 @@
                 'name.unique'            => 'Името на адреса трябва да е уникално',
                 'street.required'        => trans('shop::admin.registered_users.street_required'),
                 'street_number.required' => trans('shop::admin.registered_users.street_number_required'),
-                'country_id.required'    => trans('shop::admin.registered_users.country_id_required'),
                 'country_id.exists'      => trans('shop::admin.registered_users.country_id_exists'),
+                'state_id.required'      => trans('shop::admin.registered_users.state_id_required'),
+                'state_id.exists'        => trans('shop::admin.registered_users.state_id_exists'),
                 'city_id.required'       => trans('shop::admin.registered_users.city_id_required'),
                 'city_id.exists'         => trans('shop::admin.registered_users.city_id_exists'),
                 'zip_code.required'      => trans('shop::admin.registered_users.zip_code_required'),
