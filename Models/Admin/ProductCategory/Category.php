@@ -34,7 +34,7 @@
 
         public static string $PRODUCT_CATEGORY_SYSTEM_IMAGE  = 'shop_2_image.png';
         public static string $PRODUCT_CATEGORY_RATIO         = '1/1';
-        public static string $PRODUCT_CATEGORY_MIMES         = 'jpg,jpeg,png,gif,svg';
+        public static string $PRODUCT_CATEGORY_MIMES         = 'jpg,jpeg,png,gif,webp,svg';
         public static string $PRODUCT_CATEGORY_MAX_FILE_SIZE = '3000';
 
         public array $translatedAttributes = ['title', 'announce', 'description'];

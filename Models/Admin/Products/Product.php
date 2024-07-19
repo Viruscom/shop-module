@@ -47,7 +47,7 @@
 
         public static string $PRODUCT_SYSTEM_IMAGE  = 'shop_3_image.png';
         public static string $PRODUCT_RATIO         = '1/1';
-        public static string $PRODUCT_MIMES         = 'jpg,jpeg,png,gif';
+        public static string $PRODUCT_MIMES         = 'jpg,jpeg,png,gif,webp';
         public static string $PRODUCT_MAX_FILE_SIZE = '3000';
 
         public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url', 'title_additional_1', 'title_additional_2', 'title_additional_3',
