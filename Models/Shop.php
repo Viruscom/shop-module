@@ -3,6 +3,7 @@
     namespace Modules\Shop\Models;
 
     use App\Helpers\AdminHelper;
+    use App\Traits\HasModelRatios;
     use Illuminate\Database\Eloquent\Model;
     use Modules\Shop\Models\Admin\Brands\Brand;
     use Modules\Shop\Models\Admin\ProductCategory\Category;
@@ -10,6 +11,8 @@
 
     class Shop extends Model
     {
+        use HasModelRatios;
+        
         public const CURRENCY_DECIMALS            = 2;
         public const CURRENCY_SEPARATOR           = ',';
         public const CURRENCY_THOUSANDS_SEPARATOR = '';
