@@ -45,10 +45,7 @@
         const        ALLOW_ICONS    = true;
         const        ALLOW_LOGOS    = true;
 
-        public static string $PRODUCT_SYSTEM_IMAGE  = 'shop_3_image.png';
-        public static string $PRODUCT_RATIO         = '1/1';
-        public static string $PRODUCT_MIMES         = 'jpg,jpeg,png,gif,webp';
-        public static string $PRODUCT_MAX_FILE_SIZE = '3000';
+        public static string $PRODUCT_SYSTEM_IMAGE = 'shop_3_image.png';
 
         public array $translatedAttributes = ['title', 'announce', 'description', 'visible', 'url', 'title_additional_1', 'title_additional_2', 'title_additional_3',
                                               'title_additional_4', 'title_additional_5', 'title_additional_6', 'text_additional_1', 'text_additional_2',
@@ -68,19 +65,6 @@
         public static function getUserInfoMessage(): string
         {
             return FileDimensionHelper::getUserInfoMessage('Shop', 3);
-        }
-
-        public static function cacheUpdate(): void
-        {
-            cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ADMIN);
-            cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_FRONT);
-            cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ADMIN, function () {
-                return self::with('category')->with('brand', 'measureUnit')->withTranslation()->with('translations')->orderBy('position')->get();
-            });
-
-            cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_FRONT, function () {
-                return self::with('category', 'category.translations')->with('brand', 'measureUnit')->active(true)->orderBy('position')->with('translations')->get();
-            });
         }
 
         public static function getRequestData($request): array
@@ -325,6 +309,19 @@
             }
 
             return $filterArray;
+        }
+
+        public static function cacheUpdate(): void
+        {
+            cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_ADMIN);
+            cache()->forget(CacheKeysHelper::$SHOP_PRODUCT_FRONT);
+            cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_ADMIN, function () {
+                return self::with('category')->with('brand', 'measureUnit')->withTranslation()->with('translations')->orderBy('position')->get();
+            });
+
+            cache()->rememberForever(CacheKeysHelper::$SHOP_PRODUCT_FRONT, function () {
+                return self::with('category', 'category.translations')->with('brand', 'measureUnit')->active(true)->orderBy('position')->with('translations')->get();
+            });
         }
 
         public function updatedPosition($request)
