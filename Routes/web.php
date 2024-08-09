@@ -643,6 +643,7 @@
                 Route::get('preview/{id}', [BasketController::class, 'previewOrder'])->name('basket.order.preview');
                 Route::get('create', [BasketController::class, 'createOrder'])->name('basket.order.create');
                 Route::post('store', [BasketController::class, 'storeOrder'])->name('basket.order.store');
+                Route::get('canceled_payment', [BasketController::class, 'canceledPayment'])->name('basket.order.canceled_payment');
             });
         });
 

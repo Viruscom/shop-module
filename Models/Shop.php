@@ -12,7 +12,7 @@
     class Shop extends Model
     {
         use HasModelRatios;
-        
+
         public const CURRENCY_DECIMALS            = 2;
         public const CURRENCY_SEPARATOR           = ',';
         public const CURRENCY_THOUSANDS_SEPARATOR = '';
@@ -25,9 +25,16 @@
                 case 'Brand':
                     return view('shop::front.brands.show', ['viewArray' => $viewArray]);
                 case 'Category':
-                    $categories = Category::where('active', true)->whereNull('main_category')->with('translations')->with(['subCategories' => function ($q) {
-                        return $q->orderBy('position');
-                    }])->orderBy('position')->get();
+                    $categories = Category::where('active', true)
+                        ->whereNull('main_category')
+                        ->with('translations')
+                        ->with(['subCategories' => function ($q) {
+                            return $q->where('active', true)->with(['subCategories' => function ($qq) {
+                                return $qq->where('active', true)->orderBy('position');
+                            }])->orderBy('position');
+                        }])
+                        ->orderBy('position')
+                        ->get();
                     $brands     = Brand::where('active', true)->with('translations')->orderBy('position')->get();
 
                     return view('shop::front.categories.show', ['viewArray' => $viewArray, 'categories' => $categories, 'brands' => $brands]);

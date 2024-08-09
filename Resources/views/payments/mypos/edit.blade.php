@@ -34,7 +34,10 @@
                                     <label for="environment" class="control-label col-md-3">{{ __('Environment') }}*</label>
 
                                     <div class="col-md-6">
-                                        <input id="environment" type="text" class="form-control @error('environment') is-invalid @enderror" name="environment" value="{{ $payment->data->environment }}" required autocomplete="environment" autofocus>
+                                        <select class="form-control @error('environment') is-invalid @enderror" name="environment" required autofocus>
+                                            <option value="TEST" {{ $payment->data->environment == 'TEST' ? 'selected="selected"': '' }}>Test</option>
+                                            <option value="PRODUCTION" {{ $payment->data->environment == 'PRODUCTION' ? 'selected="selected"': '' }}>Production</option>
+                                        </select>
 
                                         @error('environment')
                                         <span class="invalid-feedback" role="alert">
@@ -48,12 +51,15 @@
                                     <label for="environment_url" class="control-label col-md-3">{{ __('Environment URL') }}*</label>
 
                                     <div class="col-md-6">
-                                        <input id="environment_url" type="text" class="form-control @error('environment_url') is-invalid @enderror" name="environment_url" value="{{ $payment->data->environment_url }}" required autocomplete="environment_url" autofocus>
-
+                                        <select class="form-control @error('environment_url') is-invalid @enderror" name="environment_url_display" id="environment_url_display" required disabled>
+                                            <option value="https://mypos.com/vmp/checkout-test/" {{ $payment->data->environment == 'TEST' ? 'selected="selected"': '' }}>Test</option>
+                                            <option value="https://mypos.com/vmp/checkout/" {{ $payment->data->environment == 'PRODUCTION' ? 'selected="selected"': '' }}>Production</option>
+                                        </select>
+                                        <input type="hidden" name="environment_url" id="environment_url" value="{{ $payment->data->environment == 'TEST' ? 'https://mypos.com/vmp/checkout-test/' : 'https://mypos.com/vmp/checkout/' }}">
                                         @error('environment_url')
                                         <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+            <strong>{{ $message }}</strong>
+        </span>
                                         @enderror
                                     </div>
                                 </div>
@@ -90,12 +96,15 @@
                                     <label for="key_index" class="control-label col-md-3">{{ __('Key index') }}*</label>
 
                                     <div class="col-md-6">
-                                        <input id="key_index" type="text" class="form-control @error('key_index') is-invalid @enderror" name="key_index" value="{{ $payment->data->key_index }}" required autocomplete="key_index" autofocus>
-
+                                        <select class="form-control @error('key_index') is-invalid @enderror" name="key_index_display" id="key_index_display" required disabled>
+                                            <option value="1" {{ $payment->data->environment == 'TEST' ? 'selected="selected"': '' }}>Test (Key index = 1)</option>
+                                            <option value="2" {{ $payment->data->environment == 'PRODUCTION' ? 'selected="selected"': '' }}>Production (Key index = 2)</option>
+                                        </select>
+                                        <input type="hidden" name="key_index" id="key_index" value="{{ $payment->data->environment == 'TEST' ? '1' : '2' }}">
                                         @error('key_index')
                                         <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+            <strong>{{ $message }}</strong>
+        </span>
                                         @enderror
                                     </div>
                                 </div>
@@ -175,4 +184,30 @@
                 </div>
             </div>
     </form>
+    <script>
+        $(document).ready(function () {
+            // Функция за смяна на стойностите на полетата
+            function updateFieldsBasedOnEnvironment(environment) {
+                if (environment === 'PRODUCTION') {
+                    $('#environment_url_display').val('https://mypos.com/vmp/checkout/');
+                    $('#environment_url').val('https://mypos.com/vmp/checkout/');
+                    $('#key_index_display').val('2');
+                    $('#key_index').val('2');
+                } else if (environment === 'TEST') {
+                    $('#environment_url_display').val('https://mypos.com/vmp/checkout-test/');
+                    $('#environment_url').val('https://mypos.com/vmp/checkout-test/');
+                    $('#key_index_display').val('1');
+                    $('#key_index').val('1');
+                }
+            }
+
+            // Сменяме стойностите при зареждане на страницата
+            updateFieldsBasedOnEnvironment($('select[name="environment"]').val());
+
+            // Слушаме за промяна на environment полето
+            $('select[name="environment"]').change(function () {
+                updateFieldsBasedOnEnvironment($(this).val());
+            });
+        });
+    </script>
 @endsection

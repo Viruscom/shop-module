@@ -7,7 +7,6 @@
     use App\Helpers\WebsiteHelper;
     use App\Http\Controllers\Controller;
     use App\Models\LawPages\LawPageTranslation;
-    use Artesaos\SEOTools\Facades\SEOTools;
     use Auth;
     use Illuminate\Http\Request;
     use Illuminate\Support\Str;
@@ -94,6 +93,7 @@
 
             return redirect(route('basket.order.preview', ['id' => $order->id]))->with('success', __('Successful update'));
         }
+
         public function previewOrder($id)
         {
             $order = Order::where('id', $id)->where(function ($q) {
@@ -110,6 +110,24 @@
 
             return view('shop::basket.order.preview', ['order' => $order]);
         }
+
+        public function canceledPayment($languageSlug, $id)
+        {
+            $order = Order::where('id', $id)->where(function ($q) {
+                if (Auth::guard('shop')->check()) {
+                    return $q->where('user_id', Auth::guard('shop')->user()->id);
+                } else {
+                    return $q->where('key', $_COOKIE['sbuuid']);
+                }
+            })->get()->first();
+
+            if (is_null($order)) {
+                abort(404);
+            }
+
+            return view('shop::basket.order.canceled_payment', ['order' => $order]);
+        }
+
         public function createOrder()
         {
             $currentLanguage = LanguageHelper::getCurrentLanguage();
@@ -143,6 +161,7 @@
                 'termsOfUse'      => LawPageTranslation::where('url', 'obshchi-usloviya')->with('parent', 'parent.translations')->first()
             ]);
         }
+
         public function index()
         {
             $currentLanguage = LanguageHelper::getCurrentLanguage();
@@ -162,6 +181,7 @@
 
             return view('shop::basket.index', ['basket' => $basket, 'countries' => $countries, 'cities' => $cities]);
         }
+
         public function addProduct(Request $request, BasketAction $basketAction)//can be used for add,increment,decrement,delete
         {
             if (!isset($request->product_id)) {
