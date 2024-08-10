@@ -113,19 +113,7 @@
 
         public function canceledPayment($languageSlug, $id)
         {
-            $order = Order::where('id', $id)->where(function ($q) {
-                if (Auth::guard('shop')->check()) {
-                    return $q->where('user_id', Auth::guard('shop')->user()->id);
-                } else {
-                    return $q->where('key', $_COOKIE['sbuuid']);
-                }
-            })->get()->first();
-
-            if (is_null($order)) {
-                abort(404);
-            }
-
-            return view('shop::basket.order.canceled_payment', ['order' => $order]);
+            return view('shop::basket.order.canceled_payment');
         }
 
         public function createOrder()
