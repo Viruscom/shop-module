@@ -47,6 +47,7 @@
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\PaymentAddressesController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\RegisteredUserAccountController;
     use Modules\Shop\Http\Controllers\Front\RegisteredUser\ShipmentAddressesController;
+    use Modules\Shop\Http\Controllers\Front\ShopFrontController;
     use Modules\Shop\Http\Controllers\Front\ShopHomeController;
     use Modules\Shop\Http\Controllers\HomeController;
 
@@ -625,6 +626,14 @@
     /*
      * FRONT ROUTES
      */
+    Route::group(['prefix' => '/', 'middleware' => ['lockedSite', 'underMaintenance', 'redirects', 'set.sbuuid']], static function () {
+        Route::group(['prefix' => '{languageSlug}', 'where' => ['languageSlug' => '[a-zA-Z]{2}']], static function () {
+            Route::get('/brand/{slug}', [ShopFrontController::class, 'loadShopBrandPage']);
+            Route::get('/category/{slug}', [ShopFrontController::class, 'loadShopCategoryPage']);
+            Route::get('/product/{slug}', [ShopFrontController::class, 'loadShopProductPage']);
+        });
+    });
+
     Route::prefix('guest')->group(function () {
         Route::get('show-order/{orderUid}', [ShopHomeController::class, 'showGuestOrder'])->name('guest.show-order');
     });
